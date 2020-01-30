@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui"/>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#1a33ff">
+    <meta name="msapplication-TileColor" content="#1a33ff">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>Francois Risoud Portfolio</title>
+
+    <style>
+
+      html.js .no-js-info {
+        display: none;
+      }
+
+      html.no-js .no-js-info {
+        display: block;
+        text-align: center;
+        margin-top: 100px;
+        font-size: 0.618em;
+        font-weight: 700;
+        font-family: 'Raleway', sans-serif;
+      }
+
+      body {
+        background-color: #1a33ff;
+      }
+
+      .loader-wrapper {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+        transition: opacity 0.2s linear;
+      }
+
+      .loader {
+        width: 75px;
+        height: 75px;
+        transform-origin: center center;
+        animation: loader-breath 2s ease infinite alternate;
+      }
+
+      body.mounted .loader-wrapper {
+        opacity: 0;
+      }
+
+      @keyframes loader-breath {
+        0% {
+          transform: scale(0.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+    </style>
+
+    <script>document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, 'js');</script>
+
+  </head>
+  <body>
+
+    <div class="no-js-info">
+      <h1>Sorry, this website needs javascript 〴⋋_⋌〵</h1>
+    </div>
+
+    <div class="loader-wrapper">
+      <div class="loader">
+        <svg viewBox="0 0 2 2" xmlns="http://www.w3.org/2000/svg">
+          <circle fill="#001433" cx="1" cy="1" r="1"/>
+        </svg>
+      </div>
+    </div>
+
+    <div id="root"></div>
+
+  </body>
+</html>
