@@ -3,6 +3,9 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router/routes';
+import VueHead from 'vue-head';
+
+Vue.use(VueHead);
 
 Vue.config.productionTip = false;
 
@@ -11,5 +14,5 @@ new Vue({
   el: '#root',
   router,
   template: '<App/>',
-  components: { App }
+  components: { App },
 });

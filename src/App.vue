@@ -15,9 +15,12 @@ import 'reset-css/reset.css';
 
 import CustomCursor from '@/components/CustomCursor.vue';
 import AppContent from '@/components/AppContent.vue';
+import head from '@/head';
 
 export default {
   name: 'app',
+
+  head,
 
   components: {
     CustomCursor,

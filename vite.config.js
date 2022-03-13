@@ -51,7 +51,7 @@ export default defineConfig({
     preprocessorOptions: {
       stylus: {
         // import these files so that they are available everywhere
-        imports: [path.resolve(__dirname, 'src/styles/variables.styl')]
+        imports: [path.resolve(__dirname, 'src/styles/variables.styl')],
       },
     },
     postcss: {
