@@ -1606,17 +1606,17 @@ function PhysicalBubble(settings, domElem) {
     window.addEventListener('mousemove', function(e) {
       mouse.position.x = e.clientX;
       mouse.position.y = e.clientY;
-    });
+    }, { passive: true });
 
     window.addEventListener('touchmove', function(e) {
       mouse.position.x = e.touches[0].clientX;
       mouse.position.y = e.touches[0].clientY;
-    });
+    }, { passive: true });
 
     window.addEventListener('touchend', function(e) {
       mouse.position.x = -100;
       mouse.position.y = -100;
-    });
+    }, { passive: true });
 
     return bubble;
 

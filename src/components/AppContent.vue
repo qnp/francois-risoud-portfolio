@@ -299,7 +299,7 @@ export default {
     // prevent touchmove defaults on everything that hides the adress bar in chrome android
     $('*').on({
       touchmove: function(e) { e.preventDefault(); },
-    });
+    }, { passive: true });
 
     // preload images
     if (window.innerWidth <= 600) {
