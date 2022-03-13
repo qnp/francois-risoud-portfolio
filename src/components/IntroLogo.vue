@@ -65,31 +65,18 @@ export default {
   data() {
     return {
       svgEk,
+      classes: [],
     };
   },
 
   methods: {
-
-    show: function() {
-
-      const $el = this.$el;
-
-      $el.classList.remove('hide');
-      $el.classList.add('show');
-      $el.classList.add('clickable');
-
+    show() {
+      this.classes = ['show', 'clickable'];
     },
 
-    hide: function() {
-
-      const $el = this.$el;
-
-      $el.classList.add('hide');
-      $el.classList.remove('show');
-      $el.classList.remove('clickable');
-
-    }
-
+    hide() {
+      this.classes = ['hide'];
+    },
   },
 
   watch: {
