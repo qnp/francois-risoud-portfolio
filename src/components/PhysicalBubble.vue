@@ -1,5 +1,5 @@
 <template lang="pug">
-  .physical-bubble
+.physical-bubble
 </template>
 
 <style lang="stylus">
@@ -406,7 +406,6 @@ function PhysicalBubble(settings, domElem) {
       const formattedBgStr = 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')';
       document.body.style['background-color'] = formattedBgStr;
     }
-    // setBodyBg(settings.bgColor);
 
     /*******
      * gui *
@@ -414,25 +413,10 @@ function PhysicalBubble(settings, domElem) {
 
     var gui;
 
-    /*********
-     * stats *
-     *********/
-
-    // var stats = new Stats();
-    // stats.setMode(0);
-
-    // // Align top-left
-    // stats.domElement.style.position = 'absolute';
-    // stats.domElement.style.left = '0px';
-    // stats.domElement.style.top = '0px';
-
-    // if (settings.showStats) document.body.appendChild(stats.domElement);
-
     /******************
      * actions stack *
      ******************/
 
-    // const actionStack = [];
     const actionStack = new ActionStack();
 
     /***********
@@ -598,11 +582,6 @@ function PhysicalBubble(settings, domElem) {
 
             plugin: {
 
-              // wrap: {
-              //   min: { x: 0, y: 0 },
-              //   max: { x: WIDTH, y: HEIGHT }
-              // },
-
               attractors: [ // Van der Waals + Pauli
 
                 function(bodyA, bodyB) {
@@ -694,15 +673,9 @@ function PhysicalBubble(settings, domElem) {
           boundaries.push(Bodies.rectangle(0, settings.boundaries.bottom.hRatio*HEIGHT + settings.boundaries.bottom.offset, 2*WIDTH, boundaryThickness, boundsOpt));
           boundaries.push(Bodies.rectangle(settings.boundaries.right.wRatio*WIDTH + settings.boundaries.right.offset - k, settings.boundaries.bottom.hRatio*HEIGHT + settings.boundaries.bottom.offset - k, 4*k, boundaryThickness, boundsOpt));
 
-          // boundaries.forEach(function(boundary) {
-          //   boundary.savedPosition = boundary.position;
-          // });
-
           World.add(world, boundaries);
 
         }
-
-        // particleRadiusController.onChange(bubble.setParticleRadius);
 
       },
 
@@ -1156,74 +1129,6 @@ function PhysicalBubble(settings, domElem) {
 
       },
 
-      // reduce: function(reduce) {
-
-      //   if (reduce) {
-
-      //     console.log('red');
-
-      //     bubble.setParticleRadius(3);
-      //     bubble.removeAllIsolatedHelper();
-
-      //     console.log(preventCheckIsolated, settings.showIsolated);
-
-      //     actionStack.remove(['breath', 'appear', 'fade-in', 'fade-out', 'sooth', 'reduce']).add({
-      //       name: 'reduce',
-      //       object: settings,
-      //       ref: 'particleAuraRadius',
-      //       to: 0.01,
-      //       easing: 0.05,
-      //       completePercent: 0.99,
-      //     });
-
-      //     setTimeout(function() {
-
-      //       actionStack.add({
-      //         name: 'sooth',
-      //         object: settings,
-      //         ref: 'soothingFactor',
-      //         to: 1,
-      //         easing: 0.05,
-      //         completePercent: 0.99,
-      //       });
-
-      //     }, 500);
-
-      //   } else {
-
-      //     bubble.setParticleRadius(initialParticleRadius);
-
-      //     preventCheckIsolated = false;
-      //     settings.showIsolated = true;
-
-      //     actionStack.remove(['breath', 'appear', 'fade-in', 'fade-out', 'sooth', 'reduce']).add({
-      //       name: 'reduce',
-      //       object: settings,
-      //       ref: 'particleAuraRadius',
-      //       to: projectsOn ? projectsParticleRadius : initialParticleAuraRadius,
-      //       easing: 0.05,
-      //       completePercent: 0.99,
-      //     }).add({
-      //       name: 'sooth',
-      //       object: settings,
-      //       ref: 'soothingFactor',
-      //       to: initialSoothingFactor,
-      //       easing: 0.2,
-      //       completePercent: 0.99,
-      //     });
-
-      //   }
-
-      // },
-
-      // hideBlob: function() {
-      //   bubble.setParticleRadius(3);
-      //   bubble.removeAllIsolatedHelper();
-      //   settings.particleAuraRadius = 0.01;
-      //   preventCheckIsolated = true;
-      //   settings.showIsolated = false;
-      // },
-
       breath: function(value) {
 
         const to = projectsOn
@@ -1402,9 +1307,6 @@ function PhysicalBubble(settings, domElem) {
           to: projectsParticleRadius,
           easing: 0.05,
           completePercent: 0.9,
-          // done: function() {
-          //   console.log('yo');
-          // }
         });
 
         projectsOn = true;
@@ -1422,9 +1324,6 @@ function PhysicalBubble(settings, domElem) {
         var numLines = m_floor(rawNumLines);
         var numCols = m_floor(rawNumCols);
         var distance;
-        // var keepMargin = false;
-
-        // console.log(rawNumLines, numLines, rawNumCols, numCols, rawNumLines*rawNumCols);
 
         while (numLines * numCols < numProjects) {
           if (m_abs(numLines * (numCols+1) - numProjects) < m_abs((numLines+1) * numCols - numProjects)) {
@@ -1435,8 +1334,6 @@ function PhysicalBubble(settings, domElem) {
             distance = ((HEIGHT-marginTop-marginBot)/numLines);
           }
         }
-        //  distance = (WIDTH-2*marginLR)/numCols;
-
 
         if (numLines === 1) {
           numLines++;
@@ -1444,16 +1341,12 @@ function PhysicalBubble(settings, domElem) {
         }
 
         const extraMarginLeft = ((WIDTH - 2*marginLR) - (numCols - 0.5) * distance) / 2;
-        // const extraMarginTop = (numLines * numCols === numProjects || keepMargin ? ((HEIGHT-marginTop-marginBot) - (numLines - 1) * distance * m_sin(PI/3)) / 2 : 0);
         const extraMarginTop = ((HEIGHT-marginTop-marginBot) - (numLines - 1) * distance * m_sin(PI/3))/2;
-        // console.log((HEIGHT-marginTop-marginBot), numLines, (numLines - 1) * distance * m_sin(PI/3), extraMarginTop);
 
         const iLine = m_floor(i/numCols);
 
         const x = extraMarginLeft + marginLR + (i%numCols + iLine%2/2) * distance;
         const y = extraMarginTop + marginTop + iLine * distance*m_sin(PI/3);
-
-        // console.log(i, '/', iLine, numLines, x, (i%numCols + iLine%2/2), '/', numCols, y, distance);
 
         return {
           x: x,
@@ -1599,9 +1492,6 @@ function PhysicalBubble(settings, domElem) {
           to: initialParticleAuraRadius,
           easing: 0.1,
           completePercent: 0.99,
-          // done: function() {
-          //   console.log('finnally');
-          // }
         });
 
       },
@@ -1631,16 +1521,6 @@ function PhysicalBubble(settings, domElem) {
         numParticles = numParticles - quantity;
         if (adjustThreshold) settings.threshold = 1/numParticles;
 
-
-        // World.clear(world);
-        // Engine.clear(engine);
-        // numParticles = numParticles - quantity;
-
-        // Getting ImageData from canvas with the helper function getImgdata().
-        // const pixels = new Uint8Array(glW * glH * 4);
-        // gl.readPixels(0, 0, glW, glH, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-        // const imageData = new ImageData(Uint8ClampedArray.from(pixels), glW, glH);
-
         const oldStyle = document.body.getAttribute('style');
         document.body.setAttribute('style', 'background-image: url('+canvas.toDataURL()+');');
         setTimeout(() => { document.body.setAttribute('style', oldStyle); }, 500);
@@ -1648,8 +1528,6 @@ function PhysicalBubble(settings, domElem) {
         removeRenderer();
         createRenderer();
         bubble.setupWebGLmetaballs();
-        // bubble.init();
-
       }
 
     };
@@ -1662,16 +1540,9 @@ function PhysicalBubble(settings, domElem) {
 
       if (started) {
 
-        // stats.begin();
-
         var t0 = performance.now();
 
         actionStack.increment();
-
-        // actionStack.forEach(function(action, i) {
-        //   if (!action.isComplete) action.increment();
-        //   else actionStack.splice(i, 1);
-        // });
 
         if (settings.playPhysics) bubble.updatePhysics();
         if (renderGPU) bubble.transferToGPU();
@@ -1752,10 +1623,6 @@ function PhysicalBubble(settings, domElem) {
   })(window, Math);
 
 }
-
-// window.addEventListener('mousedown', function(e) {
-//   console.log(e.clientX, e.clientY);
-// });
 
 export default {
 
@@ -1960,15 +1827,6 @@ export default {
       this.bubble.removeParticles(newVal.num, newVal.threshold);
     },
 
-    // reduce: function(newVal, oldVal) {
-    //   this.bubble.reduce(newVal);
-    // },
-
-    // hideBlob: function(newVal, oldVal) {
-    //   if (newVal) {
-    //     this.bubble.hideBlob();
-    //   }
-    // }
   }
 
 };
