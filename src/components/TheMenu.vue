@@ -524,14 +524,14 @@
 
 @keyframes show-menu-opacity
   0%
-    opaciy 0
+    opacity 0
 
   100%
     opacity 1
 
 @keyframes hide-menu-opacity
   0%
-    opaciy 1
+    opacity 1
 
   100%
     opacity 0

@@ -148,7 +148,7 @@ $media-content-max-width = "only screen and (min-width: " + $content-max-width +
 
 @keyframes show-content-opacity
   0%
-    opaciy 0
+    opacity 0
   100%
     opacity 1
 
