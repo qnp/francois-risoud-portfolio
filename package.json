@@ -1,17 +1,15 @@
 {
   "name": "francois-risoud-fullstack-freelance-dev-homepage",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "François Risoud, fullstack freelance developper",
   "author": "François Risoud <francois.risoud@gmail.com>",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "dev-ip": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --host 192.168.1.14",
-    "start": "npm run dev",
+    "dev": "vite",
+    "start": "yarn dev",
     "lint": "eslint --ext .js,.vue src",
-    "build": "node build/build.js",
-    "serve": "node server.js",
-    "dev-loader": "node loaders/test.js"
+    "build": "vite build --emptyOutDir",
+    "serve": "node server.js"
   },
   "dependencies": {
     "connect-history-api-fallback": "^1.5.0",
@@ -81,13 +79,12 @@
     "svgo-loader": "^2.1.0",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.8",
+    "vite": "^2.8.6",
+    "vite-plugin-pwa": "^0.11.13",
+    "vite-plugin-vue2": "^1.9.3",
     "vue-loader": "^13.3.0",
     "vue-style-loader": "^3.0.1",
-    "vue-template-compiler": "^2.5.2",
-    "webpack": "^3.6.0",
-    "webpack-bundle-analyzer": "^3.3.2",
-    "webpack-dev-server": "^3.1.11",
-    "webpack-merge": "^4.1.0"
+    "vue-template-compiler": "^2.5.2"
   },
   "engines": {
     "node": ">= 4.0.0",
