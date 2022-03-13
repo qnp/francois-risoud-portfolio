@@ -35,7 +35,6 @@
   z-index 2
   nav
     width 100%
-    // max-width $content-max-width
     margin-left auto
     margin-right auto
     pointer-events all
@@ -135,9 +134,6 @@
       z-index 2
       mix-blend-mode hard-light
 
-      // a.home
-      //   padding-top 0
-      //   margin-top -1px
       svg.burger
         width 30px
         height 30px
@@ -188,12 +184,15 @@
       color $theme-color-white
       background-color $theme-color-blue
       transform translateX(-130%) skew(5deg, 5deg) scale(1.2)
+
       &.appear
         transform translateX(0%) skew(0, 0) scale(1)
         transition transform 0.3s ease-out
+
       &.disappear
         transform translateX(-130%) skew(-5deg, -5deg) scale(1.2)
         transition transform 0.3s ease-in
+
       .menu-wrapper
         display flex
         flex-direction column
@@ -438,7 +437,6 @@
     opaciy 1
   100%
     opacity 0
-
 </style>
 
 <script>
@@ -446,117 +444,88 @@ import svgEk from "@/assets/images/ek.svg";
 
 import InlineSvg from "@/components/utils/InlineSvg.vue";
 
-import $ from '@/assets/js/utils/$';
+import $ from "@/assets/js/utils/$";
 // import raf from 'raf';
 
 export default {
-
-  name: 'the-menu',
+  name: "the-menu",
 
   components: { InlineSvg },
 
   props: {
-    open: Boolean,
+    value: {
+      type: Boolean,
+      default: false,
+    },
     // preventNavigation: false,
     route: {
       type: String,
-      default: 'About',
-    }
+      default: "About",
+    },
   },
 
   data() {
     return {
+      svgEk,
       allA: [],
-      pendingRoute: '',
+      pendingRoute: "",
       mobileOpen: false,
       burgerOpen: false,
       animating: false,
+      navClasses: [],
+      navWrapperClasses: [],
+      timer: null,
     };
   },
 
   computed: {
-    aboutClass: function() {
-      return this.route === 'About' ? 'active' : '';
+    aboutClass: function () {
+      return this.route === "About" ? "active" : "";
     },
-    projectsClass: function() {
-      return this.route === 'Projects' ? 'active' : '';
+    projectsClass: function () {
+      return this.route === "Projects" ? "active" : "";
     },
-    curriculumClass: function() {
-      return this.route === 'Curriculum' ? 'active' : '';
+    curriculumClass: function () {
+      return this.route === "Curriculum" ? "active" : "";
     },
   },
 
-  mounted() {
-
-    const self = this;
-    const nav = $('.nav-wrapper nav');
-    const navWrapper = $('.nav-wrapper');
-
-    var timer = null;
-
-    function close() {
-      nav.classList.remove('appear');
-      nav.classList.add('disappear');
-      navWrapper.classList.add('mobile-close');
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        navWrapper.classList.remove('mobile-close');
+  methods: {
+    open() {
+      this.animating = true;
+      this.navClasses = [];
+      this.navWrapperClasses = ["mobile-open"];
+      setTimeout(() => (this.navClasses = ["appear"]), 50);
+      setTimeout(() => (this.animating = false), 350);
+    },
+    close() {
+      this.animating = true;
+      this.navClasses = ["disappear"]
+       setTimeout(() => this.navWrapperClasses = ["mobile-close"], 300);
+      if (this.timer) clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        this.navWrapperClasses = [];
+        this.animating = false;
       }, 1000);
       setTimeout(() => {
-        navWrapper.classList.remove('mobile-open');
+        if (this.navWrapperClasses.includes("mobile-open")) {
+          this.navWrapperClasses = this.navWrapperClasses.filter(c => c !== "mobile-open");
+        }
       }, 350);
-    }
-
-    function open() {
-      nav.classList.remove('disappear');
-      navWrapper.classList.add('mobile-open');
-      navWrapper.classList.remove('mobile-close');
-      setTimeout(() => { nav.classList.add('appear'); }, 350);
-    }
-
-    $('.burger').on({
-      click: function() {
-        if (!self.animating) {
-          if (self.mobileOpen) close();
-          else open();
-          self.mobileOpen = !self.mobileOpen;
-          // self.animateBurger();
-        }
+    },
+    onClickBurger() {
+      if (!this.animating) {
+        if (this.mobileOpen) this.close();
+        else this.open();
+        this.mobileOpen = !this.mobileOpen;
       }
-    });
-
-    $('a').on({
-      click: function() {
-        if (self.mobileOpen) {
-          close();
-          self.mobileOpen = !self.mobileOpen;
-          // self.animateBurger();
-        }
+    },
+    onClickLink() {
+      if (this.mobileOpen) {
+        this.close();
+        this.mobileOpen = !this.mobileOpen;
       }
-    });
-
+    },
   },
-
-  watch: {
-    open: function(newVal, oldVal) {
-
-      const nav = $('.nav-wrapper nav');
-
-      if (newVal) {
-
-        nav.classList.add('show');
-        nav.classList.remove('hide');
-
-      } else {
-
-        nav.classList.remove('show');
-        nav.classList.add('hide');
-
-      }
-
-    }
-  }
-
 };
-
 </script>
