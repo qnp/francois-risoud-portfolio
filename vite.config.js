@@ -29,10 +29,7 @@ export default defineConfig({
         ],
       },
     }),
-    VitePWA({
-      strategies: 'injectManifest',
-      manifest,
-    }),
+    VitePWA({ manifest }),
   ],
   root: 'src',
   publicDir: path.resolve(__dirname, 'public'),
