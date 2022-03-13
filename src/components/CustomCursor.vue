@@ -332,24 +332,23 @@ export default {
       transition: false,
       transitionStickyDuration: 300,
       unsetTransitionOnce: false,
-      elapsedWaitingTime: 0
+      elapsedWaitingTime: 0,
+      clicked: false,
+      down: false,
     };
   },
 
   computed: {
-    classes: function() {
-      return 'blend-'+this.blendMode+' '+this.viewClass+(this.transition?' transition':'');
+    classes() {
+      return ['blend-' + this.blendMode, this.viewClass,  { transition: this.transition, clicked: this.clicked, down: this.down }];
     },
-    pathDef: function() {
+    pathDef() {
       return 'M1,1 L0,1 A1,1,0,1,0,0.000000005,0.999999 Z';
     }
 
   },
 
   mounted() {
-
-    const _this = this;
-    const $el = this.$el;
 
     const debug = false;
 
@@ -359,60 +358,57 @@ export default {
     if (!debug) {
 
       $(document.body).on({
-        mousemove: function(e) {
-          if (!_this.hasTouch) {
+        mousemove: (e) => {
+          if (!this.hasTouch) {
             mouse.x = e.clientX;
             mouse.y = e.clientY;
-            _this.checkClickable(mouse.x, mouse.y);
-            _this.setCursorPosition(mouse.x, mouse.y);
-            if (_this.viewClass !== 'visible') _this.viewClass = 'visible';
+            this.checkClickable(mouse.x, mouse.y);
+            this.setCursorPosition(mouse.x, mouse.y);
+            if (this.viewClass !== 'visible') this.viewClass = 'visible';
           }
         },
-        mouseenter: function(e) {
-          if (!_this.hasTouch) {
-            _this.setCursorPosition(e.clientX, e.clientY);
-            _this.viewClass = 'visible';
+        mouseenter: (e) => {
+          if (!this.hasTouch) {
+            this.setCursorPosition(e.clientX, e.clientY);
+            this.viewClass = 'visible';
           }
         },
-        mouseleave: function() {
-          if (!_this.hasTouch) {
-            if ($el.classList.contains('clicked')) {
-            } else {
-              _this.viewClass = 'hidden';
+        mouseleave: () => {
+          if (!this.hasTouch) {
+            if (!this.clicked) {
+              this.viewClass = 'hidden';
             }
           }
         },
-        mousedown: function() {
-          if (!_this.hasTouch) {
-            $el.classList.add('down');
+        mousedown: () => {
+          if (!this.hasTouch) {
+            this.down = true;
           }
         },
-        mouseup: function() {
-          if (!_this.hasTouch) {
-            $el.classList.remove('down');
+        mouseup: () => {
+          if (!this.hasTouch) {
+            this.down = false;
           }
         },
-        click: function() {
-          if (!_this.hasTouch) {
-            $el.classList.add('clicked');
-            setTimeout(function() {
-              $el.classList.remove('clicked');
-            }, 1000);
+        click: () => {
+          if (!this.hasTouch) {
+            this.clicked = true;
+            setTimeout(() => (this.clicked = false), 1000);
           }
         },
       });
 
       $(`#${this.contentId}`).on({
-        DOMSubtreeModified: function() {
-          if (!_this.hasTouch) _this.checkClickable(mouse.x, mouse.y);
-          _this.checkEvents();
+        DOMSubtreeModified: () => {
+          if (!this.hasTouch) this.checkClickable(mouse.x, mouse.y);
+          this.checkEvents();
         }
       });
 
     } else {
 
-      _this.setCursorPosition(200, 200);
-      _this.viewClass = 'visible scroll-cursor';
+      this.setCursorPosition(200, 200);
+      this.viewClass = 'visible scroll-cursor';
       $('html').classList.add('debug');
       $('body').classList.add('debug');
 
@@ -422,7 +418,7 @@ export default {
 
   methods: {
 
-    checkEvents: function() {
+    checkEvents() {
       // check for special handlers
       this.eventsLogic.forEach((logic) => {
         if (logic.events) {
@@ -432,7 +428,7 @@ export default {
       });
     },
 
-    checkClickable: function(x, y) {
+    checkClickable(x, y) {
       const $el = this.$el;
       const elem = document.elementFromPoint(x, y);
       // check if it has a class defined in logic
@@ -458,7 +454,7 @@ export default {
       }
     },
 
-    setCursorPosition: function(x, y) {
+    setCursorPosition(x, y) {
       if (this.stickyElem) {
         const rect = this.stickyElem.getBoundingClientRect();
         const X = rect.x + rect.width/2;
