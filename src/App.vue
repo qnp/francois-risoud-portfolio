@@ -1,17 +1,14 @@
 <template lang="pug">
-  #app
-    custom-cursor(:content-id='contentId',:blend-mode='cursorBlendMode',:has-touch='hasTouch')
-    router-view
-
-</template>
-
-
-<style lang="stylus">
-
-</style>
+#app
+  custom-cursor(
+    :content-id="contentId"
+    :blend-mode="cursorBlendMode"
+    :has-touch="hasTouch"
+  )
+  router-view
+</template><style lang="stylus"></style>
 
 <script>
-
 // css
 import 'normalize.css';
 import 'reset-css/reset.css';
@@ -20,7 +17,6 @@ import CustomCursor from '@/components/CustomCursor.vue';
 import AppContent from '@/components/AppContent.vue';
 
 export default {
-
   name: 'app',
 
   components: {
@@ -29,21 +25,27 @@ export default {
   },
 
   mounted() {
-
     // detect if touch event is working as supposed => touch device
     const self = this;
-    window.addEventListener('touchstart', function setHasTouch() {
-      self.hasTouch = true;
-      document.body.classList.add('has-touch');
-      window.removeEventListener('touchstart', setHasTouch);
-    }, false);
+    window.addEventListener(
+      'touchstart',
+      function setHasTouch() {
+        self.hasTouch = true;
+        document.body.classList.add('has-touch');
+        window.removeEventListener('touchstart', setHasTouch);
+      },
+      false
+    );
 
     // prenvent touchmove event to remove 'overscroll' effect
-    window.addEventListener('touchmove', function(e) {
-      e.preventDefault();
-      return false;
-    }, false);
-
+    window.addEventListener(
+      'touchmove',
+      function (e) {
+        e.preventDefault();
+        return false;
+      },
+      false
+    );
   },
 
   data() {
@@ -53,7 +55,5 @@ export default {
       cursorBlendMode: 'intro',
     };
   },
-
 };
-
 </script>

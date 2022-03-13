@@ -1,5 +1,4 @@
 export default [
-
   {
     type: 'back',
     content: [
@@ -15,9 +14,8 @@ export default [
       'SQL',
       // 'letsencrypt',
       'e-commerce',
-    ]
+    ],
   },
-
   {
     type: 'front',
     content: [
@@ -34,9 +32,8 @@ export default [
       'webGL',
       'shaders',
       'SEO',
-    ]
+    ],
   },
-
   {
     type: 'build',
     content: [
@@ -52,19 +49,12 @@ export default [
       'stylus',
       'less',
       'pug',
-    ]
+    ],
   },
-
   {
     type: 'methodology',
-    content: [
-      'git',
-      'BEM',
-      'agile',
-      'pedagogy',
-    ]
+    content: ['git', 'BEM', 'agile', 'pedagogy'],
   },
-
   {
     type: 'science',
     content: [
@@ -82,9 +72,8 @@ export default [
       'python',
       'mathematica',
       'LaTeX',
-    ]
+    ],
   },
-
   {
     type: 'deep',
     content: [
@@ -97,18 +86,12 @@ export default [
       'gnuplot',
       'vim',
       'video compression',
-    ]
+    ],
   },
-
   {
     type: 'softwares',
-    content: [
-      'photoshop',
-      'illustrator',
-      'sketch',
-    ]
+    content: ['photoshop', 'illustrator', 'sketch'],
   },
-
   {
     type: 'art',
     content: [
@@ -117,14 +100,10 @@ export default [
       'digital art',
       'MIDI / OSC',
       'arduino',
-    ]
+    ],
   },
-
   {
     type: 'languages',
-    content: [
-      'fluent english',
-    ]
+    content: ['fluent english'],
   },
-
 ];

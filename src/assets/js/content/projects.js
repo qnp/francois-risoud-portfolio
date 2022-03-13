@@ -7,7 +7,7 @@ export default [
     smallImageUrl: '/images/projects/small/4N-w-logo-bnw.jpg',
     url: 'http://4nparis.com',
     bgColor: '#111111',
-    blendMode: 'lighten'
+    blendMode: 'lighten',
   },
   {
     title: 'Fractaleidoscope',
@@ -17,7 +17,7 @@ export default [
     smallImageUrl: '/images/projects/small/fractaleidoscope-bnw.jpg',
     url: 'https://youtu.be/ghLG9gDp__A',
     bgColor: '#111111',
-    blendMode: 'lighten'
+    blendMode: 'lighten',
   },
   {
     title: 'JMD',
@@ -27,7 +27,7 @@ export default [
     smallImageUrl: '/images/projects/small/JMD-bnw.jpg',
     url: 'http://jmd.paris',
     bgColor: '#111111',
-    blendMode: 'lighten'
+    blendMode: 'lighten',
   },
   {
     title: 'Lou-Anne Lacaille',
@@ -37,7 +37,7 @@ export default [
     smallImageUrl: '/images/projects/small/lacaille-2.jpg',
     url: 'http://www.lacaille-osteo-beaune.fr',
     bgColor: '#111111',
-    blendMode: 'lighten'
+    blendMode: 'lighten',
   },
   {
     title: 'Datagif',
@@ -47,7 +47,7 @@ export default [
     smallImageUrl: '/images/projects/small/datagif-bnw.jpg',
     url: 'https://datagif.fr',
     bgColor: '#111111',
-    blendMode: 'lighten'
+    blendMode: 'lighten',
   },
   {
     title: 'inSynch',
@@ -57,17 +57,20 @@ export default [
     smallImageUrl: '/images/projects/small/inSynch-bnw.jpg',
     url: 'http://www.themgames.net/insynch',
     bgColor: '#111111',
-    blendMode: 'lighten'
+    blendMode: 'lighten',
   },
   {
     title: 'Bredrin Records',
     type: 'Webapp',
-    techInfos: ['koa.js restful API, React.js,', 'e-commerce, music composition'],
+    techInfos: [
+      'koa.js restful API, React.js,',
+      'e-commerce, music composition',
+    ],
     imageUrl: '/images/projects/BR02-bnw.jpg',
     smallImageUrl: '/images/projects/small/BR02-bnw.jpg',
     url: 'https://bredrinrecords.com',
     bgColor: '#111111',
-    blendMode: 'lighten'
+    blendMode: 'lighten',
   },
   {
     title: 'Alors comment ça va ?',
@@ -77,7 +80,7 @@ export default [
     smallImageUrl: '/images/projects/small/alorscommentcava-bnw.jpg',
     url: 'http://alorscommentcava.fr',
     bgColor: '#111111',
-    blendMode: 'lighten'
+    blendMode: 'lighten',
   },
   {
     title: 'PhD Thesis',
@@ -87,6 +90,6 @@ export default [
     smallImageUrl: '/images/projects/small/phd-bnw.jpg',
     url: 'https://tel.archives-ouvertes.fr/THESES-UPMC/tel-01432887v1',
     bgColor: '#111111',
-    blendMode: 'lighten'
+    blendMode: 'lighten',
   },
 ];

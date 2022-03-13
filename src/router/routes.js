@@ -11,35 +11,35 @@ export default new Router({
       path: '/',
       name: 'Intro',
       component: AppContent,
-      props: {route: 'Intro'}
+      props: { route: 'Intro' },
     },
     {
       path: '/about',
       name: 'About',
       component: AppContent,
-      props: {route: 'About'}
+      props: { route: 'About' },
     },
     {
       path: '/projects',
       name: 'Projects',
       component: AppContent,
-      props: {route: 'Projects'}
+      props: { route: 'Projects' },
     },
     {
       path: '/curriculum',
       name: 'Curriculum',
       component: AppContent,
-      props: {route: 'Curriculum'}
+      props: { route: 'Curriculum' },
     },
     {
       path: '/404',
       name: 'NotFound',
       component: AppContent,
-      props: {route: 'NotFound'}
+      props: { route: 'NotFound' },
     },
     {
       path: '/*',
-      redirect: '/404'
-    }
-  ]
+      redirect: '/404',
+    },
+  ],
 });

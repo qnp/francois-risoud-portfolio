@@ -4,112 +4,110 @@
 
 <style lang="stylus">
 
-  $circle-radius = 75px
-  $line-length = 1.4*$circle-radius
-  $text-line-spacing = 10px
-  $line45deg-length = 50px
-  $line45deg-translate = (- ($circle-radius + $line45deg-length/2)*cos(45deg))
-  $show-color = $theme-color-pink
+$circle-radius = 75px
+$line-length = 1.4*$circle-radius
+$text-line-spacing = 10px
+$line45deg-length = 50px
+$line45deg-translate = (- ($circle-radius + $line45deg-length/2)*cos(45deg))
+$show-color = $theme-color-pink
 
-  $particle-project-circle-radius = 27px
+$particle-project-circle-radius = 27px
 
-  .physical-bubble
-    display block
+.physical-bubble
+  display block
+  position fixed
+  top 0
+  left 0
+  right 0
+  bottom 0
+  opacity 1
+  transition opacity 0.3s linear
+  &.hide
+    opacity 0
+
+  .isolated-particle-view
+    width 2*$circle-radius
+    height 2*$circle-radius
+    // background-color rgba(155,155,0,0.2)
     position fixed
     top 0
     left 0
-    right 0
-    bottom 0
-    opacity 1
+    opacity 0
+    transition opacity 0.7s linear
+    &.show
+      opacity 1
+    .text
+      width (2*$circle-radius - 40px)
+      font-size 0.7em
+      line-height 1.4
+      font-family 'Raleway', sans-serif
+      font-weight 500
+      color $show-color
+      // text-align center
+      text-align right
+      position absolute
+      top 50%
+      left 50%
+      // transform translate(-50%,-50%)
+      transform translateY(-50%)
+      margin-left (- @width - $line-length - $text-line-spacing)
+    .line
+        width $line-length
+        height 1px
+        background-color $show-color
+        position absolute
+        top 50%
+        left 50%
+        margin-left (- $line-length)
+
+  .project-particle-view
+    width 2*$circle-radius
+    height 2*$circle-radius
+    position fixed
+    top 0
+    left 0
+    opacity 0
     transition opacity 0.3s linear
-    &.hide
-      opacity 0
+    &.show
+      opacity 1
+    .circle
+      width 2*$particle-project-circle-radius
+      height 2*$particle-project-circle-radius
+      position absolute
+      top 50%
+      left 50%
+      margin-top (- $particle-project-circle-radius)
+      margin-left (- $particle-project-circle-radius)
+      background-color alpha($theme-color-pink, 0.6)
+      transition background-color 0.5s linear
+      border-radius $particle-project-circle-radius
 
-    .isolated-particle-view
-      width 2*$circle-radius
-      height 2*$circle-radius
-      // background-color rgba(155,155,0,0.2)
-      position fixed
-      top 0
-      left 0
-      opacity 0
-      transition opacity 0.7s linear
-      &.show
-        opacity 1
-      .text
-        width (2*$circle-radius - 40px)
-        font-size 0.7em
-        line-height 1.4
-        font-family 'Raleway', sans-serif
-        font-weight 500
-        color $show-color
-        // text-align center
-        text-align right
-        position absolute
-        top 50%
-        left 50%
-        // transform translate(-50%,-50%)
-        transform translateY(-50%)
-        margin-left (- @width - $line-length - $text-line-spacing)
-      .line
-          width $line-length
-          height 1px
-          background-color $show-color
-          position absolute
-          top 50%
-          left 50%
-          margin-left (- $line-length)
-
+body:not(.has-touch)
+  .physical-bubble
     .project-particle-view
-      width 2*$circle-radius
-      height 2*$circle-radius
-      position fixed
-      top 0
-      left 0
-      opacity 0
-      transition opacity 0.3s linear
-      &.show
-        opacity 1
-      .circle
-        width 2*$particle-project-circle-radius
-        height 2*$particle-project-circle-radius
-        position absolute
-        top 50%
-        left 50%
-        margin-top (- $particle-project-circle-radius)
-        margin-left (- $particle-project-circle-radius)
+      .circle:hover
+        background-color alpha($theme-color-dark-teal, 0.6)
+
+body.has-touch
+  .physical-bubble
+    .project-particle-view
+      .circle.hover
+        transition all 0.2s linear
         background-color alpha($theme-color-pink, 0.6)
-        transition background-color 0.5s linear
-        border-radius $particle-project-circle-radius
+        border 5px solid $theme-color-pink
+        margin-top -32px
+        margin-left -32px
+        border-radius 32px
 
-  body:not(.has-touch)
-    .physical-bubble
-      .project-particle-view
-        .circle:hover
-          background-color alpha($theme-color-dark-teal, 0.6)
-
-  body.has-touch
-    .physical-bubble
-      .project-particle-view
-        .circle.hover
-          transition all 0.2s linear
-          background-color alpha($theme-color-pink, 0.6)
-          border 5px solid $theme-color-pink
-          margin-top -32px
-          margin-left -32px
-          border-radius 32px
-
-  .dg.ac
+.dg.ac
+  transition width 0.3s ease
+  ul
+    background-color #000
+  .close-button
     transition width 0.3s ease
-    ul
-      background-color #000
-    .close-button
-      transition width 0.3s ease
-
 </style>
 
 <script>
-
 import Matter from 'matter-js';
 import MatterAttractors from 'matter-attractors';
 // import MatterWrap from 'matter-wrap';
@@ -125,9 +123,7 @@ import uniqueID from '@/assets/js/utils/unique-ID.js';
 // import Stats from 'stats-js';
 
 class ParticleView {
-
   constructor(domElem, duration) {
-
     this.w = 150;
     this.h = 150;
 
@@ -140,22 +136,18 @@ class ParticleView {
     this.hidingTimeout = null;
 
     this.hidingDuration = duration;
-
   }
 
   show() {
-
     this.domElem.appendChild(this.view);
     this.view.classList.add('show');
     if (this.hiding) {
       clearTimeout(this.hidingTimeout);
       this.hiding = false;
     }
-
   }
 
   hide(callback) {
-
     this.hiding = true;
     this.view.classList.remove('show');
     if (this.hidingTimeout) clearTimeout(this.hidingTimeout);
@@ -164,33 +156,30 @@ class ParticleView {
       this.domElem.removeChild(this.view);
       callback();
     }, this.hidingDuration);
-
   }
 
   setPosition(pos) {
-
-    this.view.setAttribute('style', `transform: translate(${pos.x-this.w/2}px,${pos.y-this.h/2}px);`);
+    this.view.setAttribute(
+      'style',
+      `transform: translate(${pos.x - this.w / 2}px,${pos.y - this.h / 2}px);`
+    );
 
     const updateOriginnEvent = new CustomEvent('updateorigin', {
       detail: {
         id: this.id,
         newPos: {
           x: pos.x,
-          y: pos.y
-        }
-      }
+          y: pos.y,
+        },
+      },
     });
 
     window.dispatchEvent(updateOriginnEvent);
-
   }
-
 }
 
 class IsolatedParticleView extends ParticleView {
-
   constructor(domElem, label, duplicate) {
-
     super(domElem, 710);
 
     this.label = label;
@@ -205,15 +194,11 @@ class IsolatedParticleView extends ParticleView {
     if (label) text.textContent = label;
     text.classList.add('text');
     this.view.appendChild(text);
-
   }
-
 }
 
 class ProjectParticleView extends ParticleView {
-
   constructor(domElem, project, centerPosition) {
-
     super(domElem, 310);
 
     this.view.classList.add('project-particle-view');
@@ -228,12 +213,14 @@ class ProjectParticleView extends ParticleView {
     this.circle.classList.add('circle');
     this.view.appendChild(this.circle);
 
-    this.circle.addEventListener('mouseenter', (e) => { this.mouseenterHandler(e); });
+    this.circle.addEventListener('mouseenter', e => {
+      this.mouseenterHandler(e);
+    });
     this.circle.addEventListener('mouseleave', this.mouseleaveHandler);
 
     const self = this;
 
-    this.circle.addEventListener('touchstart', (e) => {
+    this.circle.addEventListener('touchstart', e => {
       if (!self.open) {
         setTimeout(() => {
           domElem.addEventListener('touchstart', function handleOut() {
@@ -246,7 +233,6 @@ class ProjectParticleView extends ParticleView {
         self.circle.classList.add('hover');
       }
     });
-
   }
 
   mouseenterHandler(e) {
@@ -258,9 +244,9 @@ class ProjectParticleView extends ParticleView {
         centerPosition: this.centerPosition,
         origin: {
           x: e.clientX,
-          y: e.clientY
-        }
-      }
+          y: e.clientY,
+        },
+      },
     });
     window.dispatchEvent(showProjectEvent);
   }
@@ -271,16 +257,17 @@ class ProjectParticleView extends ParticleView {
   }
 
   off() {
-    this.circle.removeEventListener('mouseenter', (e) => { this.mouseenterHandler(e); });
+    this.circle.removeEventListener('mouseenter', e => {
+      this.mouseenterHandler(e);
+    });
     this.circle.removeEventListener('mouseleave', this.mouseleaveHandler);
     window.dispatchEvent(new Event('hideproject'));
   }
-
 }
 
 function PhysicalBubble(settings, domElem) {
-
-  return (function(window, Math) { // encapsulation
+  return (function (window, Math) {
+    // encapsulation
 
     var started = false;
 
@@ -310,32 +297,26 @@ function PhysicalBubble(settings, domElem) {
     var gl, glW, glH;
 
     function setCanvasSize() {
-
       glW = WIDTH * renderFactor;
       glH = HEIGHT * renderFactor;
 
       canvas.setAttribute('width', glW);
       canvas.setAttribute('height', glH);
       canvas.setAttribute('style', `width: ${WIDTH}px; height: ${HEIGHT}px`);
-
     }
 
     function createRenderer() {
-
       // webgl canvas renderer
       canvas = document.createElement('canvas');
       setCanvasSize();
       domElem.appendChild(canvas);
-      gl = canvas.getContext('webgl', {preserveDrawingBuffer: true});
-
+      gl = canvas.getContext('webgl', { preserveDrawingBuffer: true });
     }
 
     function removeRenderer() {
-
       domElem.removeChild(canvas);
       canvas = null;
       gl = null;
-
     }
 
     // uniform handles
@@ -362,7 +343,8 @@ function PhysicalBubble(settings, domElem) {
     // const initialParticleRadius = settings.particleRadius;
     const initialParticleAuraRadius = settings.particleAuraRadius;
     const effectiveCheckRadius = settings.effectiveCheckRadius;
-    const effectiveCheckRadiusPow2 = effectiveCheckRadius * effectiveCheckRadius;
+    const effectiveCheckRadiusPow2 =
+      effectiveCheckRadius * effectiveCheckRadius;
     const maxNeighbours = settings.maxNeighbours;
     // const particleAuraRatio = settings.particleAuraRatio || '1.0';
     const particleMass = settings.particleMass || 50;
@@ -379,7 +361,7 @@ function PhysicalBubble(settings, domElem) {
     // const threshold = (settings.threshold || 0.01) * particleAuraRatio;
     // const steps = settings.steps || 20;
 
-    const bloatedEvent = new Event('bloated-'+settings.name);
+    const bloatedEvent = new Event('bloated-' + settings.name);
 
     // show labels
     var leftLabels = settings.isolatedLabels.slice(0);
@@ -403,7 +385,8 @@ function PhysicalBubble(settings, domElem) {
 
     // set body bg to prevent white blink on resize
     function setBodyBg(color) {
-      const formattedBgStr = 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')';
+      const formattedBgStr =
+        'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')';
       document.body.style['background-color'] = formattedBgStr;
     }
 
@@ -449,91 +432,109 @@ function PhysicalBubble(settings, domElem) {
     var checkBoundaries = true;
 
     const bubble = {
-
-      showGui: function() {
-
+      showGui: function () {
         /*******************
          * lazy loaded gui *
          *******************/
 
-        import(/* webpackChunkName: "dat.gui" */'dat.gui').then(function(dat) {
+        import(/* webpackChunkName: "dat.gui" */ 'dat.gui')
+          .then(function (dat) {
+            settings.random = function () {
+              settings.repelExponent = 2 + m_floor(m_random() * 23);
+              settings.centerAttractExponent = 2 + m_floor(m_random() * 23);
+              settings.centerAttractFactor = m_random();
+              settings.longRangeCenterAttract = m_random() * 20;
+              settings.equilibriumDistance = 10 + m_random() * 35;
+              settings.attarctiveness = m_random() * 50;
+              settings.longRangeTail = m_random() * 20;
 
-          settings.random = function() {
-            settings.repelExponent = 2 + m_floor(m_random()*23);
-            settings.centerAttractExponent = 2 + m_floor(m_random()*23);
-            settings.centerAttractFactor = m_random();
-            settings.longRangeCenterAttract = m_random()*20;
-            settings.equilibriumDistance = 10 + m_random()*35;
-            settings.attarctiveness = m_random()*50;
-            settings.longRangeTail = m_random()*20;
+              settings.soothingFactor = m_random();
+              settings.particleAuraRadius = m_random() * 80;
+              settings.randomRadiusFactor = m_random();
+              settings.auraTypeMix = m_random();
+              settings.threshold = (m_random() * 5) / numParticles;
+              settings.blobColor = [
+                m_random() * 255,
+                m_random() * 255,
+                m_random() * 255,
+              ];
+              settings.bgColor = [
+                m_random() * 255,
+                m_random() * 255,
+                m_random() * 255,
+              ];
+            };
 
-            settings.soothingFactor = m_random();
-            settings.particleAuraRadius = m_random()*80;
-            settings.randomRadiusFactor = m_random();
-            settings.auraTypeMix = m_random();
-            settings.threshold = m_random() * 5/numParticles;
-            settings.blobColor = [m_random()*255, m_random()*255, m_random()*255];
-            settings.bgColor = [m_random()*255, m_random()*255, m_random()*255];
-          };
+            gui = new dat.default.GUI({ autoPlace: settings.showGui });
+            gui.add(settings, 'playPhysics');
+            gui.add(settings, 'random');
 
-          gui = new dat.default.GUI({ autoPlace: settings.showGui });
-          gui.add(settings, 'playPhysics');
-          gui.add(settings, 'random');
+            const physicsGui = gui.addFolder('Physics');
+            physicsGui
+              .add(settings, 'repelExponent')
+              .min(2)
+              .step(2)
+              .max(24)
+              .listen();
+            physicsGui
+              .add(settings, 'centerAttractExponent')
+              .min(2)
+              .step(2)
+              .max(24)
+              .listen();
+            physicsGui.add(settings, 'centerAttractFactor', 0, 1).listen();
+            physicsGui.add(settings, 'longRangeCenterAttract', 0, 20).listen();
+            physicsGui.add(settings, 'equilibriumDistance', 10, 45).listen();
+            physicsGui.add(settings, 'attarctiveness', 0, 50).listen();
+            // const particleRadiusController = physicsGui.add(settings, 'particleRadius', 0.001, 100);
+            physicsGui.add(settings, 'longRangeTail', 0, 20).listen();
+            // physicsGui.add(settings, 'timeScale', 0, 1.5);
+            physicsGui.open();
 
-          const physicsGui = gui.addFolder('Physics');
-          physicsGui.add(settings, 'repelExponent').min(2).step(2).max(24).listen();
-          physicsGui.add(settings, 'centerAttractExponent').min(2).step(2).max(24).listen();
-          physicsGui.add(settings, 'centerAttractFactor', 0, 1).listen();
-          physicsGui.add(settings, 'longRangeCenterAttract', 0, 20).listen();
-          physicsGui.add(settings, 'equilibriumDistance', 10, 45).listen();
-          physicsGui.add(settings, 'attarctiveness', 0, 50).listen();
-          // const particleRadiusController = physicsGui.add(settings, 'particleRadius', 0.001, 100);
-          physicsGui.add(settings, 'longRangeTail', 0, 20).listen();
-          // physicsGui.add(settings, 'timeScale', 0, 1.5);
-          physicsGui.open();
+            const renderGui = gui.addFolder('Render');
+            renderGui.add(settings, 'soothingFactor', 0, 1).listen();
+            renderGui.add(settings, 'particleAuraRadius', 0, 80).listen();
+            renderGui.add(settings, 'randomRadiusFactor', 0, 1).listen();
+            renderGui.add(settings, 'auraTypeMix', 0, 1).listen();
+            renderGui.add(settings, 'threshold', 0, 5 / numParticles).listen();
+            renderGui.addColor(settings, 'blobColor').listen();
+            const bgColorController = renderGui
+              .addColor(settings, 'bgColor')
+              .listen();
+            bgColorController.onChange(setBodyBg);
+            renderGui.open();
 
-          const renderGui = gui.addFolder('Render');
-          renderGui.add(settings, 'soothingFactor', 0, 1).listen();
-          renderGui.add(settings, 'particleAuraRadius', 0, 80).listen();
-          renderGui.add(settings, 'randomRadiusFactor', 0, 1).listen();
-          renderGui.add(settings, 'auraTypeMix', 0, 1).listen();
-          renderGui.add(settings, 'threshold', 0, 5/numParticles).listen();
-          renderGui.addColor(settings, 'blobColor').listen();
-          const bgColorController = renderGui.addColor(settings, 'bgColor').listen();
-          bgColorController.onChange(setBodyBg);
-          renderGui.open();
+            document.body.appendChild(gui.domElement);
+            gui.domElement.classList.add('ac');
+            const closeBtnElem = gui.domElement.querySelector('.close-button');
 
-          document.body.appendChild(gui.domElement);
-          gui.domElement.classList.add('ac');
-          const closeBtnElem = gui.domElement.querySelector('.close-button');
+            setTimeout(function () {
+              closeBtnElem.style = 'width: 340px;';
+              gui.domElement.style = 'width: 340px;';
+            }, 1000);
 
-          setTimeout(function() {
-            closeBtnElem.style = 'width: 340px;';
-            gui.domElement.style = 'width: 340px;';
-          }, 1000);
+            closeBtnElem.addEventListener('click', () => {
+              closeBtnElem.style = 'width: 340px;';
+            });
 
-          closeBtnElem.addEventListener('click', () => {
-            closeBtnElem.style = 'width: 340px;';
+            window.addEventListener('resize', () => {
+              closeBtnElem.style = 'width: 340px;';
+            });
+          })
+          .catch(function (err) {
+            throw err;
           });
-
-          window.addEventListener('resize', () => {
-            closeBtnElem.style = 'width: 340px;';
-          });
-
-        }).catch(function(err) { throw err; });
-
       },
 
-      hideGui: function() {
+      hideGui: function () {
         document.body.removeChild(gui.domElement);
       },
 
-      setHasTouch: function() {
+      setHasTouch: function () {
         // mouseTouchFactor = 0;
       },
 
-      init: function() {
-
+      init: function () {
         // create an engine
         engine = Engine.create();
         world = engine.world;
@@ -541,11 +542,9 @@ function PhysicalBubble(settings, domElem) {
         createRenderer();
         bubble.setupPhysics();
         bubble.setupWebGLmetaballs();
-
       },
 
-      setupPhysics: function() {
-
+      setupPhysics: function () {
         // zero gravity world
         world.gravity.x = 0;
         world.gravity.y = 0;
@@ -560,77 +559,104 @@ function PhysicalBubble(settings, domElem) {
 
         var i = numParticles;
         while (i--) {
-
           var ax;
           var ay;
 
-          const startRadius = settings.startRadius + m_random()*10;
+          const startRadius = settings.startRadius + m_random() * 10;
           if (settings.startPosMode === 'circle') {
-            ax = settings.center.xRatio * WIDTH + startRadius * m_cos(i / numParticles * 2 * PI);
-            ay = settings.center.yRatio * HEIGHT + startRadius * m_sin(i / numParticles * 2 * PI);
+            ax =
+              settings.center.xRatio * WIDTH +
+              startRadius * m_cos((i / numParticles) * 2 * PI);
+            ay =
+              settings.center.yRatio * HEIGHT +
+              startRadius * m_sin((i / numParticles) * 2 * PI);
           } else if (settings.startPosMode === 'far') {
-            ax = settings.center.xRatio * WIDTH + startRadius * m_cos((-1 - i / numParticles) * PI/2);
-            ay = settings.center.yRatio * HEIGHT + startRadius * m_sin((-1 - i / numParticles) * PI/2);
+            ax =
+              settings.center.xRatio * WIDTH +
+              startRadius * m_cos(((-1 - i / numParticles) * PI) / 2);
+            ay =
+              settings.center.yRatio * HEIGHT +
+              startRadius * m_sin(((-1 - i / numParticles) * PI) / 2);
           }
 
           const particle = Bodies.circle(ax, ay, settings.particleRadius, {
-
             mass: particleMass,
-            additionalRadiusFactor: 0.5+m_random()*2.5,
+            additionalRadiusFactor: 0.5 + m_random() * 2.5,
             restitution: 0,
             frictionAir: viscosity,
 
             plugin: {
+              attractors: [
+                // Van der Waals + Pauli
 
-              attractors: [ // Van der Waals + Pauli
-
-                function(bodyA, bodyB) {
-
-                  const vecBToA = Matter.Vector.sub(bodyB.position, bodyA.position);
+                function (bodyA, bodyB) {
+                  const vecBToA = Matter.Vector.sub(
+                    bodyB.position,
+                    bodyA.position
+                  );
                   const vecNormal = Matter.Vector.normalise(vecBToA);
                   const bToA = m_max(Matter.Vector.magnitude(vecBToA), 1);
-                  const bToAPow6 = bToA**6;
-                  const attarctiveness = settings.attarctiveness*10**7;
+                  const bToAPow6 = bToA ** 6;
+                  const attarctiveness = settings.attarctiveness * 10 ** 7;
                   const equilibriumDistance = settings.equilibriumDistance;
-                  const equilibriumDistancePow6 = equilibriumDistance**6;
-                  const longRangeTail = settings.longRangeTail*10**(-9);
+                  const equilibriumDistancePow6 = equilibriumDistance ** 6;
+                  const longRangeTail = settings.longRangeTail * 10 ** -9;
                   const repelExponent = settings.repelExponent;
                   const centerAttractExponent = settings.centerAttractExponent;
-                  const longRangeCenterAttract = settings.longRangeCenterAttract*10**(-7);
-                  const max = 1 * (5 * attarctiveness / (6*equilibriumDistancePow6));
+                  const longRangeCenterAttract =
+                    settings.longRangeCenterAttract * 10 ** -7;
+                  const max =
+                    1 * ((5 * attarctiveness) / (6 * equilibriumDistancePow6));
 
-                  let magnitude = (6 * attarctiveness / (bToA * bToAPow6)) * (equilibriumDistancePow6 / bToAPow6 - 1) - longRangeTail * (bToA - equilibriumDistance)**2;
+                  let magnitude =
+                    ((6 * attarctiveness) / (bToA * bToAPow6)) *
+                      (equilibriumDistancePow6 / bToAPow6 - 1) -
+                    longRangeTail * (bToA - equilibriumDistance) ** 2;
                   if (bodyA.preventOtherAttractions) magnitude = 0;
 
-                  let force = Matter.Vector.mult(vecNormal, m_min(magnitude, max));
+                  let force = Matter.Vector.mult(
+                    vecNormal,
+                    m_min(magnitude, max)
+                  );
 
                   if (bodyB.isMouse) {
-
-                    magnitude = attarctiveness * (equilibriumDistance / bToA)**repelExponent;
+                    magnitude =
+                      attarctiveness *
+                      (equilibriumDistance / bToA) ** repelExponent;
 
                     if (bodyA.preventOtherAttractions) magnitude = 0;
 
-                    force = Matter.Vector.mult(vecNormal, mouseTouchFactor * mouseRepelFactor * m_min(magnitude, max));
-
+                    force = Matter.Vector.mult(
+                      vecNormal,
+                      mouseTouchFactor *
+                        mouseRepelFactor *
+                        m_min(magnitude, max)
+                    );
                   } else if (bodyB.isCenter) {
-
-                    magnitude = settings.centerAttractFactor * attarctiveness * (equilibriumDistance / bToA)**centerAttractExponent + longRangeCenterAttract * (bToA - equilibriumDistance)**2;
+                    magnitude =
+                      settings.centerAttractFactor *
+                        attarctiveness *
+                        (equilibriumDistance / bToA) ** centerAttractExponent +
+                      longRangeCenterAttract *
+                        (bToA - equilibriumDistance) ** 2;
 
                     if (bodyA.preventOtherAttractions) magnitude = 0;
 
-                    force = Matter.Vector.mult(vecNormal, -m_min(magnitude, max));
-
+                    force = Matter.Vector.mult(
+                      vecNormal,
+                      -m_min(magnitude, max)
+                    );
                   }
 
-                  Matter.Body.applyForce(bodyA, bodyA.position, Matter.Vector.neg(force));
+                  Matter.Body.applyForce(
+                    bodyA,
+                    bodyA.position,
+                    Matter.Vector.neg(force)
+                  );
                   Matter.Body.applyForce(bodyB, bodyB.position, force);
-
-                }
-
+                },
               ],
-
-            }
-
+            },
           });
 
           // stock it
@@ -638,112 +664,147 @@ function PhysicalBubble(settings, domElem) {
 
           // add particle to the physical world
           World.add(world, particle);
-
         }
 
         // attactive fixed particle in the center
         const centerRadius = 10;
-        centerBody = Bodies.circle(settings.center.xRatio * WIDTH, settings.center.yRatio * HEIGHT, centerRadius, {isStatic: true, isCenter: true});
+        centerBody = Bodies.circle(
+          settings.center.xRatio * WIDTH,
+          settings.center.yRatio * HEIGHT,
+          centerRadius,
+          { isStatic: true, isCenter: true }
+        );
 
         // add the center to the world
         World.add(world, centerBody);
 
         // create a body for the mouse
-        const mouseBody = Bodies.circle(0, 0, mouseRadius, {isStatic: true, isMouse: true});
+        const mouseBody = Bodies.circle(0, 0, mouseRadius, {
+          isStatic: true,
+          isMouse: true,
+        });
 
         // add the mouse body to the world
         World.add(world, mouseBody);
 
         // add mouse control
-        Events.on(engine, 'afterUpdate', function() {
+        Events.on(engine, 'afterUpdate', function () {
           if (!mouse.position.x) return;
           Body.translate(mouseBody, {
             x: (mouse.position.x - mouseBody.position.x) * mouseEasingFactor,
-            y: (mouse.position.y - mouseBody.position.y) * mouseEasingFactor
+            y: (mouse.position.y - mouseBody.position.y) * mouseEasingFactor,
           });
         });
 
         const boundsOpt = { isStatic: true, angle: 0 };
 
         if (settings.hasBoundaries) {
-
           const k = 100;
 
-          boundaries.push(Bodies.rectangle(settings.boundaries.right.wRatio*WIDTH + settings.boundaries.right.offset, 0, boundaryThickness, 2*HEIGHT, boundsOpt));
-          boundaries.push(Bodies.rectangle(0, settings.boundaries.bottom.hRatio*HEIGHT + settings.boundaries.bottom.offset, 2*WIDTH, boundaryThickness, boundsOpt));
-          boundaries.push(Bodies.rectangle(settings.boundaries.right.wRatio*WIDTH + settings.boundaries.right.offset - k, settings.boundaries.bottom.hRatio*HEIGHT + settings.boundaries.bottom.offset - k, 4*k, boundaryThickness, boundsOpt));
+          boundaries.push(
+            Bodies.rectangle(
+              settings.boundaries.right.wRatio * WIDTH +
+                settings.boundaries.right.offset,
+              0,
+              boundaryThickness,
+              2 * HEIGHT,
+              boundsOpt
+            )
+          );
+          boundaries.push(
+            Bodies.rectangle(
+              0,
+              settings.boundaries.bottom.hRatio * HEIGHT +
+                settings.boundaries.bottom.offset,
+              2 * WIDTH,
+              boundaryThickness,
+              boundsOpt
+            )
+          );
+          boundaries.push(
+            Bodies.rectangle(
+              settings.boundaries.right.wRatio * WIDTH +
+                settings.boundaries.right.offset -
+                k,
+              settings.boundaries.bottom.hRatio * HEIGHT +
+                settings.boundaries.bottom.offset -
+                k,
+              4 * k,
+              boundaryThickness,
+              boundsOpt
+            )
+          );
 
           World.add(world, boundaries);
-
         }
-
       },
 
-      setParticleRadius: function(radiusValue) {
-
+      setParticleRadius: function (radiusValue) {
         var i = numParticles;
         while (i--) {
           const particle_i = particles[i];
-          Body.scale(particle_i, radiusValue/particle_i.circleRadius, radiusValue/particle_i.circleRadius);
+          Body.scale(
+            particle_i,
+            radiusValue / particle_i.circleRadius,
+            radiusValue / particle_i.circleRadius
+          );
         }
-
       },
 
-      updatePhysics: function() {
-
+      updatePhysics: function () {
         Engine.update(engine);
 
         if (settings.hasBoundaries && checkBoundaries) {
-
           var i = numParticles;
           while (i--) {
             const particle_i = particles[i];
-            if (particle_i.position.x >= settings.boundaries.right.wRatio*WIDTH + settings.boundaries.right.offset + boundaryThickness
-            || particle_i.position.y >= settings.boundaries.bottom.hRatio*HEIGHT + settings.boundaries.bottom.offset + boundaryThickness) {
+            if (
+              particle_i.position.x >=
+                settings.boundaries.right.wRatio * WIDTH +
+                  settings.boundaries.right.offset +
+                  boundaryThickness ||
+              particle_i.position.y >=
+                settings.boundaries.bottom.hRatio * HEIGHT +
+                  settings.boundaries.bottom.offset +
+                  boundaryThickness
+            ) {
               Body.translate(particle_i, {
-                x: -boundaryThickness - settings.boundaries.right.offset/2,
-                y: -boundaryThickness - settings.boundaries.bottom.offset/2,
+                x: -boundaryThickness - settings.boundaries.right.offset / 2,
+                y: -boundaryThickness - settings.boundaries.bottom.offset / 2,
               });
             }
           }
-
         }
-
       },
 
-      updateTwo: function() {
-
-        particles.forEach(function(particle) {
-
+      updateTwo: function () {
+        particles.forEach(function (particle) {
           particle.position = particle.shape.translation;
-
         });
-
       },
 
-      resizeWorld: function(oldW, oldH) {
+      resizeWorld: function (oldW, oldH) {
         Body.translate(centerBody, {
-          x: centerBody.position.x * (WIDTH/oldW-1),
-          y: centerBody.position.y * (HEIGHT/oldH-1),
+          x: centerBody.position.x * (WIDTH / oldW - 1),
+          y: centerBody.position.y * (HEIGHT / oldH - 1),
         });
-        particles.forEach(function(particle) {
+        particles.forEach(function (particle) {
           Body.translate(particle, {
-            x: particle.position.x * (WIDTH/oldW-1),
-            y: particle.position.y * (HEIGHT/oldH-1),
+            x: particle.position.x * (WIDTH / oldW - 1),
+            y: particle.position.y * (HEIGHT / oldH - 1),
           });
         });
         if (settings.hasBoundaries) {
-          boundaries.forEach(function(boundary) {
+          boundaries.forEach(function (boundary) {
             Body.translate(boundary, {
-              x: boundary.position.x * (WIDTH/oldW-1),
-              y: boundary.position.y * (HEIGHT/oldH-1)
+              x: boundary.position.x * (WIDTH / oldW - 1),
+              y: boundary.position.y * (HEIGHT / oldH - 1),
             });
           });
         }
       },
 
-      setupWebGLmetaballs: function() {
-
+      setupWebGLmetaballs: function () {
         /***********
          * Shaders *
          ***********/
@@ -761,17 +822,20 @@ function PhysicalBubble(settings, domElem) {
           return shader;
         }
 
-        var vertexShader = compileShader(`//glsl
+        var vertexShader = compileShader(
+          `//glsl
           attribute vec2 position;
           void main() {
               // position specifies only x and y. We set z to be 0.0, and w to be 1.0
               gl_Position = vec4(position, 0.0, 1.0);
           }
-        `, gl.VERTEX_SHADER);
+        `,
+          gl.VERTEX_SHADER
+        );
 
         try {
-
-          var fragmentShader = compileShader(`//glsl
+          var fragmentShader = compileShader(
+            `//glsl
 
             precision highp float;
             uniform vec3 metaballs[${numParticles}];
@@ -814,13 +878,13 @@ function PhysicalBubble(settings, domElem) {
 
                 gl_FragColor = vec4((1.0-f)*bgcolor[0]+f*color[0], (1.0-f)*bgcolor[1]+f*color[1], (1.0-f)*bgcolor[2]+f*color[2], 1.0);
             }
-          `, gl.FRAGMENT_SHADER);
-
+          `,
+            gl.FRAGMENT_SHADER
+          );
         } catch (err) {
-
-          if (err.message.indexOf('too many uniforms') !== -1) bubble.removeParticles(10);
+          if (err.message.indexOf('too many uniforms') !== -1)
+            bubble.removeParticles(10);
           return;
-
         }
 
         var program = gl.createProgram();
@@ -846,10 +910,14 @@ function PhysicalBubble(settings, domElem) {
         // gl.TRIANGLE_STRIP, we draw triangle ABC and BCD.
         /* eslint-disable indent, no-multi-spaces */
         var vertexData = new Float32Array([
-          -1.0,  1.0, // top left (A)
-          -1.0, -1.0, // bottom left (B)
-           1.0,  1.0, // top right (C)
-           1.0, -1.0, // bottom right (D)
+          -1.0,
+          1.0, // top left (A)
+          -1.0,
+          -1.0, // bottom left (B)
+          1.0,
+          1.0, // top right (C)
+          1.0,
+          -1.0, // bottom right (D)
         ]);
         /* eslint-enable indent, no-multi-spaces */
         var vertexDataBuffer = gl.createBuffer();
@@ -903,25 +971,25 @@ function PhysicalBubble(settings, domElem) {
         randomRadiusFactorHandle = getUniformLocation(program, 'rdmfactor');
         blobColorHandle = getUniformLocation(program, 'color');
         bgColorHandle = getUniformLocation(program, 'bgcolor');
-
       },
 
-      transferToGPU: function() {
+      transferToGPU: function () {
         // To send the data to the GPU, we first need to flatten our data into a single array.
         const dataToSendToGPU = new Float32Array(3 * numParticles);
-        for (var i=0; i < numParticles; i++) {
+        for (var i = 0; i < numParticles; i++) {
           var baseIndex = 3 * i;
           var particle = particles[i];
           dataToSendToGPU[baseIndex + 0] = renderFactor * particle.position.x;
-          dataToSendToGPU[baseIndex + 1] = renderFactor * (HEIGHT-particle.position.y);
+          dataToSendToGPU[baseIndex + 1] =
+            renderFactor * (HEIGHT - particle.position.y);
           dataToSendToGPU[baseIndex + 2] = particle.additionalRadiusFactor;
         }
 
         const colorData = new Float32Array(3);
         const bgcolorData = new Float32Array(3);
-        for (i=0; i<3; i++) {
-          colorData[i] = settings.blobColor[i]/255;
-          bgcolorData[i] = settings.bgColor[i]/255;
+        for (i = 0; i < 3; i++) {
+          colorData[i] = settings.blobColor[i] / 255;
+          bgcolorData[i] = settings.bgColor[i] / 255;
         }
 
         gl.uniform3fv(metaballsHandle, dataToSendToGPU);
@@ -934,73 +1002,71 @@ function PhysicalBubble(settings, domElem) {
         gl.uniform3fv(bgColorHandle, bgcolorData);
 
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-
       },
 
-      removeViewHelper: function(particle, specialCallback) {
+      removeViewHelper: function (particle, specialCallback) {
         if (particle.view) {
-          particle.view.hide(function() {
+          particle.view.hide(function () {
             if (!particle.view.duplicate) leftLabels.push(particle.view.label);
             particle.view = null;
-            if (specialCallback && typeof specialCallback === 'function') specialCallback();
+            if (specialCallback && typeof specialCallback === 'function')
+              specialCallback();
           });
         }
       },
 
-      checkIsolatedParticles: function() {
-
+      checkIsolatedParticles: function () {
         // only 'settings.maxNeighbours' neighbours is an isolated particle
 
         isolatedParticles = [];
 
         var i = numParticles;
         while (i--) {
-
           const particle_i = particles[i];
           const x_i = particle_i.position.x;
           const y_i = particle_i.position.y;
 
           // particle must be in viewport (takinng into account its mean viewRadius), otherwise no need to check it
-          if (x_i < WIDTH+4*effectiveCheckRadius && y_i < HEIGHT+2*effectiveCheckRadius) {
+          if (
+            x_i < WIDTH + 4 * effectiveCheckRadius &&
+            y_i < HEIGHT + 2 * effectiveCheckRadius
+          ) {
             var neighbours = 0;
 
             var j = numParticles;
             while (j--) {
-
               if (j !== i) {
                 const particle_j = particles[j];
-                const d2_ij = (x_i - particle_j.position.x)**2 + (y_i - particle_j.position.y)**2;
-                if (d2_ij < 4*effectiveCheckRadiusPow2) {
+                const d2_ij =
+                  (x_i - particle_j.position.x) ** 2 +
+                  (y_i - particle_j.position.y) ** 2;
+                if (d2_ij < 4 * effectiveCheckRadiusPow2) {
                   neighbours += 1;
                 }
               }
             }
 
-            if (neighbours <= maxNeighbours || (particle_i.view && particle_i.view.hiding)) isolatedParticles.push(particle_i);
+            if (
+              neighbours <= maxNeighbours ||
+              (particle_i.view && particle_i.view.hiding)
+            )
+              isolatedParticles.push(particle_i);
             else bubble.removeViewHelper(particle_i);
-
           } else {
-
             bubble.removeViewHelper(particle_i);
-
           }
         }
 
         return isolatedParticles;
-
       },
 
-      showIsolatedParticles: function() {
-
+      showIsolatedParticles: function () {
         var i = isolatedParticles.length;
         while (i--) {
-
           const isolatedParticle = isolatedParticles[i];
 
           if (!isolatedParticle.view) {
-
             if (!isolatedParticle.preventNewView) {
-
               const rdm = randomArrayElement(leftLabels, true);
               var label = rdm.element;
               var duplicate = false;
@@ -1013,98 +1079,125 @@ function PhysicalBubble(settings, domElem) {
 
               const view = new IsolatedParticleView(domElem, label, duplicate);
               view.show();
-              view.setPosition({x: isolatedParticle.position.x, y: isolatedParticle.position.y});
+              view.setPosition({
+                x: isolatedParticle.position.x,
+                y: isolatedParticle.position.y,
+              });
               isolatedParticle.view = view;
-
             }
-
           } else {
-
-            isolatedParticle.view.setPosition({x: isolatedParticle.position.x, y: isolatedParticle.position.y});
-
+            isolatedParticle.view.setPosition({
+              x: isolatedParticle.position.x,
+              y: isolatedParticle.position.y,
+            });
           }
-
         }
-
       },
 
-      open: function(callback) {
+      open: function (callback) {
+        actionStack
+          .remove(['close', 'close-2', 'breath'])
+          .add({
+            name: 'open',
+            object: settings,
+            ref: 'particleAuraRadius',
+            to: m_max(WIDTH, HEIGHT) / 4,
+            easing: 0.02,
 
-        actionStack.remove(['close', 'close-2', 'breath']).add({
-          name: 'open',
-          object: settings,
-          ref: 'particleAuraRadius',
-          to: m_max(WIDTH, HEIGHT)/4,
-          easing: 0.02,
+            checkCompletion: function () {
+              var complete = true;
+              const theColor = settings.blobColor;
 
-          checkCompletion: function() {
+              var pixelTL = new Uint8Array(4);
+              gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixelTL);
 
-            var complete = true;
-            const theColor = settings.blobColor;
+              var pixelTR = new Uint8Array(4);
+              gl.readPixels(
+                gl.drawingBufferWidth - 1,
+                0,
+                1,
+                1,
+                gl.RGBA,
+                gl.UNSIGNED_BYTE,
+                pixelTR
+              );
 
-            var pixelTL = new Uint8Array(4);
-            gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixelTL);
+              var pixelBL = new Uint8Array(4);
+              gl.readPixels(
+                0,
+                gl.drawingBufferHeight - 1,
+                1,
+                1,
+                gl.RGBA,
+                gl.UNSIGNED_BYTE,
+                pixelBL
+              );
 
-            var pixelTR = new Uint8Array(4);
-            gl.readPixels(gl.drawingBufferWidth-1, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixelTR);
+              var pixelBR = new Uint8Array(4);
+              gl.readPixels(
+                gl.drawingBufferWidth - 1,
+                gl.drawingBufferHeight - 1,
+                1,
+                1,
+                gl.RGBA,
+                gl.UNSIGNED_BYTE,
+                pixelBR
+              );
 
-            var pixelBL = new Uint8Array(4);
-            gl.readPixels(0, gl.drawingBufferHeight-1, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixelBL);
-
-            var pixelBR = new Uint8Array(4);
-            gl.readPixels(gl.drawingBufferWidth-1, gl.drawingBufferHeight-1, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixelBR);
-
-            for (let i=0; i<3; i++) {
-              if (pixelTL[i] !== theColor[i] || pixelTR[i] !== theColor[i] || pixelBL[i] !== theColor[i] || pixelBR[i] !== theColor[i]) {
-                complete = false;
+              for (let i = 0; i < 3; i++) {
+                if (
+                  pixelTL[i] !== theColor[i] ||
+                  pixelTR[i] !== theColor[i] ||
+                  pixelBL[i] !== theColor[i] ||
+                  pixelBR[i] !== theColor[i]
+                ) {
+                  complete = false;
+                }
               }
-            }
 
-            return complete;
+              return complete;
+            },
 
-          },
-
-          done: function() {
-            bubble.stop();
-            setBodyBg(settings.blobColor);
-            if (callback && typeof callback === 'function') callback();
-          }
-        }).add({
-          name: 'open-2',
-          object: settings,
-          ref: 'soothingFactor',
-          to: 1,
-          easing: 0.1,
-        });
-
+            done: function () {
+              bubble.stop();
+              setBodyBg(settings.blobColor);
+              if (callback && typeof callback === 'function') callback();
+            },
+          })
+          .add({
+            name: 'open-2',
+            object: settings,
+            ref: 'soothingFactor',
+            to: 1,
+            easing: 0.1,
+          });
       },
 
-      close: function(callback) {
-
-        actionStack.remove(['open', 'open-2', 'breath']).add({
-          name: 'close',
-          object: settings,
-          ref: 'particleAuraRadius',
-          to: initialParticleAuraRadius,
-          easing: 0.1,
-          completePercent: 0.99,
-          done: callback
-        }).add({
-          name: 'close-2',
-          object: settings,
-          ref: 'soothingFactor',
-          to: initialSoothingFactor,
-          easing: 0.05,
-        });
+      close: function (callback) {
+        actionStack
+          .remove(['open', 'open-2', 'breath'])
+          .add({
+            name: 'close',
+            object: settings,
+            ref: 'particleAuraRadius',
+            to: initialParticleAuraRadius,
+            easing: 0.1,
+            completePercent: 0.99,
+            done: callback,
+          })
+          .add({
+            name: 'close-2',
+            object: settings,
+            ref: 'soothingFactor',
+            to: initialSoothingFactor,
+            easing: 0.05,
+          });
 
         bubble.start({ appear: false });
-
       },
 
-      start: function(options) {
-
+      start: function (options) {
         if (options.appear) {
-
           settings.particleAuraRadius = 0;
 
           actionStack.add({
@@ -1115,25 +1208,24 @@ function PhysicalBubble(settings, domElem) {
             easing: 0.1,
             completePercent: 0.99,
           });
-
         }
 
         started = true;
         raf(tick);
-
       },
 
-      stop: function() {
-
+      stop: function () {
         started = false;
-
       },
 
-      breath: function(value) {
-
+      breath: function (value) {
         const to = projectsOn
-          ? projectsParticleRadius + 0.5*((maxBreath + 40)*value + (maxBreath - 40))*value
-          : initialParticleAuraRadius + 0.5*((maxBreath + minBreath)*value + (maxBreath - minBreath))*value;
+          ? projectsParticleRadius +
+            0.5 * ((maxBreath + 40) * value + (maxBreath - 40)) * value
+          : initialParticleAuraRadius +
+            0.5 *
+              ((maxBreath + minBreath) * value + (maxBreath - minBreath)) *
+              value;
 
         actionStack.remove(['breath']).add({
           name: 'breath',
@@ -1143,47 +1235,44 @@ function PhysicalBubble(settings, domElem) {
           easing: 0.05,
           completePercent: 0.99,
         });
-
       },
 
-      changeColor: function(ref, newColor) {
-
+      changeColor: function (ref, newColor) {
         var colorArray;
 
         if (typeof newColor === 'string') colorArray = hexToArray(newColor);
         else if (newColor instanceof Array) colorArray = newColor;
         else throw new Error('changeBgColor needs a hex color or an rgb array');
 
-        actionStack.remove(['change-'+ref+'-color']).add({
-          name: 'change-'+ref+'-color',
+        actionStack.remove(['change-' + ref + '-color']).add({
+          name: 'change-' + ref + '-color',
           object: settings,
           ref: ref,
           to: colorArray,
           easing: 0.1,
           completePercent: 0.99,
         });
-
       },
 
-      removeAllIsolatedHelper: function() {
+      removeAllIsolatedHelper: function () {
         // remove all isolated label view and prevent new view
         preventCheckIsolated = true;
         const numIsolatedParticles = isolatedParticles.length;
         if (numIsolatedParticles === 0) settings.showIsolated = false;
         var count = 0;
-        isolatedParticles.forEach(function(isolatedParticle) {
+        isolatedParticles.forEach(function (isolatedParticle) {
           if (isolatedParticle.view) {
             isolatedParticle.preventNewView = true;
-            bubble.removeViewHelper(isolatedParticle, function() {
+            bubble.removeViewHelper(isolatedParticle, function () {
               count++;
-              if (count === numIsolatedParticles-1) settings.showIsolated = false;
+              if (count === numIsolatedParticles - 1)
+                settings.showIsolated = false;
             });
           }
         });
       },
 
-      projectsModeOn: function() {
-
+      projectsModeOn: function () {
         mouse.position.x = -100;
         mouse.position.y = -100;
 
@@ -1197,7 +1286,11 @@ function PhysicalBubble(settings, domElem) {
         i = numParticles;
         while (projectParticles.length < numProjects && i--) {
           const particle_i = particles[i];
-          if (particle_i.view && particle_i.position.x <= WIDTH && particle_i.position.y <= HEIGHT) {
+          if (
+            particle_i.view &&
+            particle_i.position.x <= WIDTH &&
+            particle_i.position.y <= HEIGHT
+          ) {
             particle_i.isProject = true;
             projectParticles.push(particle_i);
           }
@@ -1206,7 +1299,11 @@ function PhysicalBubble(settings, domElem) {
         i = numParticles;
         while (projectParticles.length < numProjects && i--) {
           const particle_i = particles[i];
-          if (!particle_i.isProject && particle_i.position.x <= WIDTH && particle_i.position.y <= HEIGHT) {
+          if (
+            !particle_i.isProject &&
+            particle_i.position.x <= WIDTH &&
+            particle_i.position.y <= HEIGHT
+          ) {
             particle_i.isProject = true;
             projectParticles.push(particle_i);
           }
@@ -1216,7 +1313,12 @@ function PhysicalBubble(settings, domElem) {
         i = numParticles;
         while (projectParticles.length < numProjects && i--) {
           const particle_i = particles[i];
-          if (!particle_i.isProject && particle_i.view && particle_i.position.x > WIDTH && particle_i.position.y > HEIGHT) {
+          if (
+            !particle_i.isProject &&
+            particle_i.view &&
+            particle_i.position.x > WIDTH &&
+            particle_i.position.y > HEIGHT
+          ) {
             particle_i.isProject = true;
             projectParticles.push(particle_i);
           }
@@ -1234,37 +1336,39 @@ function PhysicalBubble(settings, domElem) {
         // translate boundaries
         checkBoundaries = false;
         if (settings.hasBoundaries) {
-          boundaries.forEach(function(boundary) {
+          boundaries.forEach(function (boundary) {
             Body.translate(boundary, {
-              x: 2*WIDTH,
-              y: 2*HEIGHT
+              x: 2 * WIDTH,
+              y: 2 * HEIGHT,
             });
           });
         }
 
-        actionStack.remove(['center-go-back-x', 'center-go-back-y']).add({
-          name: 'center-go-far-x',
-          object: centerBody.position,
-          ref: 'x',
-          to: 2*WIDTH,
-          easing: 0.05,
-          completePercent: 0.9,
-        }).add({
-          name: 'center-go-far-y',
-          object: centerBody.position,
-          ref: 'y',
-          to: 2*HEIGHT,
-          easing: 0.05,
-          completePercent: 0.9,
-        });
+        actionStack
+          .remove(['center-go-back-x', 'center-go-back-y'])
+          .add({
+            name: 'center-go-far-x',
+            object: centerBody.position,
+            ref: 'x',
+            to: 2 * WIDTH,
+            easing: 0.05,
+            completePercent: 0.9,
+          })
+          .add({
+            name: 'center-go-far-y',
+            object: centerBody.position,
+            ref: 'y',
+            to: 2 * HEIGHT,
+            easing: 0.05,
+            completePercent: 0.9,
+          });
 
         settings.centerAttractExponent = 2;
         settings.longRangeCenterAttract = 10;
 
         bubble.removeAllIsolatedHelper();
 
-        projectParticles.forEach(function(particle, i) {
-
+        projectParticles.forEach(function (particle, i) {
           // attach a project
           particle.project = settings.projects[i];
 
@@ -1274,7 +1378,9 @@ function PhysicalBubble(settings, domElem) {
           // set it a constraint attractor at required position
           const pos = bubble.hexagonCenterPosition(i);
 
-          const attachedCenter = Bodies.circle(pos.x, pos.y, 0.1, {isStatic: true});
+          const attachedCenter = Bodies.circle(pos.x, pos.y, 0.1, {
+            isStatic: true,
+          });
 
           particle.itsAttachedCenter = attachedCenter;
 
@@ -1283,11 +1389,11 @@ function PhysicalBubble(settings, domElem) {
           const constraint = Constraint.create({
             bodyA: particle,
             bodyB: attachedCenter,
-            pointA: {x: 0, y: 0},
-            pointB: {x: 0, y: 0},
+            pointA: { x: 0, y: 0 },
+            pointB: { x: 0, y: 0 },
             length: 0,
             stiffness: 0.01,
-            damping: 0.001
+            damping: 0.001,
           });
 
           particle.itsConstraint = constraint;
@@ -1296,7 +1402,6 @@ function PhysicalBubble(settings, domElem) {
 
           // reverse mouse constraint
           mouseRepelFactor = -0.1;
-
         });
 
         // change rendering of the particles
@@ -1310,28 +1415,34 @@ function PhysicalBubble(settings, domElem) {
         });
 
         projectsOn = true;
-
       },
 
-      hexagonCenterPosition: function(i) {
-
+      hexagonCenterPosition: function (i) {
         const numProjects = settings.projects.length;
         const marginLR = WIDTH > 400 ? 80 : 40;
         const marginTop = WIDTH > 400 ? 120 : WIDTH <= 340 ? 60 : 80;
-        const marginBot = WIDTH > 400 ? 150: 60;
-        const rawNumLines = m_sqrt(((HEIGHT-marginTop-marginBot)/m_sin(PI/3))/(WIDTH-2*marginLR)*numProjects);
-        const rawNumCols = numProjects/rawNumLines;
+        const marginBot = WIDTH > 400 ? 150 : 60;
+        const rawNumLines = m_sqrt(
+          ((HEIGHT - marginTop - marginBot) /
+            m_sin(PI / 3) /
+            (WIDTH - 2 * marginLR)) *
+            numProjects
+        );
+        const rawNumCols = numProjects / rawNumLines;
         var numLines = m_floor(rawNumLines);
         var numCols = m_floor(rawNumCols);
         var distance;
 
         while (numLines * numCols < numProjects) {
-          if (m_abs(numLines * (numCols+1) - numProjects) < m_abs((numLines+1) * numCols - numProjects)) {
+          if (
+            m_abs(numLines * (numCols + 1) - numProjects) <
+            m_abs((numLines + 1) * numCols - numProjects)
+          ) {
             numCols++;
-            distance = (WIDTH-2*marginLR)/numCols;
+            distance = (WIDTH - 2 * marginLR) / numCols;
           } else {
             numLines++;
-            distance = ((HEIGHT-marginTop-marginBot)/numLines);
+            distance = (HEIGHT - marginTop - marginBot) / numLines;
           }
         }
 
@@ -1340,77 +1451,76 @@ function PhysicalBubble(settings, domElem) {
           numCols--;
         }
 
-        const extraMarginLeft = ((WIDTH - 2*marginLR) - (numCols - 0.5) * distance) / 2;
-        const extraMarginTop = ((HEIGHT-marginTop-marginBot) - (numLines - 1) * distance * m_sin(PI/3))/2;
+        const extraMarginLeft =
+          (WIDTH - 2 * marginLR - (numCols - 0.5) * distance) / 2;
+        const extraMarginTop =
+          (HEIGHT -
+            marginTop -
+            marginBot -
+            (numLines - 1) * distance * m_sin(PI / 3)) /
+          2;
 
-        const iLine = m_floor(i/numCols);
+        const iLine = m_floor(i / numCols);
 
-        const x = extraMarginLeft + marginLR + (i%numCols + iLine%2/2) * distance;
-        const y = extraMarginTop + marginTop + iLine * distance*m_sin(PI/3);
+        const x =
+          extraMarginLeft +
+          marginLR +
+          ((i % numCols) + (iLine % 2) / 2) * distance;
+        const y = extraMarginTop + marginTop + iLine * distance * m_sin(PI / 3);
 
         return {
           x: x,
-          y: y
+          y: y,
         };
-
       },
 
-      updateHexagonCenterPositions: function() {
-
-
-        projectParticles.forEach(function(particle, i) {
-
+      updateHexagonCenterPositions: function () {
+        projectParticles.forEach(function (particle, i) {
           try {
-
             const pos = bubble.hexagonCenterPosition(i);
             particle.itsConstraint.damping = 0;
             particle.itsAttachedCenter.position.x = pos.x;
             particle.itsAttachedCenter.position.y = pos.y;
-
           } catch (e) {
-
             // silence is golden
-
           }
-
         });
-
       },
 
-      showPojectsParticles: function() {
-
+      showPojectsParticles: function () {
         var i = projectParticles.length;
         while (i--) {
-
           try {
-
             const projectParticle = projectParticles[i];
 
-            if (!projectParticle.projectView && projectParticle.itsAttachedCenter) {
-
-              const projectView = new ProjectParticleView(domElem, projectParticle.project, projectParticle.itsAttachedCenter.position);
+            if (
+              !projectParticle.projectView &&
+              projectParticle.itsAttachedCenter
+            ) {
+              const projectView = new ProjectParticleView(
+                domElem,
+                projectParticle.project,
+                projectParticle.itsAttachedCenter.position
+              );
               projectView.show();
-              projectView.setPosition({x: projectParticle.position.x, y: projectParticle.position.y});
+              projectView.setPosition({
+                x: projectParticle.position.x,
+                y: projectParticle.position.y,
+              });
               projectParticle.projectView = projectView;
-
             } else {
-
-              projectParticle.projectView.setPosition({x: projectParticle.position.x, y: projectParticle.position.y});
-
+              projectParticle.projectView.setPosition({
+                x: projectParticle.position.x,
+                y: projectParticle.position.y,
+              });
             }
-
           } catch (e) {
-
             // silence is golden
-
           }
-
         }
-
       },
 
-      projectsModeOff: function() {
-
+      projectsModeOff: function () {
         // renderGPU = true;
 
         preventCheckIsolated = false;
@@ -1419,19 +1529,18 @@ function PhysicalBubble(settings, domElem) {
         const numProjectParticles = projectParticles.length;
         var count = 0;
 
-        particles.forEach(function(particle) {
+        particles.forEach(function (particle) {
           // reset big center attractor
           particle.preventOtherAttractions = false;
         });
 
-        projectParticles.forEach(function(particle) {
-
+        projectParticles.forEach(function (particle) {
           particle.isProject = false;
 
           // remove view
           if (particle.projectView) {
             particle.projectView.off();
-            particle.projectView.hide(function() {
+            particle.projectView.hide(function () {
               particle.projectView = null;
               count++;
               if (count === numProjectParticles) projectsOn = false;
@@ -1439,7 +1548,7 @@ function PhysicalBubble(settings, domElem) {
           }
 
           // reset new view
-          setTimeout(function() {
+          setTimeout(function () {
             particle.preventNewView = false;
           }, 1000);
 
@@ -1451,38 +1560,40 @@ function PhysicalBubble(settings, domElem) {
 
           // reset mouse constraint
           mouseRepelFactor = 1;
-
         });
 
-        actionStack.remove(['center-go-far-x', 'center-go-far-y']).add({
-          name: 'center-go-back-x',
-          object: centerBody.position,
-          ref: 'x',
-          to: settings.center.xRatio*WIDTH,
-          easing: 0.05,
-          completePercent: 0.99,
-        }).add({
-          name: 'center-go-back-y',
-          object: centerBody.position,
-          ref: 'y',
-          to: settings.center.yRatio*HEIGHT,
-          easing: 0.05,
-          completePercent: 0.99,
-          done: function() {
-            settings.centerAttractExponent = savedCenterAttractExponent;
-            settings.longRangeCenterAttract = savedLongRangeCenterAttract;
-            // reset boundaries
-            checkBoundaries = true;
-            if (settings.hasBoundaries) {
-              boundaries.forEach(function(boundary) {
-                Body.translate(boundary, {
-                  x: -2*WIDTH,
-                  y: -2*HEIGHT
+        actionStack
+          .remove(['center-go-far-x', 'center-go-far-y'])
+          .add({
+            name: 'center-go-back-x',
+            object: centerBody.position,
+            ref: 'x',
+            to: settings.center.xRatio * WIDTH,
+            easing: 0.05,
+            completePercent: 0.99,
+          })
+          .add({
+            name: 'center-go-back-y',
+            object: centerBody.position,
+            ref: 'y',
+            to: settings.center.yRatio * HEIGHT,
+            easing: 0.05,
+            completePercent: 0.99,
+            done: function () {
+              settings.centerAttractExponent = savedCenterAttractExponent;
+              settings.longRangeCenterAttract = savedLongRangeCenterAttract;
+              // reset boundaries
+              checkBoundaries = true;
+              if (settings.hasBoundaries) {
+                boundaries.forEach(function (boundary) {
+                  Body.translate(boundary, {
+                    x: -2 * WIDTH,
+                    y: -2 * HEIGHT,
+                  });
                 });
-              });
-            }
-          }
-        });
+              }
+            },
+          });
 
         // reset particleAuraRadius
         actionStack.remove(['breath', 'fade-out']).add({
@@ -1493,21 +1604,18 @@ function PhysicalBubble(settings, domElem) {
           easing: 0.1,
           completePercent: 0.99,
         });
-
       },
 
-      kill: function() {
+      kill: function () {
         started = false;
         World.clear(world);
         Engine.clear(engine);
         removeRenderer();
       },
 
-      removeParticles: function(quantity, adjustThreshold) {
-
-
-        var i = numParticles-1;
-        var left = quantity-1;
+      removeParticles: function (quantity, adjustThreshold) {
+        var i = numParticles - 1;
+        var left = quantity - 1;
         while (left && i) {
           if (!particles[i].isProject) {
             bubble.removeViewHelper(particles[i]);
@@ -1519,17 +1627,21 @@ function PhysicalBubble(settings, domElem) {
         }
 
         numParticles = numParticles - quantity;
-        if (adjustThreshold) settings.threshold = 1/numParticles;
+        if (adjustThreshold) settings.threshold = 1 / numParticles;
 
         const oldStyle = document.body.getAttribute('style');
-        document.body.setAttribute('style', 'background-image: url('+canvas.toDataURL()+');');
-        setTimeout(() => { document.body.setAttribute('style', oldStyle); }, 500);
+        document.body.setAttribute(
+          'style',
+          'background-image: url(' + canvas.toDataURL() + ');'
+        );
+        setTimeout(() => {
+          document.body.setAttribute('style', oldStyle);
+        }, 500);
 
         removeRenderer();
         createRenderer();
         bubble.setupWebGLmetaballs();
-      }
-
+      },
     };
 
     /******************
@@ -1537,9 +1649,7 @@ function PhysicalBubble(settings, domElem) {
      ******************/
 
     function tick() {
-
       if (started) {
-
         var t0 = performance.now();
 
         actionStack.increment();
@@ -1558,7 +1668,7 @@ function PhysicalBubble(settings, domElem) {
 
         var t1 = performance.now();
 
-        if (t1-t0 > 1000/40) {
+        if (t1 - t0 > 1000 / 40) {
           // document.body.classList.add('bloated');
           window.dispatchEvent(bloatedEvent);
         }
@@ -1566,17 +1676,13 @@ function PhysicalBubble(settings, domElem) {
         // stats.end();
 
         raf(tick);
-
       }
-
     }
 
     // raf(tick);
 
-
     // window resize
-    window.addEventListener('resize', function(e) {
-
+    window.addEventListener('resize', function (e) {
       const oldW = WIDTH;
       const oldH = HEIGHT;
 
@@ -1592,58 +1698,66 @@ function PhysicalBubble(settings, domElem) {
 
       gl.viewport(0, 0, WIDTH, HEIGHT);
       gl.clear(gl.COLOR_BUFFER_BIT);
-
     });
 
     // mouse position stack
     const mouse = {
       position: {
         x: -100,
-        y: -100
-      }
+        y: -100,
+      },
     };
 
-    window.addEventListener('mousemove', function(e) {
-      mouse.position.x = e.clientX;
-      mouse.position.y = e.clientY;
-    }, { passive: true });
+    window.addEventListener(
+      'mousemove',
+      function (e) {
+        mouse.position.x = e.clientX;
+        mouse.position.y = e.clientY;
+      },
+      { passive: true }
+    );
 
-    window.addEventListener('touchmove', function(e) {
-      mouse.position.x = e.touches[0].clientX;
-      mouse.position.y = e.touches[0].clientY;
-    }, { passive: true });
+    window.addEventListener(
+      'touchmove',
+      function (e) {
+        mouse.position.x = e.touches[0].clientX;
+        mouse.position.y = e.touches[0].clientY;
+      },
+      { passive: true }
+    );
 
-    window.addEventListener('touchend', function(e) {
-      mouse.position.x = -100;
-      mouse.position.y = -100;
-    }, { passive: true });
+    window.addEventListener(
+      'touchend',
+      function (e) {
+        mouse.position.x = -100;
+        mouse.position.y = -100;
+      },
+      { passive: true }
+    );
 
     return bubble;
-
   })(window, Math);
-
 }
 
 export default {
-
   name: 'physical-bubble',
 
   props: {
     hasTouch: {
       type: Boolean,
-      default: false
+      default: false,
     },
     open: {
       type: Boolean,
-      default: false
+      default: false,
     },
     start: {
       type: Boolean,
-      default: true
+      default: true,
     },
     hide: {
       type: Boolean,
-      default: false
+      default: false,
     },
     // hideBlob: {
     //   type: Boolean,
@@ -1651,15 +1765,15 @@ export default {
     // },
     appear: {
       type: Boolean,
-      default: true
+      default: true,
     },
     breath: {
       type: Number,
-      default: 0
+      default: 0,
     },
     projectsMode: {
       type: Boolean,
-      default: false
+      default: false,
     },
     // reduce: {
     //   type: Boolean,
@@ -1667,15 +1781,15 @@ export default {
     // },
     changeBlobColor: {
       type: String,
-      default: ''
+      default: '',
     },
     numParticles: {
       type: Number,
-      default: 100
+      default: 100,
     },
     removeParticles: {
       type: Object,
-      default: null
+      default: null,
     },
     settings: Object,
   },
@@ -1683,12 +1797,11 @@ export default {
   data() {
     return {
       bubble: null,
-      isOpen: false
+      isOpen: false,
     };
   },
 
   mounted() {
-
     const defaultSettings = {
       name: '',
       timeScale: 1,
@@ -1698,7 +1811,7 @@ export default {
       randomRadiusFactor: 0.8,
       soothingFactor: 0.8,
       auraTypeMix: 0.005,
-      threshold: 1/this.numParticles,
+      threshold: 1 / this.numParticles,
       mouseRadius: 0.001,
       mouseEasingFactor: 1,
       repelExponent: 8,
@@ -1712,7 +1825,7 @@ export default {
       startRadius: 30,
       center: {
         xRatio: 0.5,
-        yRatio: 0.5
+        yRatio: 0.5,
       },
       hasBoundaries: false,
       boundaries: {
@@ -1742,30 +1855,26 @@ export default {
     this.bubble.init();
     if (settings.showGui) this.bubble.showGui();
     if (this.start) this.bubble.start({ appear: this.appear });
-
   },
 
   computed: {
-
-    bgColor: function() {
+    bgColor: function () {
       return this.settings.bgColor;
     },
 
-    showGui: function() {
+    showGui: function () {
       return this.settings.showGui;
-    }
-
+    },
   },
 
   watch: {
-
-    hasTouch: function(newVal, oldVal) {
+    hasTouch: function (newVal, oldVal) {
       if (newVal) {
         this.bubble.setHasTouch();
       }
     },
 
-    open: function(newVal, oldVal) {
+    open: function (newVal, oldVal) {
       if (newVal && !this.isOpen) {
         this.isOpen = true;
         this.bubble.open(() => {
@@ -1779,7 +1888,7 @@ export default {
       }
     },
 
-    start: function(newVal, oldVal) {
+    start: function (newVal, oldVal) {
       if (newVal) {
         this.bubble.start({ appear: this.appear });
       } else {
@@ -1787,7 +1896,7 @@ export default {
       }
     },
 
-    hide: function(newVal, oldVal) {
+    hide: function (newVal, oldVal) {
       if (newVal) {
         this.$el.classList.add('hide');
       } else {
@@ -1795,19 +1904,19 @@ export default {
       }
     },
 
-    breath: function(newVal, oldVal) {
+    breath: function (newVal, oldVal) {
       this.bubble.breath(newVal);
     },
 
-    bgColor: function(newVal, oldVal) {
+    bgColor: function (newVal, oldVal) {
       this.bubble.changeColor('bgColor', newVal);
     },
 
-    changeBlobColor: function(newVal, oldVal) {
+    changeBlobColor: function (newVal, oldVal) {
       this.bubble.changeColor('blobColor', newVal);
     },
 
-    projectsMode: function(newVal, oldVal) {
+    projectsMode: function (newVal, oldVal) {
       if (newVal) {
         this.bubble.projectsModeOn();
       } else {
@@ -1815,7 +1924,7 @@ export default {
       }
     },
 
-    showGui: function(newVal, oldVal) {
+    showGui: function (newVal, oldVal) {
       if (newVal) {
         this.bubble.showGui();
       } else {
@@ -1823,12 +1932,9 @@ export default {
       }
     },
 
-    removeParticles: function(newVal, oldVal) {
+    removeParticles: function (newVal, oldVal) {
       this.bubble.removeParticles(newVal.num, newVal.threshold);
     },
-
-  }
-
+  },
 };
-
 </script>

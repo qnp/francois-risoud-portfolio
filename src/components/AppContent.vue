@@ -1,91 +1,125 @@
 <template lang="pug">
-  #content.app-content
+#content.app-content
+  physical-bubble(
+    :open="bubbleIntro.open"
+    :appear="introAppear"
+    @end-opening="endOpeningHandler"
+    @end-closing="endClosingHandler"
+    :num-particles="bubbleIntro.numParticles"
+    :settings="bubbleIntro.settings"
+    :breath="bubbleIntro.breath"
+    :change-blob-color="bubbleIntro.changeBlobColor"
+    :has-touch="hasTouch"
+    :remove-particles="bubbleIntro.removeParticlesComunicator"
+  )
+  physical-bubble(
+    :num-particles="bubbleLanding.numParticles"
+    :settings="bubbleLanding.settings"
+    :start="bubbleLanding.start"
+    :hide="bubbleLanding.hide"
+    :breath="bubbleLanding.breath"
+    :projects-mode="bubbleLanding.projectsMode"
+    :appear="landingAppear"
+    :has-touch="hasTouch"
+    :remove-particles="bubbleLanding.removeParticlesComunicator"
+  )
 
-    physical-bubble(:open='bubbleIntro.open',:appear='introAppear',@end-opening='endOpeningHandler',@end-closing='endClosingHandler',:num-particles='bubbleIntro.numParticles',:settings='bubbleIntro.settings',:breath='bubbleIntro.breath',:change-blob-color='bubbleIntro.changeBlobColor',:has-touch='hasTouch',:remove-particles='bubbleIntro.removeParticlesComunicator')
-    physical-bubble(:num-particles='bubbleLanding.numParticles',:settings='bubbleLanding.settings',:start='bubbleLanding.start',:hide='bubbleLanding.hide',:breath='bubbleLanding.breath',:projects-mode='bubbleLanding.projectsMode',:appear='landingAppear',:has-touch='hasTouch',:remove-particles='bubbleLanding.removeParticlesComunicator')
+  .content-wrapper(:class="content.showHideClass")
+    curriculum-content(
+      :show="curriculum.show"
+      :skills-array="curriculum.skillsArray"
+      @on="curriculumOnHandler"
+      @off="curriculumOffHandler"
+      @reached-top="curriculumReachedTop"
+      @scroll="curriculumScrollHandler"
+    )
+    project-content(
+      :show="project.show"
+      :id="project.id"
+      :project="project.project"
+      :origin="project.origin"
+      :center-position="project.centerPosition"
+      :has-touch="hasTouch"
+    )
+    the-menu(:value="bubbleIntro.open" :route="route")
+    about-content(:show="about.show" :true-hide="about.trueHide")
 
-    .content-wrapper(:class='content.showHideClass')
-      curriculum-content(:show='curriculum.show',:skills-array='curriculum.skillsArray',@on='curriculumOnHandler',@off='curriculumOffHandler',@reached-top='curriculumReachedTop',@scroll='curriculumScrollHandler')
-      project-content(:show='project.show',:id='project.id',:project='project.project',:origin='project.origin',:center-position='project.centerPosition',:has-touch='hasTouch')
-      the-menu(:open='bubbleIntro.open',:route='route')
-      about-content(:show='about.show',:true-hide='about.trueHide')
-
-    a(href='/about')
-      intro-logo(:do-hide='intro.logo.doHide',:do-show='intro.logo.doShow')
-    intro-text(:do-hide='intro.text.doHide',:do-show='intro.text.doShow',:not-found='intro.text.notFound')
-
+  a(href="/about")
+    intro-logo(:do-hide="intro.logo.doHide" :do-show="intro.logo.doShow")
+  intro-text(
+    :do-hide="intro.text.doHide"
+    :do-show="intro.text.doShow"
+    :not-found="intro.text.notFound"
+  )
 </template>
-
 
 <style lang="stylus">
 
-  @import url('https://fonts.googleapis.com/css?family=Raleway:200,400,500,600,700|Quattrocento:400')
+@import url('https://fonts.googleapis.com/css?family=Raleway:200,400,500,600,700|Quattrocento:400')
 
-  html
-    height 100%
+html
+  height 100%
+  width 100%
+  overflow hidden
+
+body
+  width 100%
+  height 100%
+  overflow hidden
+  -webkit-overflow-scrolling touch
+  -webkit-font-smoothing antialiased
+  -moz-osx-font-smoothing grayscale
+  background-color $theme-color-light-blue
+  font-size 22px
+
+body.bloated
+  opacity 0.5
+
+::-moz-selection
+  background-color $select-color-bg
+  color $select-color-text
+  text-shadow none
+::selection
+  background-color $select-color-bg
+  color $select-color-text
+  text-shadow none
+
+a[href]
+  color inherit
+  text-decoration inherit
+  cursor inherit
+
+a:focus
+  outline 0 none
+a:active, a:hover
+  outline: 0 none
+
+svg
+  user-select none
+
+*
+  -webkit-tap-highlight-color rgba(0,0,0,0)
+
+.app-content
+  opacity 0
+  transition opacity 0.2s linear
+  .content-wrapper
+    pointer-events none
     width 100%
-    overflow hidden
+    max-width $content-max-width
+    margin-left auto
+    margin-right auto
+    &.show
+      display block
+    &.hide
+      display none
 
-  body
-    width 100%
-    height 100%
-    overflow hidden
-    -webkit-overflow-scrolling touch
-    -webkit-font-smoothing antialiased
-    -moz-osx-font-smoothing grayscale
-    background-color $theme-color-light-blue
-    font-size 22px
-
-  body.bloated
-    opacity 0.5
-
-  ::-moz-selection
-    background-color $select-color-bg
-    color $select-color-text
-    text-shadow none
-  ::selection
-    background-color $select-color-bg
-    color $select-color-text
-    text-shadow none
-
-  a[href]
-    color inherit
-    text-decoration inherit
-    cursor inherit
-
-  a:focus
-    outline 0 none
-  a:active, a:hover
-    outline: 0 none
-
-  svg
-    user-select none
-
-  *
-    -webkit-tap-highlight-color rgba(0,0,0,0)
-
+body.mounted
   .app-content
-    opacity 0
-    transition opacity 0.2s linear
-    .content-wrapper
-      pointer-events none
-      width 100%
-      max-width $content-max-width
-      margin-left auto
-      margin-right auto
-      &.show
-        display block
-      &.hide
-        display none
-
-  body.mounted
-    .app-content
-      opacity 1
-
+    opacity 1
 </style>
 
 <script>
-
 import PhysicalBubble from '@/components/PhysicalBubble.vue';
 import IntroLogo from '@/components/IntroLogo.vue';
 import IntroText from '@/components/IntroText.vue';
@@ -104,7 +138,7 @@ import $ from '@/assets/js/utils/$';
 
 // flatten skillsArray
 var isolatedLabels = [];
-skillsArray.forEach(function(category) {
+skillsArray.forEach(function (category) {
   isolatedLabels = isolatedLabels.concat(category.content);
 });
 
@@ -125,21 +159,16 @@ var numParticlesIntroMin = 20;
 var centerRatio = 1.05;
 
 if (window.innerWidth > 400 && window.innerWidth <= 600) {
-
   numParticlesLanding = 50;
   centerRatio = 1.1;
-
 } else if (window.innerWidth <= 400) {
-
   numParticlesLanding = numParticlesLandingMin;
   bubbleLandingSettings.attarctiveness = 60;
   bubbleLandingSettings.longRangeCenterAttract = 1;
   centerRatio = 1.3;
-
 }
 
 export default {
-
   name: 'app-content',
 
   components: {
@@ -149,18 +178,17 @@ export default {
     AboutContent,
     IntroText,
     ProjectContent,
-    CurriculumContent
+    CurriculumContent,
   },
 
   props: {
     route: {
       type: String,
-      default: 'Intro'
-    }
+      default: 'Intro',
+    },
   },
 
   data() {
-
     return {
       hasTouch: false,
       bubbleIntro: {
@@ -170,14 +198,18 @@ export default {
         breath: 0,
         changeBlobColor: '',
         numParticles: numParticlesIntro,
-        settings: Object.assign({}, {
-          name: 'intro',
-          soothingFactor: 0.02,
-          blobColor: hexToArray(darkBlue),
-          bgColor: hexToArray(lightBlue),
-          showGui: false,
-          showStats: false
-        }, bubbleIntroSettings)
+        settings: Object.assign(
+          {},
+          {
+            name: 'intro',
+            soothingFactor: 0.02,
+            blobColor: hexToArray(darkBlue),
+            bgColor: hexToArray(lightBlue),
+            showGui: false,
+            showStats: false,
+          },
+          bubbleIntroSettings
+        ),
       },
       bubbleLanding: {
         removeParticlesComunicator: null,
@@ -187,46 +219,50 @@ export default {
         breath: 0,
         projectsMode: false,
         numParticles: numParticlesLanding, // 15, // 100,
-        settings: Object.assign({}, {
-          name: 'landing',
-          timeScale: 1, // 0.8,
-          particleRadius: 1,
-          particleAuraRadius: 60,
-          randomRadiusFactor: 0,
-          soothingFactor: 0.05,
-          auraTypeMix: 0.8,
-          repelExponent: 14,
-          centerAttractExponent: 20,
-          longRangeCenterAttract: 0.5,
-          equilibriumDistance: 24,
-          attarctiveness: 50,
-          longRangeTail: 0.6,
-          startRadius: 250,
-          center: {
-            xRatio: centerRatio,
-            yRatio: centerRatio
-          },
-          showIsolated: true,
-          isolatedLabels: isolatedLabels,
-          projects: projects,
-          startPosMode: 'far',
-          hasBoundaries: true,
-          boundaries: {
-            right: {
-              wRatio: centerRatio,
-              offset: 400,
+        settings: Object.assign(
+          {},
+          {
+            name: 'landing',
+            timeScale: 1, // 0.8,
+            particleRadius: 1,
+            particleAuraRadius: 60,
+            randomRadiusFactor: 0,
+            soothingFactor: 0.05,
+            auraTypeMix: 0.8,
+            repelExponent: 14,
+            centerAttractExponent: 20,
+            longRangeCenterAttract: 0.5,
+            equilibriumDistance: 24,
+            attarctiveness: 50,
+            longRangeTail: 0.6,
+            startRadius: 250,
+            center: {
+              xRatio: centerRatio,
+              yRatio: centerRatio,
             },
-            bottom: {
-              hRatio: centerRatio,
-              offset: 400,
-            }
+            showIsolated: true,
+            isolatedLabels: isolatedLabels,
+            projects: projects,
+            startPosMode: 'far',
+            hasBoundaries: true,
+            boundaries: {
+              right: {
+                wRatio: centerRatio,
+                offset: 400,
+              },
+              bottom: {
+                hRatio: centerRatio,
+                offset: 400,
+              },
+            },
+            blobColor: hexToArray(pink),
+            bgColor: hexToArray(darkBlue),
+            maxBreath: -30,
+            minBreath: -100,
+            showGui: false,
           },
-          blobColor: hexToArray(pink),
-          bgColor: hexToArray(darkBlue),
-          maxBreath: -30,
-          minBreath: -100,
-          showGui: false,
-        }, bubbleLandingSettings)
+          bubbleLandingSettings
+        ),
       },
       content: {
         showHideClass: 'hide',
@@ -244,13 +280,13 @@ export default {
       },
       about: {
         show: false,
-        trueHide: false
+        trueHide: false,
       },
       project: {
         show: false,
         project: {},
-        origin: {x: 0, y: 0},
-        centerPosition: {x: 0, y: 0}
+        origin: { x: 0, y: 0 },
+        centerPosition: { x: 0, y: 0 },
       },
       curriculum: {
         show: false,
@@ -265,41 +301,46 @@ export default {
       waitScroll: false,
       bloatedStack: 0,
     };
-
   },
 
   computed: {
-
-    introAppear: function() {
-      return (this.route === 'Intro');
+    introAppear: function () {
+      return this.route === 'Intro';
     },
 
-    landingAppear: function() {
-      return (this.route === 'About');
-    }
-
+    landingAppear: function () {
+      return this.route === 'About';
+    },
   },
 
   mounted() {
-
     document.body.classList.add('mounted');
 
     // detect if touch event is working as supposed => touch device
     const self = this;
-    window.addEventListener('touchstart', function setHasTouch() {
-      self.hasTouch = true;
-      window.removeEventListener('touchstart', setHasTouch);
-    }, false);
+    window.addEventListener(
+      'touchstart',
+      function setHasTouch() {
+        self.hasTouch = true;
+        window.removeEventListener('touchstart', setHasTouch);
+      },
+      false
+    );
 
     // prevent fake scroll
-    window.onLoad = function() {
+    window.onLoad = function () {
       window.scrollTo(0, 1);
     };
 
     // prevent touchmove defaults on everything that hides the adress bar in chrome android
-    $('*').on({
-      touchmove: function(e) { e.preventDefault(); },
-    }, { passive: true });
+    $('*').on(
+      {
+        touchmove: function (e) {
+          e.preventDefault();
+        },
+      },
+      { passive: true }
+    );
 
     // preload images
     if (window.innerWidth <= 600) {
@@ -318,7 +359,9 @@ export default {
         }, 1000);
         break;
       }
-      case 'About': this.setAboutState(); break;
+      case 'About':
+        this.setAboutState();
+        break;
       case 'Projects': {
         this.about.trueHide = true;
         this.setProjectsState();
@@ -333,15 +376,16 @@ export default {
         this.checkBloatIntro();
         this.bubbleIntro.settings.showGui = true;
         this.intro.text.notFound = true;
-        setTimeout(() => { this.intro.text.doShow = uniqueID(); }, 500);
+        setTimeout(() => {
+          this.intro.text.doShow = uniqueID();
+        }, 500);
         break;
       }
     }
 
     var timer;
 
-    window.addEventListener('wheel', (e) => {
-
+    window.addEventListener('wheel', e => {
       let factor = 1;
       if (e.deltaMode === 1) factor = 30;
       const scrollValue = e.deltaY * factor;
@@ -353,52 +397,49 @@ export default {
       }
 
       timer = setTimeout(() => {
-
         this.scrollValueStack = 0;
         this.scrollHandler(0);
-
       }, this.scrollDateLimit);
 
       if (this.scrollValueStack >= this.scrollValueLimit) {
         this.scrollValueStack = 0;
         this.waitScroll = true;
-        setTimeout(() => { this.waitScroll = false; }, 1000);
+        setTimeout(() => {
+          this.waitScroll = false;
+        }, 1000);
         this.next(); // go to next page
       } else if (this.scrollValueStack <= -this.scrollValueLimit) {
         this.scrollValueStack = 0;
         this.waitScroll = true;
-        setTimeout(() => { this.waitScroll = false; }, 1000);
+        setTimeout(() => {
+          this.waitScroll = false;
+        }, 1000);
         this.prev(); // go to prev page
       } else if (!this.waitScroll) {
         this.scrollHandler(this.scrollValueStack / this.scrollValueLimit); // handle scroll
       }
-
     });
 
-    window.addEventListener('showproject', (e) => {
-
+    window.addEventListener('showproject', e => {
       this.project.show = true;
       this.project.id = e.detail.id;
       this.project.project = e.detail.project;
       this.project.origin = e.detail.origin;
       this.project.centerPosition = e.detail.centerPosition;
       this.bubbleLanding.settings.bgColor = e.detail.project.bgColor;
-
     });
 
-    window.addEventListener('hideproject', (e) => {
-
+    window.addEventListener('hideproject', e => {
       this.project.show = false;
-      if (this.route === 'Projects') this.bubbleLanding.settings.bgColor = darkPink;
-      else if (this.route === 'About') this.bubbleLanding.settings.bgColor = darkBlue;
-
+      if (this.route === 'Projects')
+        this.bubbleLanding.settings.bgColor = darkPink;
+      else if (this.route === 'About')
+        this.bubbleLanding.settings.bgColor = darkBlue;
     });
-
   },
 
   methods: {
-
-    bloatIntroHandler: function() {
+    bloatIntroHandler: function () {
       this.bloatedStack++;
       if (this.bloatedStack >= 7) {
         this.bloatedStack = 0;
@@ -407,22 +448,22 @@ export default {
           this.bubbleIntro.removeParticlesComunicator = {
             num: 10,
             threshold: false,
-            id: uniqueID()
+            id: uniqueID(),
           };
         }
       }
     },
 
-    checkBloatIntro: function() {
+    checkBloatIntro: function () {
       window.addEventListener('bloated-intro', this.bloatIntroHandler);
     },
 
-    uncheckBloatIntro: function() {
+    uncheckBloatIntro: function () {
       this.bloatedStack = 0;
       window.removeEventListener('bloated-intro', this.bloatIntroHandler);
     },
 
-    bloatLandingHandler: function() {
+    bloatLandingHandler: function () {
       this.bloatedStack++;
       if (this.bloatedStack >= 7) {
         this.bloatedStack = 0;
@@ -431,39 +472,37 @@ export default {
           this.bubbleLanding.removeParticlesComunicator = {
             num: 10,
             threshold: true,
-            id: uniqueID()
+            id: uniqueID(),
           };
         }
       }
     },
 
-    checkBloatLanding: function() {
+    checkBloatLanding: function () {
       window.addEventListener('bloated-landing', this.bloatLandingHandler);
     },
 
-    uncheckBloatLanding: function() {
+    uncheckBloatLanding: function () {
       this.bloatedStack = 0;
       window.removeEventListener('bloated-landing', this.bloatLandingHandler);
     },
 
-    lazyloadProjectImages: function(urlName, cb) {
-
-      var i = projects.length-1;
+    lazyloadProjectImages: function (urlName, cb) {
+      var i = projects.length - 1;
 
       function loadImage(src) {
         const img = new Image();
         img.src = src;
-        img.onload = function() {
-          if (i>0) loadImage(projects[i--][urlName]);
+        img.onload = function () {
+          if (i > 0) loadImage(projects[i--][urlName]);
           else if (cb && typeof cb === 'function') cb();
         };
       }
 
       loadImage(projects[i].imageUrl);
-
     },
 
-    setIntroState: function() {
+    setIntroState: function () {
       this.checkBloatIntro();
       this.setBodyBg(blue);
       this.bubbleIntro.open = false;
@@ -472,10 +511,12 @@ export default {
       this.bubbleLanding.settings.bgColor = darkBlue;
       this.bubbleLanding.projectsMode = false;
       this.curriculum.show = false;
-      setTimeout(() => { this.bubbleLanding.start = false; }, 500);
+      setTimeout(() => {
+        this.bubbleLanding.start = false;
+      }, 500);
     },
 
-    setAboutState: function() {
+    setAboutState: function () {
       this.checkBloatLanding();
       this.uncheckBloatIntro();
       this.setBodyBg(darkBlue);
@@ -494,7 +535,7 @@ export default {
       this.curriculum.show = false;
     },
 
-    setProjectsState: function() {
+    setProjectsState: function () {
       this.checkBloatLanding();
       this.uncheckBloatIntro();
       this.setBodyBg(darkPink);
@@ -512,7 +553,7 @@ export default {
       this.curriculum.show = false;
     },
 
-    setCurriculumState: function() {
+    setCurriculumState: function () {
       this.uncheckBloatLanding();
       this.uncheckBloatIntro();
       this.setBodyBg(blue);
@@ -528,14 +569,14 @@ export default {
       this.curriculum.show = true;
     },
 
-    endClosingHandler: function() {
+    endClosingHandler: function () {
       this.bubbleIntro.isOpen = false;
       this.intro.logo.doShow = uniqueID();
       this.intro.text.doShow = uniqueID();
       this.content.showHideClass = 'hide';
     },
 
-    endOpeningHandler: function() {
+    endOpeningHandler: function () {
       this.bubbleIntro.isOpen = true;
       this.bubbleLanding.hide = false;
       if (!this.curriculum.show) {
@@ -543,83 +584,102 @@ export default {
       }
     },
 
-    scrollHandler: function(ratio) {
-
+    scrollHandler: function (ratio) {
       switch (this.route) {
-        case 'Intro': this.bubbleIntro.breath = ratio; break;
-        case 'About': this.bubbleLanding.breath = ratio; break;
-        case 'Projects': this.bubbleLanding.breath = ratio; break;
+        case 'Intro':
+          this.bubbleIntro.breath = ratio;
+          break;
+        case 'About':
+          this.bubbleLanding.breath = ratio;
+          break;
+        case 'Projects':
+          this.bubbleLanding.breath = ratio;
+          break;
       }
-
     },
 
-    next: function() {
+    next: function () {
       if (!this.preventNavigation) {
         switch (this.route) {
-          case 'Intro': this.$router.push('/about'); break;
-          case 'About': this.$router.push('/projects'); break;
-          case 'Projects': this.$router.push('/curriculum'); break;
+          case 'Intro':
+            this.$router.push('/about');
+            break;
+          case 'About':
+            this.$router.push('/projects');
+            break;
+          case 'Projects':
+            this.$router.push('/curriculum');
+            break;
         }
         this.preventNavigationOn();
       }
     },
 
-    prev: function() {
+    prev: function () {
       if (!this.preventNavigation) {
         switch (this.route) {
-          case 'About': this.$router.push('/'); break;
-          case 'Projects': this.$router.push('/about'); break;
-          case 'Curriculum': this.$router.push('/projects'); break;
+          case 'About':
+            this.$router.push('/');
+            break;
+          case 'Projects':
+            this.$router.push('/about');
+            break;
+          case 'Curriculum':
+            this.$router.push('/projects');
+            break;
         }
         this.preventNavigationOn();
       }
     },
 
-    preventNavigationOn: function() {
+    preventNavigationOn: function () {
       if (this.navTimeout) clearTimeout(this.navTimeout);
       this.preventNavigation = true;
-      this.navTimeout = setTimeout(() => { this.preventNavigation = false; }, 2000);
+      this.navTimeout = setTimeout(() => {
+        this.preventNavigation = false;
+      }, 2000);
     },
 
-    curriculumOnHandler: function() {
+    curriculumOnHandler: function () {
       this.bubbleLanding.start = false;
     },
 
-    curriculumOffHandler: function() {
+    curriculumOffHandler: function () {
       this.bubbleLanding.start = true;
     },
 
-    curriculumReachedTop: function() {
-      setTimeout(() => { this.curriculum.isScrolling = false; }, 1000);
+    curriculumReachedTop: function () {
+      setTimeout(() => {
+        this.curriculum.isScrolling = false;
+      }, 1000);
     },
 
-    curriculumScrollHandler: function() {
+    curriculumScrollHandler: function () {
       this.curriculum.isScrolling = true;
     },
 
     setBodyBg(color) {
-      document.body.setAttribute('style', 'background-color: '+color+';');
-    }
-
+      document.body.setAttribute('style', 'background-color: ' + color + ';');
+    },
   },
 
   watch: {
-
-    route: function(newRoute, oldRoute) {
-
+    route: function (newRoute, oldRoute) {
       switch (newRoute) {
-
-        case 'Intro': this.setIntroState(); break;
-        case 'About': this.setAboutState(); break;
-        case 'Projects': this.setProjectsState(); break;
-        case 'Curriculum': this.setCurriculumState(); break;
-
+        case 'Intro':
+          this.setIntroState();
+          break;
+        case 'About':
+          this.setAboutState();
+          break;
+        case 'Projects':
+          this.setProjectsState();
+          break;
+        case 'Curriculum':
+          this.setCurriculumState();
+          break;
       }
-
-    }
-
-  }
-
+    },
+  },
 };
-
 </script>

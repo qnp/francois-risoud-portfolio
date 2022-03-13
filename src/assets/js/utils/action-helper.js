@@ -10,7 +10,6 @@ import uniqueID from '@/assets/js/utils/unique-ID.js';
 const m_abs = Math.abs;
 
 export default class ActionStack {
-
   constructor() {
     this.stack = [];
   }
@@ -33,7 +32,7 @@ export default class ActionStack {
     var i = this.stack.length;
     while (i--) {
       const action = this.stack[i];
-      actionNames.forEach((name) => {
+      actionNames.forEach(name => {
         if (action.name === name) {
           this.stack.splice(i, 1);
         }
@@ -53,13 +52,10 @@ export default class ActionStack {
     }
     return this; // chaining
   }
-
 }
 
 class Action {
-
   constructor(settings) {
-
     this.name = settings.name || uniqueID();
     this.object = settings.object;
     this.ref = settings.ref;
@@ -68,17 +64,17 @@ class Action {
     this.completePercent = settings.completePercent;
     this.done = settings.done;
 
-    if (settings.checkCompletion && typeof settings.checkCompletion === 'function') {
-
+    if (
+      settings.checkCompletion &&
+      typeof settings.checkCompletion === 'function'
+    ) {
       this.checkCompletion = settings.checkCompletion;
-
     } else {
-
-      this.checkCompletion = function() {
+      this.checkCompletion = function () {
         var val = 0;
         var to = 0;
         if (this.isArray) {
-          for (let i=0; i<this.to.length; i++) {
+          for (let i = 0; i < this.to.length; i++) {
             val += m_abs(this.object[this.ref][i] - this.to[i]);
             to += this.to[i];
           }
@@ -88,25 +84,24 @@ class Action {
           val = m_abs(this.object[this.ref] - this.to);
           to = this.to;
         }
-        return val <= (1-this.completePercent) * to;
+        return val <= (1 - this.completePercent) * to;
       };
-
     }
 
     this.isArray = this.to instanceof Array;
     this.complete = false;
-
   }
 
   increment() {
-
     if (!this.complete) {
       if (this.isArray) {
-        for (let i=0; i<this.to.length; i++) {
-          this.object[this.ref][i] += (this.to[i] - this.object[this.ref][i]) * this.easing;
+        for (let i = 0; i < this.to.length; i++) {
+          this.object[this.ref][i] +=
+            (this.to[i] - this.object[this.ref][i]) * this.easing;
         }
       } else {
-        this.object[this.ref] += (this.to - this.object[this.ref]) * this.easing;
+        this.object[this.ref] +=
+          (this.to - this.object[this.ref]) * this.easing;
       }
     }
 
@@ -116,11 +111,9 @@ class Action {
         this.done();
       }
     }
-
   }
 
   get isComplete() {
     return this.complete;
   }
-
-};
+}

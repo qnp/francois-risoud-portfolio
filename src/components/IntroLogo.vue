@@ -1,48 +1,50 @@
 <template lang="pug">
-inline-svg.intro-logo.hide(:src="svgEk")
+inline-svg.intro-logo.hide(:class="classes" :src="svgEk")
 </template>
 
 <style lang="stylus">
+$beat-scale = 1.2
+$logo-w = 2.5em
 
-  $beat-scale = 1.2
-  $logo-w = 2.5em
+.intro-logo
+  width $logo-w
+  position absolute
+  top 50%
+  left 50%
+  transform translate(-50%, -50%)
+  transition opacity 1s
 
-  .intro-logo
+  svg
     width $logo-w
-    position absolute
-    // top calc(50% + 260px)
-    top 50%
-    left 50%
-    transform translate(-50%, -50%)
-    transition opacity 1s
-    svg
-      width $logo-w
-      animation beating 15s linear infinite
-      animation-delay 10s
-    &.hide
-      pointer-events none
-      opacity 0
-    &.show
-      pointer-events auto
-      opacity 1
+    animation beating 15s linear infinite
+    animation-delay 10s
+
+  &.hide
+    pointer-events none
+    opacity 0
+
+  &.show
+    pointer-events auto
+    opacity 1
+
+  path
+    fill $theme-color-dark-blue
+
+  &:hover
     path
-      fill $theme-color-dark-blue
-      // fill none
-      // stroke $theme-color-white
-      // stroke-width 3px
-      // fill $theme-color-black
-      // fill #e2efde
-    &:hover
-      path
-        transition fill 0.5s linear
-        fill $theme-color-dark-white
+      transition fill 0.5s linear
+      fill $theme-color-dark-white
 
-  @keyframes beating
-    0%, 49%, 51%, 53%
-      transform scale(1,1)
-    50%, 52%
-      transform scale($beat-scale,$beat-scale)
+@keyframes beating
+  0%,
+  49%,
+  51%,
+  53%
+    transform scale(1, 1)
 
+  50%,
+  52%
+    transform scale($beat-scale, $beat-scale)
 </style>
 
 <script>
@@ -51,7 +53,6 @@ import svgEk from '@/assets/images/ek.svg';
 import InlineSvg from '@/components/utils/InlineSvg.vue';
 
 export default {
-
   name: 'intro-logo',
 
   components: { InlineSvg },
@@ -92,18 +93,16 @@ export default {
   },
 
   watch: {
-    doShow: function(newVal, oldVal) {
+    doShow(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.show();
       }
     },
-    doHide: function(newVal, oldVal) {
+    doHide(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.hide();
       }
-    }
-  }
-
+    },
+  },
 };
-
 </script>
