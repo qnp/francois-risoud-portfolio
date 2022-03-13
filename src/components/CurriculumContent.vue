@@ -65,11 +65,11 @@ main.curriculum(
       li.item
         .date
           .skill-tag skills
-        ul.thing
-          li.category(v-for="category in skillsArray")
-            .type {{ category.type }}
-            ul.skills
-              li(v-for="skill in category.content") {{ skill.replace("/ ", "&nbsp;") }}
+        .thing
+          span.category(v-for="category in skillsArray")
+            span.type {{ category.type }}
+            span.skills
+              span(v-for="skill in category.content") {{ skill + ', ' }}
       li.item
         .date
           .year clients
@@ -207,18 +207,14 @@ main.curriculum
         .type
           line-height 0
 
-        .category,
+        .category
+          vertical-align middle
+
         .type,
         .skills
           vertical-align middle
-          display inline
 
-          li
-            display inline
-
-            &::after
-              content '\00a0 '
-
+          > span
             &:first-child::before
               content ' '
 
