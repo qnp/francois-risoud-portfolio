@@ -1,14 +1,13 @@
 <template lang="pug">
-  main.project(:class='(show?"show":"")+" transition"+transition',:style='computedBlendModeStyle')
-    .image-wrapper(:style='computedImageWrapperStyle')
-      .image(:style='computedImageStyle')
-    .infos(:style='computedInfosStyle')
-      a(:href='theProject.url',target="_blank")
-        h1 {{ theProject.title }} - {{ theProject.type }}
-          inline-svg(src='~@/assets/images/new-window-mobile.svg')
+main.project(:class='(show?"show":"")+" transition"+transition',:style='computedBlendModeStyle')
+  .image-wrapper(:style='computedImageWrapperStyle')
+    .image(:style='computedImageStyle')
+  .infos(:style='computedInfosStyle')
+    a(:href='theProject.url',target="_blank")
+      h1 {{ theProject.title }} - {{ theProject.type }}
+        inline-svg(:src="svgNewWindow")
 
-      h2(v-for='infoLine in theProject.techInfos') {{ infoLine }}
-
+    h2(v-for='infoLine in theProject.techInfos') {{ infoLine }}
 </template>
 
 <style lang="stylus">
@@ -143,6 +142,7 @@
 </style>
 
 <script>
+import svgNewWindow from '@/assets/images/new-window-mobile.svg';
 
 import InlineSvg from '@/components/utils/InlineSvg.vue';
 
@@ -179,6 +179,7 @@ export default {
 
   data() {
     return {
+      svgNewWindow,
       firstProject: true,
       hideSpeCallback: null,
       isHiding: false,

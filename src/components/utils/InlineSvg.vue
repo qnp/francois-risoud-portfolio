@@ -1,5 +1,5 @@
 <template lang="pug">
-  .inline-svg(v-once,v-html="src")
+.inline-svg(v-once v-html="src")
 </template>
 
 <style lang="stylus">
@@ -54,4 +54,3 @@ export default {
 };
 
 </script>
-

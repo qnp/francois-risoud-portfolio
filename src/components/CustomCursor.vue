@@ -1,16 +1,18 @@
 <template lang='pug'>
-  .cursor(:class='classes')
-    .cursor-content
-    .social-picto.twitter
-      inline-svg(src='~@/assets/images/twitter.svg')
-    .social-picto.github
-      inline-svg(src='~@/assets/images/github.svg')
-    .social-picto.mailto
-      inline-svg(src='~@/assets/images/mail.svg')
-    .social-picto.new-window
-      inline-svg(src='~@/assets/images/new-window-3.svg')
-    .scroll-picto
-      inline-svg(src='~@/assets/images/cursor-scroll.svg')
+.cursor(:class='classes')
+  .cursor-content
+  .social-picto.fifteen
+    inline-svg(:src="svgFifteenLogoOnly")
+  .social-picto.twitter
+    inline-svg(:src="svgTwitter")
+  .social-picto.github
+    inline-svg(:src="svgGithub")
+  .social-picto.mailto
+    inline-svg(:src="svgMail")
+  .social-picto.new-window
+    inline-svg(:src="svgCursorNewWindow")
+  .scroll-picto
+    inline-svg(:src="svgCursorScroll")
 </template>
 
 <style lang='stylus'>
@@ -222,6 +224,12 @@
 </style>
 
 <script>
+import svgFifteenLogoOnly from '@/assets/images/fifteen-logo-only.svg';
+import svgTwitter from '@/assets/images/twitter.svg';
+import svgGithub from '@/assets/images/github.svg';
+import svgMail from '@/assets/images/mail.svg';
+import svgCursorNewWindow from '@/assets/images/new-window-3.svg';
+import svgCursorScroll from '@/assets/images/cursor-scroll.svg';
 
 import $ from '@/assets/js/utils/$';
 import rot13 from '@/assets/js/utils/rot13';
@@ -250,6 +258,12 @@ export default {
     const router = this.$router;
     const self = this;
     return {
+      svgFifteenLogoOnly,
+      svgTwitter,
+      svgGithub,
+      svgMail,
+      svgCursorNewWindow,
+      svgCursorScroll,
       transitionDurationDownClickable: 500,
       clickableLogic: [{
         selector: 'a[href]:not([href^=mailto]):not([href^=http]):not(.active)',

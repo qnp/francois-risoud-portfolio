@@ -1,5 +1,5 @@
 <template lang="pug">
-  inline-svg.intro-logo.hide(src='~@/assets/images/ek.svg')
+inline-svg.intro-logo.hide(:src="svgEk")
 </template>
 
 <style lang="stylus">
@@ -46,6 +46,7 @@
 </style>
 
 <script>
+import svgEk from '@/assets/images/ek.svg';
 
 import InlineSvg from '@/components/utils/InlineSvg.vue';
 
@@ -58,6 +59,12 @@ export default {
   props: {
     doShow: String,
     doHide: String,
+  },
+
+  data() {
+    return {
+      svgEk,
+    };
   },
 
   methods: {

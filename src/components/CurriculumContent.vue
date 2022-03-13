@@ -1,79 +1,91 @@
 <template lang="pug">
-  main.curriculum(:class='(show?"show":"hide")+(trueHide?" true-hide":"")')
-    .mask
-    .wrapper#iscroll
-      ul.content
-        li.item
-          .date
-            .year June 2018 – now
-          .thing
-            .occupation Full-stack web developer
-            .location
-              a(href="https://zoov.eu", target="_blank") Zoov
-                inline-svg(src='~@/assets/images/new-window-mobile.svg')
-              |, Vanves, France
-        li.item
-          .date
-            .year 2014 – June 2018
-          .thing
-            .occupation Freelance full-stack web developer
-            .location Paris, France
-        li.item
-          .date
-            .year 2011 – 2018
-          .thing
-            .occupation Music producer
-            .location
-              a(href="https://bredrinrecords.com", target="_blank") Bredrin Records
-                inline-svg(src='~@/assets/images/new-window-mobile.svg')
-              |, Paris, France
-        li.item
-          .date
-            .year 2013 – 2016
-          .thing
-            .occupation PhD in Theoretical Quantum Physics
-            .location
-              a(href="http://www.ens.fr", target="_blank") École Normale Supérieure
-                inline-svg(src='~@/assets/images/new-window-mobile.svg')
-              |,&nbsp;
-              a(href="https://www.sorbonne-universite.fr", target="_blank") UPMC
-                inline-svg(src='~@/assets/images/new-window-mobile.svg')
-              |, Paris, France
-        li.item
-          .date
-            .year 2011 – 2012
-          .thing
-            .occupation Master Degree in Theoretical, Physical & Analytical Chemistry
-            .location
-              a(href="http://www.ens.fr", target="_blank") École Normale Supérieure
-                inline-svg(src='~@/assets/images/new-window-mobile.svg')
-              |,&nbsp;
-              a(href="https://www.sorbonne-universite.fr", target="_blank") UPMC
-                inline-svg(src='~@/assets/images/new-window-mobile.svg')
-              |, Paris, France
-        li.item
-          .date
-            .skill-tag skills
-          ul.thing
-            li.category(v-for="category in skillsArray")
-              .type {{ category.type }}
-              ul.skills
-                li(v-for="skill in category.content") {{ skill.replace('/ ','&nbsp;') }}
-        li.item
-          .date
-            .year clients
-          .thing.logos
-            a.logo(href="http://maison-solide.fr", target="_blank")
-              inline-svg(src='~@/assets/images/logos/solide.svg')
-            a.logo.datagif(href="http://www.datagif.fr", target="_blank")
-              inline-svg(src='~@/assets/images/logos/datagif.svg')
-            a.logo(href="https://www.policestudio.fr", target="_blank")
-              inline-svg(src='~@/assets/images/logos/police.svg')
-            a.logo(href="https://www.habx.fr", target="_blank")
-              inline-svg(src='~@/assets/images/logos/habx.svg')
-            a.logo(href="http://4nparis.com", target="_blank")
-              inline-svg(src='~@/assets/images/logos/4N.svg')
-
+main.curriculum(:class='(show?"show":"hide")+(trueHide?" true-hide":"")')
+  .mask
+  .wrapper#iscroll
+    ul.content
+      li.item
+        .date
+          .year March 2022 – now
+        .thing
+          .occupation Lead web developer
+          .location
+            a(href="https://fifteen.eu", target="_blank") Fifteen
+              inline-svg(:src="svgNewWindow")
+            |, Vanves, France
+      li.item
+        .date
+          .year June 2018 – March 2022
+        .thing
+          .occupation Fullstack web developer
+          .location
+            a(href="https://zoov.eu", target="_blank") Zoov by Fifteen
+              inline-svg(:src="svgNewWindow")
+            |, Vanves, France
+      li.item
+        .date
+          .year 2014 – June 2018
+        .thing
+          .occupation Freelance fullstack web developer
+          .location Paris, France
+      li.item
+        .date
+          .year 2011 – 2018
+        .thing
+          .occupation Music producer
+          .location
+            a(href="https://bredrinrecords.com", target="_blank") Bredrin Records
+              inline-svg(:src="svgNewWindow")
+            |, Paris, France
+      li.item
+        .date
+          .year 2013 – 2016
+        .thing
+          .occupation PhD in Theoretical Quantum Physics
+          .location
+            a(href="http://www.ens.fr", target="_blank") École Normale Supérieure
+              inline-svg(:src="svgNewWindow")
+            |,&nbsp;
+            a(href="https://www.sorbonne-universite.fr", target="_blank") UPMC
+              inline-svg(:src="svgNewWindow")
+            |, Paris, France
+      li.item
+        .date
+          .year 2011 – 2012
+        .thing
+          .occupation Master Degree in Theoretical, Physical & Analytical Chemistry
+          .location
+            a(href="http://www.ens.fr", target="_blank") École Normale Supérieure
+              inline-svg(:src="svgNewWindow")
+            |,&nbsp;
+            a(href="https://www.sorbonne-universite.fr", target="_blank") UPMC
+              inline-svg(:src="svgNewWindow")
+            |, Paris, France
+      li.item
+        .date
+          .skill-tag skills
+        ul.thing
+          li.category(v-for="category in skillsArray")
+            .type {{ category.type }}
+            ul.skills
+              li(v-for="skill in category.content") {{ skill.replace('/ ','&nbsp;') }}
+      li.item
+        .date
+          .year clients
+        .thing.logos
+          a.logo(href="http://maison-solide.fr", target="_blank")
+            inline-svg(:src="svgSolide")
+          a.logo.datagif(href="http://www.datagif.fr", target="_blank")
+            inline-svg(:src="svgDatagif")
+          a.logo(href="https://www.policestudio.fr", target="_blank")
+            inline-svg(:src="svgPolice")
+          a.logo(href="https://www.habx.fr", target="_blank")
+            inline-svg(:src="svgHabx")
+          a.logo(href="http://4nparis.com", target="_blank")
+            inline-svg(:src="svg4N")
+          a.logo(href="http://zoov.eu", target="_blank")
+            inline-svg(:src="svgZoov")
+          a.logo(href="http://fifteen.eu", target="_blank")
+            inline-svg(:src="svgFifteen")
 </template>
 
 <style lang="stylus">
@@ -345,7 +357,14 @@
 
 import InlineSvg from '@/components/utils/InlineSvg.vue';
 
-// import IScroll from 'iscroll/build/iscroll-probe.js';
+import svgNewWindow from '@/assets/images/new-window-mobile.svg';
+import svgSolide from '@/assets/images/logos/solide.svg';
+import svgDatagif from '@/assets/images/logos/datagif.svg';
+import svgPolice from '@/assets/images/logos/police.svg';
+import svgHabx from '@/assets/images/logos/habx.svg';
+import svg4N from '@/assets/images/logos/4N.svg';
+import svgZoov from '@/assets/images/logos/zoov.svg';
+import svgFifteen from '@/assets/images/logos/fifteen.svg';
 
 export default {
 
@@ -368,6 +387,14 @@ export default {
   data() {
     return {
       myScroll: null,
+      svgNewWindow,
+      svgSolide,
+      svgDatagif,
+      svgPolice,
+      svgHabx,
+      svg4N,
+      svgZoov,
+      svgFifteen,
     };
   },
 

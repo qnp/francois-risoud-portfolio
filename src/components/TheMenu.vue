@@ -1,32 +1,29 @@
 <template lang="pug">
-  .nav-wrapper
-    .mobile-menu(:class='open?"show":"hide"')
-      svg.burger(viewBox="-1 -1 32 32", fill="none", stroke-width="2")
-        g
-          line(x1="2.5",y1="5",x2="27.5",y2="5")
-        g
-          line(x1="2.5",y1="15",x2="27.5",y2="15")
-        g
-          line(x1="2.5",y1="25",x2="27.5",y2="25")
-        g
-          line(x1="5",y1="5",x2="25",y2="25")
-        g
-          line(x1="5",y1="25",x2="25",y2="5")
-    nav
-      .menu-wrapper
-        .menu
-          a.home(href='/')
-            inline-svg(src='~@/assets/images/ek.svg')
-          a(href='/about',:class='aboutClass') about
-          a(href='/projects',:class='projectsClass') projects
-          a(href='/curriculum',:class='curriculumClass') curriculum
-        .social
-          a.twitter(href='https://twitter.com/ekqnp',target='_blank') twitter
-            //- inline-svg(src='~@/assets/images/twitter.svg')
-          a.github(href='https://github.com/qnp',target='_blank') github
-            //- inline-svg(src='~@/assets/images/github-alt.svg')
-          a.mailto(href='mailto:me') mail
-            //- inline-svg(src='~@/assets/images/mail.svg')
+.nav-wrapper(:class="navWrapperClasses")
+  .mobile-menu(:class="value ? 'show' : 'hide'")
+    svg.burger(viewBox="-1 -1 32 32", fill="none", stroke-width="2" @click="onClickBurger")
+      g
+        line(x1="2.5", y1="5", x2="27.5", y2="5")
+      g
+        line(x1="2.5", y1="15", x2="27.5", y2="15")
+      g
+        line(x1="2.5", y1="25", x2="27.5", y2="25")
+      g
+        line(x1="5", y1="5", x2="25", y2="25")
+      g
+        line(x1="5", y1="25", x2="25", y2="5")
+  nav(:class="[...navClasses, value ? 'show' : 'hide']")
+    .menu-wrapper
+      .menu
+        a.home(href="/" @click="onClickLink")
+          inline-svg(:src="svgEk")
+        a(href="/about", :class="aboutClass" @click="onClickLink") about
+        a(href="/projects", :class="projectsClass" @click="onClickLink") projects
+        a(href="/curriculum", :class="curriculumClass" @click="onClickLink") curriculum
+      .social
+        a.twitter(href="https://twitter.com/ekqnp", target="_blank") twitter
+        a.github(href="https://github.com/qnp", target="_blank") github
+        a.mailto(href="mailto:me") mail
 </template>
 
 <style lang="stylus">
@@ -445,6 +442,7 @@
 </style>
 
 <script>
+import svgEk from "@/assets/images/ek.svg";
 
 import InlineSvg from "@/components/utils/InlineSvg.vue";
 
