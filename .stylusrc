@@ -1,0 +1,9 @@
+{
+  "insertColons": false,
+  "insertSemicolons": false,
+  "insertBraces": false,
+  "sortProperties": false,
+  "alwaysUseZeroWithoutUnit": true,
+  "selectorSeparator": ",\n",
+  "insertNewLineBeforeElse": true
+}
