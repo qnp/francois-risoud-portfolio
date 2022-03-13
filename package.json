@@ -9,6 +9,7 @@
     "start": "yarn dev",
     "lint": "eslint --ext .js,.vue src",
     "build": "vite build --emptyOutDir",
+    "deploy": "netlify deploy",
     "serve": "node server.js"
   },
   "dependencies": {
@@ -63,6 +64,7 @@
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.6.1",
     "html-webpack-plugin": "^3.2.0",
+    "netlify-cli": "^9.13.0",
     "node-notifier": "^8.0.1",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
     "ora": "^1.2.0",
