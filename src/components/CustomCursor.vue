@@ -27,6 +27,7 @@
   $clickable-scale = 1;
   $clickable-opacity = 1
   $social-picto-size = 60px
+  $fifteen-picto-ratio-wh = 1
   $twitter-picto-ratio-wh = 1
   $github-picto-ratio-wh = 1
   $new-window-picto-ratio-wh = 1
@@ -67,10 +68,6 @@
       background-color $cursor-color
       border-radius ($cursor-size/2)
       transition all $transition-duration-all ease-out
-      // mask url(#mailto-path)
-      // svg
-      //   path
-      //     fill $cursor-color
 
     .social-picto
       width $social-picto-size
@@ -85,6 +82,8 @@
         width $social-picto-size
         path
           fill $theme-color-pink
+      &.fifteen
+        margin-top (- $social-picto-size*$fifteen-picto-ratio-wh/2)
       &.twitter
         margin-top (- $social-picto-size*$twitter-picto-ratio-wh/2)
       &.github
@@ -108,28 +107,6 @@
         path
           fill $theme-color-pink
 
-    // .mailto-picto
-    //   width $picto-size
-    //   position absolute
-    //   top 50%
-    //   left 50%
-    //   transform translate(-50%,-50%)
-    //   transition all $transition-duration-all ease-out
-    //   opacity 0
-    //   path
-    //     fill $theme-color-dark-blue
-
-    // .visor
-    //   position absolute
-    //   top (($cursor-size - $visor-size)/2)
-    //   left (($cursor-size - $visor-size)/2)
-    //   border-radius ($visor-size/2)
-    //   pointer-events none
-    //   width $visor-size
-    //   height $visor-size
-    //   background-color $cursor-color
-    //   transition all $transition-duration-all ease-out
-
     &.hidden
       .cursor-content
         transform scale(0)
@@ -140,7 +117,7 @@
 
     &:not(.hidden)
 
-      &:not(.twitter-cursor):not(.github-cursor):not(.mailto-cursor):not(.scroll-cursor)
+      &:not(.twitter-cursor):not(.github-cursor):not(.mailto-cursor):not(.scroll-cursor)&:not(.fifteen-cursor)
 
         &.down
           .cursor-content
@@ -161,12 +138,21 @@
               height (2/3*$cursor-size)
               transform translate((($cursor-size - @width)/2),(1/6*$cursor-size))
 
+      &.fifteen-cursor,
       &.twitter-cursor,
       &.github-cursor,
       &.mailto-cursor,
       &.new-window-cursor
         .cursor-content
           transform scale(0)
+
+      &.fifteen-cursor
+        .social-picto.fifteen
+          transform scale($clickable-scale)
+          opacity $clickable-opacity
+        &.down
+          .social-picto.fifteen
+            transform scale($clickable-scale * $click-scale)
 
       &.twitter-cursor
         .social-picto.twitter
@@ -281,10 +267,13 @@ export default {
         selector: 'a.github',
         cursorClasses: ['github-cursor']
       }, {
+        selector: 'a.fifteen',
+        cursorClasses: ['fifteen-cursor']
+      }, {
         selector: '.scroll-invite',
         cursorClasses: ['scroll-cursor']
       }, {
-        selector: 'a[href^=http]:not(.twitter):not(.github)',
+        selector: 'a[href^=http]:not(.twitter):not(.github):not(.fifteen)',
         cursorClasses: ['new-window-cursor']
       }],
       eventsLogic: [
