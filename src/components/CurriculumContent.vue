@@ -343,7 +343,7 @@
 
 <script>
 
-import InlineSvg from '@/components/utils/InlineSvg';
+import InlineSvg from '@/components/utils/InlineSvg.vue';
 
 // import IScroll from 'iscroll/build/iscroll-probe.js';
 

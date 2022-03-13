@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import AppContent from '@/components/AppContent';
+import AppContent from '@/components/AppContent.vue';
 
 Vue.use(Router);
 

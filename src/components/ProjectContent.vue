@@ -144,7 +144,7 @@
 
 <script>
 
-import InlineSvg from '@/components/utils/InlineSvg';
+import InlineSvg from '@/components/utils/InlineSvg.vue';
 
 import raf from 'raf';
 import ActionStack from '@/assets/js/utils/action-helper';

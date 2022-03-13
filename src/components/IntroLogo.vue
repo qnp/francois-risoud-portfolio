@@ -47,7 +47,7 @@
 
 <script>
 
-import InlineSvg from '@/components/utils/InlineSvg';
+import InlineSvg from '@/components/utils/InlineSvg.vue';
 
 export default {
 

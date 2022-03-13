@@ -227,7 +227,7 @@ import $ from '@/assets/js/utils/$';
 import rot13 from '@/assets/js/utils/rot13';
 import 'element-closest';
 
-import InlineSvg from '@/components/utils/InlineSvg';
+import InlineSvg from '@/components/utils/InlineSvg.vue';
 
 const mouse = {x: 0, y: 0};
 

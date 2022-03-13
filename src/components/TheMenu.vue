@@ -446,7 +446,7 @@
 
 <script>
 
-import InlineSvg from '@/components/utils/InlineSvg';
+import InlineSvg from "@/components/utils/InlineSvg.vue";
 
 import $ from '@/assets/js/utils/$';
 // import raf from 'raf';

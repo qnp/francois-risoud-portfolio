@@ -16,8 +16,8 @@
 import 'normalize.css';
 import 'reset-css/reset.css';
 
-import CustomCursor from '@/components/CustomCursor';
-import AppContent from '@/components/AppContent';
+import CustomCursor from '@/components/CustomCursor.vue';
+import AppContent from '@/components/AppContent.vue';
 
 export default {
 

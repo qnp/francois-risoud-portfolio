@@ -86,13 +86,13 @@
 
 <script>
 
-import PhysicalBubble from '@/components/PhysicalBubble';
-import IntroLogo from '@/components/IntroLogo';
-import IntroText from '@/components/IntroText';
-import TheMenu from '@/components/TheMenu';
-import AboutContent from '@/components/AboutContent';
-import ProjectContent from '@/components/ProjectContent';
-import CurriculumContent from '@/components/CurriculumContent';
+import PhysicalBubble from '@/components/PhysicalBubble.vue';
+import IntroLogo from '@/components/IntroLogo.vue';
+import IntroText from '@/components/IntroText.vue';
+import TheMenu from '@/components/TheMenu.vue';
+import AboutContent from '@/components/AboutContent.vue';
+import ProjectContent from '@/components/ProjectContent.vue';
+import CurriculumContent from '@/components/CurriculumContent.vue';
 
 import hexToArray from '@/assets/js/utils/hex-to-array';
 import uniqueID from '@/assets/js/utils/unique-ID';
