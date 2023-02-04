@@ -9,7 +9,11 @@ const desc_social = 'François Risoud, full-stack web developer.';
 const social_image = 'static/images/social/ekqnp.png';
 
 export default {
-  title,
+  title: {
+    inner: '',
+    separator: ' ',
+    complement: title,
+  },
   meta: [
     // prevent phone number auto-detection (Safari iOS & Blackberry)
     { name: 'format-detection', content: 'telephone=no' },
