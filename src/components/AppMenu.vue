@@ -45,26 +45,35 @@
   nav(:class="[...navClasses, value ? 'show' : 'hide']")
     .menu-wrapper
       .menu
-        a.home(href="/" @click="onClickLink")
+        router-link.home(
+          to="/"
+          @click="onClickLink"
+        )
           inline-svg(:src="svgEk")
-        a(
-          href="/about"
+        router-link(
+          to="/about"
           :class="aboutClass"
           @click="onClickLink"
         ) about
-        a(
-          href="/projects"
+        router-link(
+          to="/projects"
           :class="projectsClass"
           @click="onClickLink"
         ) projects
-        a(
-          href="/curriculum"
+        router-link(
+          to="/curriculum"
           :class="curriculumClass"
           @click="onClickLink"
         ) curriculum
       .social
-        a.twitter(href="https://twitter.com/ekqnp" target="_blank") twitter
-        a.github(href="https://github.com/qnp" target="_blank") github
+        a.twitter(
+          href="https://twitter.com/ekqnp"
+          target="_blank"
+        ) twitter
+        a.github(
+          href="https://github.com/qnp"
+          target="_blank"
+        ) github
         a.mailto(href="mailto:me") mail
 </template>
 
@@ -112,12 +121,13 @@
 
     .menu
       a.home
-        width 23px
-        padding-top 3px
-        margin-right -5px
+        width 32px
+        padding-top 1px
+        margin-left -4px
+        margin-right -6px
 
         svg
-          width 23px
+          width 32px
 
           path
             fill $theme-color-white
@@ -537,12 +547,12 @@
     opacity 0
 </style>
 
-<script>
+<script lang="ts">
 import svgEk from '@/assets/images/ek.svg';
 
 import InlineSvg from '@/components/utils/InlineSvg.vue';
 
-import $ from '@/assets/js/utils/$';
+import $ from '@/utils/$';
 // import raf from 'raf';
 
 export default {

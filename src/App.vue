@@ -1,62 +1,42 @@
 <template lang="pug">
-#app
-  custom-cursor(
-    :content-id="contentId"
-    :blend-mode="cursorBlendMode"
-    :has-touch="hasTouch"
-  )
-  router-view
-</template><style lang="stylus"></style>
+AppCursor(
+  :content-id="contentId"
+  :blend-mode="cursorBlendMode"
+  :has-touch="hasTouch"
+)
+RouterView
+</template>
 
-<script>
-// css
-import 'normalize.css';
-import 'reset-css/reset.css';
+<script setup lang="ts">
+import { useHead } from '@unhead/vue';
 
-import CustomCursor from '@/components/CustomCursor.vue';
-import AppContent from '@/components/AppContent.vue';
-import head from '@/head';
+import AppCursor from '@/components/AppCursor.vue';
+import head from '@/assets/head';
+import { useEventListener } from '@vueuse/core';
 
-export default {
-  name: 'app',
+useHead(head);
 
-  head,
+const contentId = 'content';
+const cursorBlendMode = 'intro';
 
-  components: {
-    CustomCursor,
-    AppContent,
+// Detect if touch event is working as supposed => touch device
+const hasTouch = ref(false);
+useEventListener(
+  'touchstart',
+  () => {
+    hasTouch.value = true;
+    document.body.classList.add('has-touch');
   },
+  { once: true }
+);
 
-  mounted() {
-    // detect if touch event is working as supposed => touch device
-    const self = this;
-    window.addEventListener(
-      'touchstart',
-      function setHasTouch() {
-        self.hasTouch = true;
-        document.body.classList.add('has-touch');
-        window.removeEventListener('touchstart', setHasTouch);
-      },
-      false
-    );
-
-    // prenvent touchmove event to remove 'overscroll' effect
-    window.addEventListener(
-      'touchmove',
-      function (e) {
-        e.preventDefault();
-        return false;
-      },
-      false
-    );
+// Prevent default touchmove event to remove 'overscroll' effect
+useEventListener(
+  'touchmove',
+  event => {
+    event.preventDefault();
+    return false;
   },
-
-  data() {
-    return {
-      hasTouch: false,
-      contentId: 'content',
-      cursorBlendMode: 'intro',
-    };
-  },
-};
+  { passive: false }
+);
 </script>

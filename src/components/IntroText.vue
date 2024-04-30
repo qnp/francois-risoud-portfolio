@@ -1,8 +1,8 @@
 <template lang="pug">
 .intro-text.hide
   h1
-    span.name {{ notFound ? "404" : "François Risoud" }}
-    span.type &nbsp;{{ notFound ? "Not Found" : "Portfolio" }}
+    span.name {{ notFound ? '404' : 'François Risoud' }}
+    span.type &nbsp;{{ notFound ? 'Not Found' : 'Portfolio' }}
     br(v-if="notFound")
     span.emoji.reverse(v-if="notFound") づ
     span.emoji(v-if="notFound") (｡◉‿◉｡)づ
@@ -19,6 +19,7 @@
   display flex
   align-items center
   justify-content center
+
   h1
     font-family 'Raleway', sans-serif
     font-size 1em
@@ -28,33 +29,42 @@
     transition opacity 0.5s
     text-align center
     line-height $golden-num
+
     .name
       font-weight 700
+
     .type
       font-family $the-serif, serif
       font-weight 400
+
     .emoji
       opacity 0
       font-weight 400
       transition opacity 0.5s linear
+
     .reverse
       display inline-block
       transform scaleX(-1)
+
   &.hide
     pointer-events none
+
     h1
       opacity 0
+
   &.show
     pointer-events auto
+
     h1
       opacity 1
+
       .emoji
         opacity 1
         transition opacity 1s linear
         transition-delay 2s
 </style>
 
-<script>
+<script lang="ts">
 export default {
   name: 'intro-text',
 

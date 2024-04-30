@@ -16,15 +16,14 @@
 </template>
 
 <style lang="stylus">
-
 $cursor-color = $theme-color-pink
 $cursor-size = 60px
-$visor-size = 0px
+$visor-size = 0
 $transition-duration-all = 0.1s
-$transition-duration-down-clickable = 0.5s;
+$transition-duration-down-clickable = 0.5s
 $normal-scale = 0.2
-$click-scale = 0.8;
-$clickable-scale = 1;
+$click-scale = 0.8
+$clickable-scale = 1
 $clickable-opacity = 1
 $social-picto-size = 60px
 $fifteen-picto-ratio-wh = 1
@@ -34,11 +33,13 @@ $new-window-picto-ratio-wh = 1
 $mail-picto-ratio-wh = 0.7
 $scroll-picto-size = 96px
 
-html:not(.debug), body:not(.debug)
+html:not(.debug),
+body:not(.debug)
   cursor none
 
 .debug
-  .cursor, .scroll-picto
+  .cursor,
+  .scroll-picto
     pointer-events auto
 
 .cursor
@@ -48,8 +49,8 @@ html:not(.debug), body:not(.debug)
   width $cursor-size
   height $cursor-size
   position fixed
-  top -($cursor-size/2)
-  left -($cursor-size/2)
+  top -($cursor-size / 2)
+  left -($cursor-size / 2)
   z-index 999
 
   &.transition
@@ -66,7 +67,7 @@ html:not(.debug), body:not(.debug)
     width $cursor-size
     height $cursor-size
     background-color $cursor-color
-    border-radius ($cursor-size/2)
+    border-radius: ($cursor-size / 2)
     transition all $transition-duration-all ease-out
 
   .social-picto
@@ -74,36 +75,45 @@ html:not(.debug), body:not(.debug)
     position absolute
     top 50%
     left 50%
-    margin-left (- $social-picto-size/2)
+    margin-left: (- $social-picto-size / 2)
     transition all $transition-duration-all ease-out
     opacity 0
     transform scale(0)
+
     svg
       width $social-picto-size
+
       path
         fill $theme-color-pink
+
     &.fifteen
-      margin-top (- $social-picto-size*$fifteen-picto-ratio-wh/2)
+      margin-top: (- $social-picto-size * $fifteen-picto-ratio-wh / 2)
+
     &.twitter
-      margin-top (- $social-picto-size*$twitter-picto-ratio-wh/2)
+      margin-top: (- $social-picto-size * $twitter-picto-ratio-wh / 2)
+
     &.github
-      margin-top (- $social-picto-size*$github-picto-ratio-wh/2)
+      margin-top: (- $social-picto-size * $github-picto-ratio-wh / 2)
+
     &.mailto
-      margin-top (- $social-picto-size*$mail-picto-ratio-wh/2)
+      margin-top: (- $social-picto-size * $mail-picto-ratio-wh / 2)
+
     &.new-window
-      margin-top (- $social-picto-size*$new-window-picto-ratio-wh/2)
+      margin-top: (- $social-picto-size * $new-window-picto-ratio-wh / 2)
 
   .scroll-picto
     position absolute
     top 10px
     pointer-events none
     width $scroll-picto-size
-    margin-left (-($scroll-picto-size - $cursor-size)/2)
+    margin-left: (-($scroll-picto-size - $cursor-size) / 2)
     opacity 0
     transform scale(0)
     transition all $transition-duration-all ease-out
+
     svg
       width $scroll-picto-size
+
       path
         fill $theme-color-pink
 
@@ -116,9 +126,7 @@ html:not(.debug), body:not(.debug)
       transform scale($normal-scale)
 
   &:not(.hidden)
-
     &:not(.twitter-cursor):not(.github-cursor):not(.mailto-cursor):not(.scroll-cursor)&:not(.fifteen-cursor)
-
       &.down
         .cursor-content
           transform scale($normal-scale * $click-scale)
@@ -127,6 +135,7 @@ html:not(.debug), body:not(.debug)
         .cursor-content
           transform scale($clickable-scale)
           opacity $clickable-opacity
+
         &.down
           .cursor-content
             transform scale($clickable-scale * $click-scale)
@@ -135,8 +144,8 @@ html:not(.debug), body:not(.debug)
         &.down
           .cursor-content
             width 2px
-            height (2/3*$cursor-size)
-            transform translate((($cursor-size - @width)/2),(1/6*$cursor-size))
+            height 2 / 3 * $cursor-size
+            transform translate((($cursor-size - @width) / 2), 1 / 6 * $cursor-size)
 
     &.fifteen-cursor,
     &.twitter-cursor,
@@ -150,6 +159,7 @@ html:not(.debug), body:not(.debug)
       .social-picto.fifteen
         transform scale($clickable-scale)
         opacity $clickable-opacity
+
       &.down
         .social-picto.fifteen
           transform scale($clickable-scale * $click-scale)
@@ -158,6 +168,7 @@ html:not(.debug), body:not(.debug)
       .social-picto.twitter
         transform scale($clickable-scale)
         opacity $clickable-opacity
+
       &.down
         .social-picto.twitter
           transform scale($clickable-scale * $click-scale)
@@ -166,6 +177,7 @@ html:not(.debug), body:not(.debug)
       .social-picto.github
         transform scale($clickable-scale)
         opacity $clickable-opacity
+
       &.down
         .social-picto.github
           transform scale($clickable-scale * $click-scale)
@@ -174,6 +186,7 @@ html:not(.debug), body:not(.debug)
       .social-picto.mailto
         transform scale($clickable-scale)
         opacity $clickable-opacity
+
       &.clicked
         .social-picto.mailto
           animation send-message 1s ease-in
@@ -183,6 +196,7 @@ html:not(.debug), body:not(.debug)
       .social-picto.new-window
         transform scale($clickable-scale)
         opacity $clickable-opacity
+
       &.down
         .social-picto.new-window
           transform scale($clickable-scale * $click-scale)
@@ -190,9 +204,11 @@ html:not(.debug), body:not(.debug)
     &.scroll-cursor
       .cursor-content
         transform scale(0)
+
       .scroll-picto
         transform scale($clickable-scale)
         opacity $clickable-opacity
+
       &.down
         .scroll-picto
           transform scale($clickable-scale * $click-scale)
@@ -200,15 +216,18 @@ html:not(.debug), body:not(.debug)
 @keyframes send-message
   0%
     transform translateX(0)
+
   50%
     transform translateX(3000px)
+
   51%
     transform scale(0) translateX(0)
+
   100%
     transform scale(1) translateX(0)
 </style>
 
-<script>
+<script lang="ts">
 import svgFifteenLogoOnly from '@/assets/images/fifteen-logo-only.svg';
 import svgTwitter from '@/assets/images/twitter.svg';
 import svgGithub from '@/assets/images/github.svg';
@@ -216,8 +235,8 @@ import svgMail from '@/assets/images/mail.svg';
 import svgCursorNewWindow from '@/assets/images/new-window-3.svg';
 import svgCursorScroll from '@/assets/images/cursor-scroll.svg';
 
-import $ from '@/assets/js/utils/$';
-import rot13 from '@/assets/js/utils/rot13';
+import $ from '@/utils/$';
+import rot13 from '@/utils/rot13';
 import 'element-closest';
 
 import InlineSvg from '@/components/utils/InlineSvg.vue';
@@ -287,38 +306,32 @@ export default {
       eventsLogic: [
         {
           selector: 'a[href].circle',
-          events: {
-            click: function (e) {
-              if (self.hasTouch) {
-                e.preventDefault();
-                return false;
-              }
-            },
+          onClick: function (e) {
+            if (self.hasTouch) {
+              e.preventDefault();
+              return false;
+            }
           },
         },
         {
           selector: 'a[href]:not([href^=mailto]):not([href^=http])',
-          events: {
-            click: function (e) {
-              e.preventDefault();
-              const href = e.target.closest('a[href]').getAttribute('href');
-              if (router) router.push(href);
-              else window.location.href = href;
-              return false;
-            },
+          onClick: function (e) {
+            e.preventDefault();
+            const href = e.target.closest('a[href]').getAttribute('href');
+            if (router) router.push(href);
+            else window.location.href = href;
+            return false;
           },
         },
         {
           selector: '[href^=mailto]',
-          events: {
-            click: function (e) {
-              e.preventDefault();
-              setTimeout(function () {
-                window.location.href =
-                  'mailto:' + rot13('senapbvf.evfbhq@tznvy.pbz');
-              }, 500);
-              return false;
-            },
+          onClick: function (e) {
+            e.preventDefault();
+            setTimeout(function () {
+              window.location.href =
+                'mailto:' + rot13('senapbvf.evfbhq@tznvy.pbz');
+            }, 500);
+            return false;
           },
         },
       ],
@@ -356,58 +369,55 @@ export default {
     this.checkEvents();
 
     if (!debug) {
-      $(document.body).on({
-        mousemove: e => {
-          if (!this.hasTouch) {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-            this.checkClickable(mouse.x, mouse.y);
-            this.setCursorPosition(mouse.x, mouse.y);
-            if (this.viewClass !== 'visible') this.viewClass = 'visible';
-          }
-        },
-        mouseenter: e => {
-          if (!this.hasTouch) {
-            this.setCursorPosition(e.clientX, e.clientY);
-            this.viewClass = 'visible';
-          }
-        },
-        mouseleave: () => {
-          if (!this.hasTouch) {
-            if (!this.clicked) {
-              this.viewClass = 'hidden';
-            }
-          }
-        },
-        mousedown: () => {
-          if (!this.hasTouch) {
-            this.down = true;
-          }
-        },
-        mouseup: () => {
-          if (!this.hasTouch) {
-            this.down = false;
-          }
-        },
-        click: () => {
-          if (!this.hasTouch) {
-            this.clicked = true;
-            setTimeout(() => (this.clicked = false), 1000);
-          }
-        },
+      document.body.addEventListener('mousemove', e => {
+        if (!this.hasTouch) {
+          mouse.x = e.clientX;
+          mouse.y = e.clientY;
+          this.checkClickable(mouse.x, mouse.y);
+          this.setCursorPosition(mouse.x, mouse.y);
+          if (this.viewClass !== 'visible') this.viewClass = 'visible';
+        }
       });
-
-      $(`#${this.contentId}`).on({
-        DOMSubtreeModified: () => {
+      document.body.addEventListener('mouseenter', e => {
+        if (!this.hasTouch) {
+          this.setCursorPosition(e.clientX, e.clientY);
+          this.viewClass = 'visible';
+        }
+      });
+      document.body.addEventListener('mouseleave', () => {
+        if (!this.hasTouch) {
+          if (!this.clicked) {
+            this.viewClass = 'hidden';
+          }
+        }
+      });
+      document.body.addEventListener('mousedown', () => {
+        if (!this.hasTouch) {
+          this.down = true;
+        }
+      });
+      document.body.addEventListener('mouseup', () => {
+        if (!this.hasTouch) {
+          this.down = false;
+        }
+      });
+      document.body.addEventListener('click', () => {
+        if (!this.hasTouch) {
+          this.clicked = true;
+          setTimeout(() => (this.clicked = false), 1000);
+        }
+      });
+      document
+        .querySelector(`#${this.contentId}`)
+        ?.addEventListener('DOMSubtreeModified', () => {
           if (!this.hasTouch) this.checkClickable(mouse.x, mouse.y);
           this.checkEvents();
-        },
-      });
+        });
     } else {
       this.setCursorPosition(200, 200);
       this.viewClass = 'visible scroll-cursor';
-      $('html').classList.add('debug');
-      $('body').classList.add('debug');
+      document.querySelector('html')?.classList.add('debug');
+      document.body.classList.add('debug');
     }
   },
 
@@ -415,9 +425,11 @@ export default {
     checkEvents() {
       // check for special handlers
       this.eventsLogic.forEach(logic => {
-        if (logic.events) {
-          $(logic.selector).off(logic.events);
-          $(logic.selector).on(logic.events);
+        if (logic.onClick) {
+          document.querySelectorAll(logic.selector).forEach(element => {
+            element.removeEventListener('click', logic.onClick);
+            element.addEventListener('click', logic.onClick);
+          });
         }
       });
     },

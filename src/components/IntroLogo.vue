@@ -1,5 +1,8 @@
 <template lang="pug">
-inline-svg.intro-logo.hide(:class="classes" :src="svgEk")
+inline-svg.intro-logo.hide(
+  :class="classes"
+  :src="svgEk"
+)
 </template>
 
 <style lang="stylus">
@@ -47,7 +50,7 @@ $logo-w = 2.5em
     transform scale($beat-scale, $beat-scale)
 </style>
 
-<script>
+<script lang="ts">
 import svgEk from '@/assets/images/ek.svg';
 
 import InlineSvg from '@/components/utils/InlineSvg.vue';

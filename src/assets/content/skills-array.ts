@@ -70,10 +70,7 @@ export default [
   },
   {
     type: 'devops',
-    content: [
-      'Docker',
-      'Kubernetes',
-    ]
+    content: ['Docker', 'Kubernetes'],
   },
   {
     type: 'methodology',
@@ -140,4 +137,4 @@ export default [
     type: 'languages',
     content: ['Fluent English', 'Medium Spanish'],
   },
-];
+] satisfies SkillsGroup[];

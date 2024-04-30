@@ -92,4 +92,4 @@ export default [
     bgColor: '#111111',
     blendMode: 'lighten',
   },
-];
+] satisfies Project[];

@@ -1,6 +1,5 @@
-/*
- * metas tags
- */
+import type { Head } from '@unhead/vue';
+
 const title = 'François Risoud Portfolio';
 const fullURL = 'http://www.francoisrisoud.com';
 
@@ -8,12 +7,11 @@ const desc_search = 'François Risoud, full-stack web developer.';
 const desc_social = 'François Risoud, full-stack web developer.';
 const social_image = 'static/images/social/ekqnp.png';
 
+/**
+ * Title and meta tags for SEO
+ */
 export default {
-  title: {
-    inner: '',
-    separator: ' ',
-    complement: title,
-  },
+  title,
   meta: [
     // prevent phone number auto-detection (Safari iOS & Blackberry)
     { name: 'format-detection', content: 'telephone=no' },
@@ -41,4 +39,4 @@ export default {
     { property: 'og:description', content: desc_social },
     { property: 'og:site_name', content: title },
   ],
-};
+} satisfies Head;

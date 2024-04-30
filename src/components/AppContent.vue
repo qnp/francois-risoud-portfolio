@@ -3,14 +3,14 @@
   physical-bubble(
     :open="bubbleIntro.open"
     :appear="introAppear"
-    @end-opening="endOpeningHandler"
-    @end-closing="endClosingHandler"
     :num-particles="bubbleIntro.numParticles"
     :settings="bubbleIntro.settings"
     :breath="bubbleIntro.breath"
     :change-blob-color="bubbleIntro.changeBlobColor"
     :has-touch="hasTouch"
-    :remove-particles="bubbleIntro.removeParticlesComunicator"
+    :remove-particles="bubbleIntro.removeParticles"
+    @end-opening="endOpeningHandler"
+    @end-closing="endClosingHandler"
   )
   physical-bubble(
     :num-particles="bubbleLanding.numParticles"
@@ -21,7 +21,7 @@
     :projects-mode="bubbleLanding.projectsMode"
     :appear="landingAppear"
     :has-touch="hasTouch"
-    :remove-particles="bubbleLanding.removeParticlesComunicator"
+    :remove-particles="bubbleLanding.removeParticles"
   )
 
   .content-wrapper(:class="content.showHideClass")
@@ -41,11 +41,20 @@
       :center-position="project.centerPosition"
       :has-touch="hasTouch"
     )
-    the-menu(:value="bubbleIntro.open" :route="route")
-    about-content(:show="about.show" :true-hide="about.trueHide")
+    app-menu(
+      :value="bubbleIntro.open"
+      :route="route"
+    )
+    about-content(
+      :model-value="about.show"
+      :hidden="about.trueHide"
+    )
 
-  a(href="/about")
-    intro-logo(:do-hide="intro.logo.doHide" :do-show="intro.logo.doShow")
+  router-link(to="/about")
+    intro-logo(
+      :do-hide="intro.logo.doHide"
+      :do-show="intro.logo.doShow"
+    )
   intro-text(
     :do-hide="intro.text.doHide"
     :do-show="intro.text.doShow"
@@ -54,7 +63,6 @@
 </template>
 
 <style lang="stylus">
-
 @import url('https://fonts.googleapis.com/css?family=Raleway:200,400,500,600,700|Quattrocento:400')
 
 html
@@ -70,6 +78,8 @@ body
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
   background-color $theme-color-light-blue
+
+html body
   font-size 22px
 
 body.bloated
@@ -79,6 +89,7 @@ body.bloated
   background-color $select-color-bg
   color $select-color-text
   text-shadow none
+
 ::selection
   background-color $select-color-bg
   color $select-color-text
@@ -91,26 +102,31 @@ a[href]
 
 a:focus
   outline 0 none
-a:active, a:hover
-  outline: 0 none
+
+a:active,
+a:hover
+  outline 0 none
 
 svg
   user-select none
 
 *
-  -webkit-tap-highlight-color rgba(0,0,0,0)
+  -webkit-tap-highlight-color rgba(0, 0, 0, 0)
 
 .app-content
   opacity 0
   transition opacity 0.2s linear
+
   .content-wrapper
     pointer-events none
     width 100%
     max-width $content-max-width
     margin-left auto
     margin-right auto
+
     &.show
       display block
+
     &.hide
       display none
 
@@ -119,25 +135,23 @@ body.mounted
     opacity 1
 </style>
 
-<script>
+<script lang="ts">
 import PhysicalBubble from '@/components/PhysicalBubble.vue';
 import IntroLogo from '@/components/IntroLogo.vue';
 import IntroText from '@/components/IntroText.vue';
-import TheMenu from '@/components/TheMenu.vue';
+import AppMenu from '@/components/AppMenu.vue';
 import AboutContent from '@/components/AboutContent.vue';
 import ProjectContent from '@/components/ProjectContent.vue';
 import CurriculumContent from '@/components/CurriculumContent.vue';
 
-import hexToArray from '@/assets/js/utils/hex-to-array';
-import uniqueID from '@/assets/js/utils/unique-ID';
+import hexToRgbArray from '@/utils/hex-to-rgb-array';
+import uniqueId from '@/utils/unique-id';
 
-import skillsArray from '@/assets/js/content/skills-array';
-import projects from '@/assets/js/content/projects';
-
-import $ from '@/assets/js/utils/$';
+import skillsArray from '@/assets/content/skills-array';
+import projects from '@/assets/content/projects';
 
 // flatten skillsArray
-var isolatedLabels = [];
+var isolatedLabels: string[] = [];
 skillsArray.forEach(function (category) {
   isolatedLabels = isolatedLabels.concat(category.content);
 });
@@ -163,7 +177,7 @@ if (window.innerWidth > 400 && window.innerWidth <= 600) {
   centerRatio = 1.1;
 } else if (window.innerWidth <= 400) {
   numParticlesLanding = numParticlesLandingMin;
-  bubbleLandingSettings.attarctiveness = 60;
+  bubbleLandingSettings.attractiveness = 60;
   bubbleLandingSettings.longRangeCenterAttract = 1;
   centerRatio = 1.3;
 }
@@ -174,7 +188,7 @@ export default {
   components: {
     PhysicalBubble,
     IntroLogo,
-    TheMenu,
+    AppMenu,
     AboutContent,
     IntroText,
     ProjectContent,
@@ -192,7 +206,7 @@ export default {
     return {
       hasTouch: false,
       bubbleIntro: {
-        removeParticlesComunicator: null,
+        removeParticles: null,
         open: false,
         isOpen: false,
         breath: 0,
@@ -203,8 +217,8 @@ export default {
           {
             name: 'intro',
             soothingFactor: 0.02,
-            blobColor: hexToArray(darkBlue),
-            bgColor: hexToArray(lightBlue),
+            blobColor: hexToRgbArray(darkBlue),
+            bgColor: hexToRgbArray(lightBlue),
             showGui: false,
             showStats: false,
           },
@@ -212,7 +226,7 @@ export default {
         ),
       },
       bubbleLanding: {
-        removeParticlesComunicator: null,
+        removeParticles: null,
         start: false,
         hide: false,
         reduce: false,
@@ -233,7 +247,7 @@ export default {
             centerAttractExponent: 20,
             longRangeCenterAttract: 0.5,
             equilibriumDistance: 24,
-            attarctiveness: 50,
+            attractiveness: 50,
             longRangeTail: 0.6,
             startRadius: 250,
             center: {
@@ -241,7 +255,7 @@ export default {
               yRatio: centerRatio,
             },
             showIsolated: true,
-            isolatedLabels: isolatedLabels,
+            isolatedLabels,
             projects: projects,
             startPosMode: 'far',
             hasBoundaries: true,
@@ -255,8 +269,8 @@ export default {
                 offset: 400,
               },
             },
-            blobColor: hexToArray(pink),
-            bgColor: hexToArray(darkBlue),
+            blobColor: hexToRgbArray(pink),
+            bgColor: hexToRgbArray(darkBlue),
             maxBreath: -30,
             minBreath: -100,
             showGui: false,
@@ -270,11 +284,11 @@ export default {
       intro: {
         logo: {
           doShow: '',
-          dohide: '',
+          doHide: '',
         },
         text: {
           doShow: '',
-          dohide: '',
+          doHide: '',
           notFound: false,
         },
       },
@@ -316,7 +330,7 @@ export default {
   mounted() {
     document.body.classList.add('mounted');
 
-    // detect if touch event is working as supposed => touch device
+    // Detect if touch event is working as supposed => touch device
     const self = this;
     window.addEventListener(
       'touchstart',
@@ -327,19 +341,16 @@ export default {
       false
     );
 
-    // prevent fake scroll
-    window.onLoad = function () {
+    // Fake scroll by 1 to hide address bar in mobile
+    window.onload = function () {
       window.scrollTo(0, 1);
     };
 
-    // prevent touchmove defaults on everything that hides the adress bar in chrome android
-    $('*').on(
-      {
-        touchmove: function (e) {
-          e.preventDefault();
-        },
-      },
-      { passive: true }
+    // Prevent touchmove defaults on everything in order to hide the address bar in chrome android
+    document.querySelectorAll('*').forEach(element =>
+      element.addEventListener('touchmove', event => event.preventDefault(), {
+        passive: false,
+      })
     );
 
     // preload images
@@ -354,8 +365,8 @@ export default {
         this.checkBloatIntro();
         this.setBodyBg(blue);
         setTimeout(() => {
-          this.intro.text.doShow = uniqueID();
-          this.intro.logo.doShow = uniqueID();
+          this.intro.text.doShow = uniqueId();
+          this.intro.logo.doShow = uniqueId();
         }, 1000);
         break;
       }
@@ -377,7 +388,7 @@ export default {
         this.bubbleIntro.settings.showGui = true;
         this.intro.text.notFound = true;
         setTimeout(() => {
-          this.intro.text.doShow = uniqueID();
+          this.intro.text.doShow = uniqueId();
         }, 500);
         break;
       }
@@ -445,10 +456,9 @@ export default {
         this.bloatedStack = 0;
         if (numParticlesIntro > numParticlesIntroMin) {
           numParticlesIntro -= 10;
-          this.bubbleIntro.removeParticlesComunicator = {
+          this.bubbleIntro.removeParticles = {
             num: 10,
             threshold: false,
-            id: uniqueID(),
           };
         }
       }
@@ -469,10 +479,9 @@ export default {
         this.bloatedStack = 0;
         if (numParticlesLanding > numParticlesLandingMin) {
           numParticlesLanding -= 10;
-          this.bubbleLanding.removeParticlesComunicator = {
+          this.bubbleLanding.removeParticles = {
             num: 10,
             threshold: true,
-            id: uniqueID(),
           };
         }
       }
@@ -528,8 +537,8 @@ export default {
       this.about.show = true;
       this.about.trueHide = false;
       this.content.showHideClass = 'show';
-      this.intro.logo.doHide = uniqueID();
-      this.intro.text.doHide = uniqueID();
+      this.intro.logo.doHide = uniqueId();
+      this.intro.text.doHide = uniqueId();
       this.bubbleLanding.settings.bgColor = darkBlue;
       this.bubbleLanding.projectsMode = false;
       this.curriculum.show = false;
@@ -546,8 +555,8 @@ export default {
       }
       this.about.show = false;
       this.content.showHideClass = 'show';
-      this.intro.logo.doHide = uniqueID();
-      this.intro.text.doHide = uniqueID();
+      this.intro.logo.doHide = uniqueId();
+      this.intro.text.doHide = uniqueId();
       this.bubbleLanding.settings.bgColor = darkPink;
       this.bubbleLanding.projectsMode = true;
       this.curriculum.show = false;
@@ -564,15 +573,15 @@ export default {
       }
       this.about.show = false;
       this.content.showHideClass = 'show';
-      this.intro.logo.doHide = uniqueID();
-      this.intro.text.doHide = uniqueID();
+      this.intro.logo.doHide = uniqueId();
+      this.intro.text.doHide = uniqueId();
       this.curriculum.show = true;
     },
 
     endClosingHandler: function () {
       this.bubbleIntro.isOpen = false;
-      this.intro.logo.doShow = uniqueID();
-      this.intro.text.doShow = uniqueID();
+      this.intro.logo.doShow = uniqueId();
+      this.intro.text.doShow = uniqueId();
       this.content.showHideClass = 'hide';
     },
 

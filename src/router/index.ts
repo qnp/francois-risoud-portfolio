@@ -1,11 +1,8 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import AppContent from '@/components/AppContent.vue';
 
-Vue.use(Router);
-
-export default new Router({
-  mode: 'history',
+export default createRouter({
+  history: createWebHistory(),
   routes: [
     {
       path: '/',

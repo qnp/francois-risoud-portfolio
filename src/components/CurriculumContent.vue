@@ -11,7 +11,10 @@ main.curriculum(
         .thing
           .occupation Lead web developer
           .location
-            a(href="https://fifteen.eu" target="_blank") Fifteen
+            a(
+              href="https://fifteen.eu"
+              target="_blank"
+            ) Fifteen
               inline-svg(:src="svgNewWindow")
             | , Vanves, France
       li.item
@@ -20,7 +23,10 @@ main.curriculum(
         .thing
           .occupation Fullstack web developer
           .location
-            a(href="https://zoov.eu" target="_blank") Zoov by Fifteen
+            a(
+              href="https://zoov.eu"
+              target="_blank"
+            ) Zoov by Fifteen
               inline-svg(:src="svgNewWindow")
             | , Vanves, France
       li.item
@@ -35,7 +41,10 @@ main.curriculum(
         .thing
           .occupation Music producer
           .location
-            a(href="https://bredrinrecords.com" target="_blank") Bredrin Records
+            a(
+              href="https://bredrinrecords.com"
+              target="_blank"
+            ) Bredrin Records
               inline-svg(:src="svgNewWindow")
             | , Paris, France
       li.item
@@ -44,10 +53,16 @@ main.curriculum(
         .thing
           .occupation PhD in Theoretical Quantum Physics
           .location
-            a(href="http://www.ens.fr" target="_blank") École Normale Supérieure
+            a(
+              href="http://www.ens.fr"
+              target="_blank"
+            ) École Normale Supérieure
               inline-svg(:src="svgNewWindow")
             | ,&nbsp;
-            a(href="https://www.sorbonne-universite.fr" target="_blank") UPMC
+            a(
+              href="https://www.sorbonne-universite.fr"
+              target="_blank"
+            ) UPMC
               inline-svg(:src="svgNewWindow")
             | , Paris, France
       li.item
@@ -56,10 +71,16 @@ main.curriculum(
         .thing
           .occupation Master Degree in Theoretical, Physical & Analytical Chemistry
           .location
-            a(href="http://www.ens.fr" target="_blank") École Normale Supérieure
+            a(
+              href="http://www.ens.fr"
+              target="_blank"
+            ) École Normale Supérieure
               inline-svg(:src="svgNewWindow")
             | ,&nbsp;
-            a(href="https://www.sorbonne-universite.fr" target="_blank") UPMC
+            a(
+              href="https://www.sorbonne-universite.fr"
+              target="_blank"
+            ) UPMC
               inline-svg(:src="svgNewWindow")
             | , Paris, France
       li.item
@@ -74,19 +95,40 @@ main.curriculum(
         .date
           .year clients
         .thing.logos
-          a.logo(href="http://maison-solide.fr" target="_blank")
+          a.logo(
+            href="http://maison-solide.fr"
+            target="_blank"
+          )
             inline-svg(:src="svgSolide")
-          a.logo.datagif(href="http://www.datagif.fr" target="_blank")
+          a.logo.datagif(
+            href="http://www.datagif.fr"
+            target="_blank"
+          )
             inline-svg(:src="svgDatagif")
-          a.logo(href="https://www.policestudio.fr" target="_blank")
+          a.logo(
+            href="https://www.policestudio.fr"
+            target="_blank"
+          )
             inline-svg(:src="svgPolice")
-          a.logo(href="https://www.habx.fr" target="_blank")
+          a.logo(
+            href="https://www.habx.fr"
+            target="_blank"
+          )
             inline-svg(:src="svgHabx")
-          a.logo(href="http://4nparis.com" target="_blank")
+          a.logo(
+            href="http://4nparis.com"
+            target="_blank"
+          )
             inline-svg(:src="svg4N")
-          a.logo(href="http://zoov.eu" target="_blank")
+          a.logo(
+            href="http://zoov.eu"
+            target="_blank"
+          )
             inline-svg(:src="svgZoov")
-          a.logo(href="http://fifteen.eu" target="_blank")
+          a.logo(
+            href="http://fifteen.eu"
+            target="_blank"
+          )
             inline-svg(:src="svgFifteen")
 </template>
 
@@ -108,7 +150,7 @@ main.curriculum
   a:not(.logo)
     font-weight 400 // 700
 
-    .inline-svg
+    .InlineSvg
       display inline
       margin-left 0.22em
 
@@ -226,7 +268,7 @@ main.curriculum
           &.datagif
             margin-bottom -8px
 
-          .inline-svg
+          .InlineSvg
             svg
               height $golden-num em
 
@@ -305,7 +347,7 @@ main.curriculum
             margin-right 1em
             margin-top 1em
 
-            .inline-svg
+            .InlineSvg
               svg
                 height 1em
 
@@ -386,7 +428,7 @@ main.curriculum
       left ($theme-margin-left-right-mobile - 10px) / 2 - 3px
 </style>
 
-<script>
+<script lang="ts">
 import InlineSvg from '@/components/utils/InlineSvg.vue';
 
 import svgNewWindow from '@/assets/images/new-window-mobile.svg';

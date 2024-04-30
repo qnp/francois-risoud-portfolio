@@ -6,7 +6,10 @@ main.project(
   .image-wrapper(:style="computedImageWrapperStyle")
     .image(:style="computedImageStyle")
   .infos(:style="computedInfosStyle")
-    a(:href="theProject.url" target="_blank")
+    a(
+      :href="theProject.url"
+      target="_blank"
+    )
       h1 {{ theProject.title }} - {{ theProject.type }}
         inline-svg(:src="svgNewWindow")
 
@@ -14,7 +17,6 @@ main.project(
 </template>
 
 <style lang="stylus">
-
 main.project
   position absolute
   top 0
@@ -23,6 +25,7 @@ main.project
   bottom 0
   opacity 0
   transition opacity 1s ease-in
+
   .image-wrapper
     position absolute
     top 0
@@ -32,6 +35,7 @@ main.project
     background-color $theme-color-dark-blue
     opacity 1
     transition opacity 0.5s linear
+
   .image
     position absolute
     top 0
@@ -41,6 +45,7 @@ main.project
     transition opacity 0.5s linear
     background-size cover
     background-position center center
+
   .infos
     position absolute
     left $theme-margin-left-right
@@ -49,21 +54,23 @@ main.project
     line-height 1.5
     font-family 'Raleway', sans-serif
     color $theme-color-white
+
     h1
       white-space nowrap
       font-weight 700
-      font-size ($golden-num)em
+      font-size $golden-num em
+
     h2
       font-weight 400
       font-size 1em
       font-family $the-serif, serif
-    .inline-svg
+
+    .InlineSvg
       display none
 
   &.show
     opacity 1
     transition opacity 0.2s ease-in
-
 
   &.transition1
     .image-wrapper
@@ -75,23 +82,24 @@ body.has-touch
     .infos
       a
         pointer-events all
-        .inline-svg
+
+        .InlineSvg
           display inline-block
           margin-left 0.26em
+
           svg
             height 1em
             width 0.35em
+
             path
               fill $theme-color-white
 
-@media only screen and (max-width: 1100px)
-
+@media only screen and (max-width 1100px)
   main.project
     .infos
       bottom $theme-margin-top-mobile
 
-@media only screen and (max-width: 660px)
-
+@media only screen and (max-width 660px)
   main.project
     .infos
       top auto
@@ -100,55 +108,59 @@ body.has-touch
       bottom 0
       padding ($theme-margin-top-mobile - 10px) $theme-margin-left-right $theme-margin-top-mobile
 
-
   body.has-touch
     main.project
       .infos
-        padding ($theme-margin-top-mobile/2 - 5px) $theme-margin-left-right ($theme-margin-top-mobile/2)
+        padding ($theme-margin-top-mobile / 2 - 5px) $theme-margin-left-right ($theme-margin-top-mobile / 2)
+
         h1
           font-size 1em
-        h2
-          font-size (1/$golden-num-sqrt)em
 
-@media only screen and (max-width: 400px)
+        h2
+          font-size: (1 / $golden-num-sqrt)em
+
+@media only screen and (max-width 400px)
   body.has-touch
     main.project
       .infos
-        padding ($theme-margin-top-mobile/2 - 5px) $theme-margin-left-right-mobile ($theme-margin-top-mobile/2)
-        h1
-          font-size (1/$golden-num-sqrt)em
-        h2
-          font-size (1/$golden-num)em
+        padding ($theme-margin-top-mobile / 2 - 5px) $theme-margin-left-right-mobile ($theme-margin-top-mobile / 2)
 
-@media only screen and (max-width: 340px)
+        h1
+          font-size: (1 / $golden-num-sqrt)em
+
+        h2
+          font-size: (1 / $golden-num)em
+
+@media only screen and (max-width 340px)
   body.has-touch
     main.project
       .infos
         h1
-          font-size (1/$golden-num)em
+          font-size: (1 / $golden-num)em
           margin-bottom 2px
-        h2
-          font-size (1/$golden-num)em
 
-@media only screen and (min-width: 661px) and (max-height: 700px)
+        h2
+          font-size: (1 / $golden-num)em
+
+@media only screen and (min-width 661px) and (max-height 700px)
   main.project
     .infos
-      bottom ($theme-margin-top/2)
+      bottom: ($theme-margin-top / 2)
 
-@media only screen and (max-width: 340px) and (max-height: 580px)
+@media only screen and (max-width 340px) and (max-height 580px)
   body.has-touch
     main.project
       .infos
-        padding ($theme-margin-top-mobile/2 - 10px) ($theme-margin-left-right-mobile - 10px) ($theme-margin-top-mobile/2 - 10px)
+        padding ($theme-margin-top-mobile / 2 - 10px) ($theme-margin-left-right-mobile - 10px) ($theme-margin-top-mobile / 2 - 10px)
 </style>
 
-<script>
+<script lang="ts">
 import svgNewWindow from '@/assets/images/new-window-mobile.svg';
 
 import InlineSvg from '@/components/utils/InlineSvg.vue';
 
 import raf from 'raf';
-import ActionStack from '@/assets/js/utils/action-helper';
+import ActionStack from '@/utils/action-stack';
 
 const actionStack = new ActionStack();
 
