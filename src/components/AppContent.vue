@@ -192,7 +192,7 @@ const centerRatioLanding = computed(() => {
 });
 
 const isBubbleIntroOpen = ref(false);
-const bubbleIntro = reactiveComputed<PhysicalBubbleProps>(() => ({
+const bubbleIntro = reactive<PhysicalBubbleProps>({
   removeParticles: null,
   open: false,
   breath: 0,
@@ -205,9 +205,9 @@ const bubbleIntro = reactiveComputed<PhysicalBubbleProps>(() => ({
     bgColor: primary,
     showGui: false,
   },
-}));
+});
 
-const bubbleLanding = reactiveComputed<PhysicalBubbleProps>(() => ({
+const bubbleLanding = reactive<PhysicalBubbleProps>({
   removeParticles: null,
   start: false,
   hide: false,
@@ -254,7 +254,7 @@ const bubbleLanding = reactiveComputed<PhysicalBubbleProps>(() => ({
     minBreath: -100,
     showGui: false,
   },
-}));
+});
 
 const contentClass = ref('hide');
 
