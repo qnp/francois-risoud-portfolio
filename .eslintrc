@@ -1,0 +1,96 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "parser": "vue-eslint-parser",
+  "plugins": ["eslint-plugin-import", "vue"],
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:vue/vue3-recommended",
+    "plugin:vue-pug/vue3-recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript"
+  ],
+  "ignorePatterns": ["auto-imports.d.ts", "components.d.ts", "fifteen-sdk/*"],
+  "overrides": [
+    {
+      "files": ["src/components/views/**/*.vue"],
+      "rules": {
+        "vue/multi-word-component-names": 0
+      }
+    },
+    {
+      "files": ["**/*.ts", "**/*.d.ts"],
+      "parser": "@typescript-eslint/parser",
+      "settings": {
+        "import/parsers": {
+          "@typescript-eslint/parser": [".ts", ".d.ts"]
+        }
+      },
+      "rules": {
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "variableLike",
+            "format": ["camelCase", "UPPER_CASE", "PascalCase"],
+            "leadingUnderscore": "allowSingleOrDouble"
+          },
+          {
+            "selector": ["typeLike", "enumMember"],
+            "format": ["PascalCase"]
+          }
+        ]
+      }
+    }
+  ],
+  "parserOptions": {
+    "parser": {
+      "ts": "@typescript-eslint/parser",
+      "<template>": "espree"
+    }
+  },
+  "rules": {
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ],
+    "vue/component-tags-order": [
+      "error",
+      {
+        "order": ["template", "style", "script"]
+      }
+    ],
+    "vue/no-v-html": "off",
+    "import/order": [
+      1,
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "object",
+          "unknown",
+          "type"
+        ],
+        "pathGroups": [{ "pattern": "@@/**/*", "group": "internal" }],
+        "pathGroupsExcludedImportTypes": [],
+        "newlines-between": "always"
+      }
+    ],
+    "@typescript-eslint/explicit-function-return-type": [
+      1,
+      {
+        "allowExpressions": true,
+        "allowTypedFunctionExpressions": true
+      }
+    ],
+    "import/no-unresolved": "off",
+    "vue/require-toggle-inside-transition": "off",
+    "curly": ["warn", "multi-line", "consistent"]
+  }
+}

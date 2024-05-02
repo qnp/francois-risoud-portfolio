@@ -1,18 +1,17 @@
 <template lang="pug">
 #content.app-content
-  physical-bubble(
+  PhysicalBubble(
     :open="bubbleIntro.open"
     :appear="introAppear"
-    @end-opening="endOpeningHandler"
-    @end-closing="endClosingHandler"
     :num-particles="bubbleIntro.numParticles"
     :settings="bubbleIntro.settings"
     :breath="bubbleIntro.breath"
     :change-blob-color="bubbleIntro.changeBlobColor"
-    :has-touch="hasTouch"
-    :remove-particles="bubbleIntro.removeParticlesComunicator"
+    :remove-particles="bubbleIntro.removeParticles"
+    @end-opening="endOpeningHandler"
+    @end-closing="endClosingHandler"
   )
-  physical-bubble(
+  PhysicalBubble(
     :num-particles="bubbleLanding.numParticles"
     :settings="bubbleLanding.settings"
     :start="bubbleLanding.start"
@@ -20,12 +19,11 @@
     :breath="bubbleLanding.breath"
     :projects-mode="bubbleLanding.projectsMode"
     :appear="landingAppear"
-    :has-touch="hasTouch"
-    :remove-particles="bubbleLanding.removeParticlesComunicator"
+    :remove-particles="bubbleLanding.removeParticles"
   )
 
-  .content-wrapper(:class="content.showHideClass")
-    curriculum-content(
+  .content-wrapper(:class="contentClass")
+    CurriculumContent(
       :show="curriculum.show"
       :skills-array="curriculum.skillsArray"
       @on="curriculumOnHandler"
@@ -33,28 +31,31 @@
       @reached-top="curriculumReachedTop"
       @scroll="curriculumScrollHandler"
     )
-    project-content(
-      :show="project.show"
+    ProjectContent(
       :id="project.id"
+      :show="project.show"
       :project="project.project"
       :origin="project.origin"
       :center-position="project.centerPosition"
-      :has-touch="hasTouch"
     )
-    the-menu(:value="bubbleIntro.open" :route="route")
-    about-content(:show="about.show" :true-hide="about.trueHide")
+    AppMenu(
+      :value="bubbleIntro.open"
+      :route="route"
+    )
+    AboutContent(
+      :show="about.show"
+      :hidden="about.trueHide"
+    )
 
-  a(href="/about")
-    intro-logo(:do-hide="intro.logo.doHide" :do-show="intro.logo.doShow")
-  intro-text(
-    :do-hide="intro.text.doHide"
-    :do-show="intro.text.doShow"
-    :not-found="intro.text.notFound"
+  RouterLink(to="/about")
+    IntroLogo(:show="showIntroLogo")
+  IntroText(
+    :show="showIntroText"
+    :not-found="isNotFoundText"
   )
 </template>
 
 <style lang="stylus">
-
 @import url('https://fonts.googleapis.com/css?family=Raleway:200,400,500,600,700|Quattrocento:400')
 
 html
@@ -70,6 +71,8 @@ body
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
   background-color $theme-color-light-blue
+
+html body
   font-size 22px
 
 body.bloated
@@ -79,6 +82,7 @@ body.bloated
   background-color $select-color-bg
   color $select-color-text
   text-shadow none
+
 ::selection
   background-color $select-color-bg
   color $select-color-text
@@ -91,26 +95,31 @@ a[href]
 
 a:focus
   outline 0 none
-a:active, a:hover
-  outline: 0 none
+
+a:active,
+a:hover
+  outline 0 none
 
 svg
   user-select none
 
 *
-  -webkit-tap-highlight-color rgba(0,0,0,0)
+  -webkit-tap-highlight-color rgba(0, 0, 0, 0)
 
 .app-content
   opacity 0
   transition opacity 0.2s linear
+
   .content-wrapper
     pointer-events none
     width 100%
     max-width $content-max-width
     margin-left auto
     margin-right auto
+
     &.show
       display block
+
     &.hide
       display none
 
@@ -119,567 +128,513 @@ body.mounted
     opacity 1
 </style>
 
-<script>
+<script setup lang="ts">
 import PhysicalBubble from '@/components/PhysicalBubble.vue';
 import IntroLogo from '@/components/IntroLogo.vue';
 import IntroText from '@/components/IntroText.vue';
-import TheMenu from '@/components/TheMenu.vue';
+import AppMenu from '@/components/AppMenu.vue';
 import AboutContent from '@/components/AboutContent.vue';
 import ProjectContent from '@/components/ProjectContent.vue';
 import CurriculumContent from '@/components/CurriculumContent.vue';
+import skillsArray from '@/assets/content/skills-array';
+import projects from '@/assets/content/projects';
 
-import hexToArray from '@/assets/js/utils/hex-to-array';
-import uniqueID from '@/assets/js/utils/unique-ID';
+import type { PhysicalBubbleProps } from '@/components/PhysicalBubble.vue';
 
-import skillsArray from '@/assets/js/content/skills-array';
-import projects from '@/assets/js/content/projects';
-
-import $ from '@/assets/js/utils/$';
-
-// flatten skillsArray
-var isolatedLabels = [];
-skillsArray.forEach(function (category) {
-  isolatedLabels = isolatedLabels.concat(category.content);
-});
-
-const lightBlue = '#1a33ff';
-const darkBlue = '#001433';
-const pink = '#f7567c';
-const darkPink = '#83173c';
-const blue = '#1a33ff';
-
-var numParticlesIntro = 100;
-var numParticlesLanding = 100;
-var bubbleIntroSettings = {};
-var bubbleLandingSettings = {};
-
-var numParticlesLandingMin = 30;
-var numParticlesIntroMin = 20;
-
-var centerRatio = 1.05;
-
-if (window.innerWidth > 400 && window.innerWidth <= 600) {
-  numParticlesLanding = 50;
-  centerRatio = 1.1;
-} else if (window.innerWidth <= 400) {
-  numParticlesLanding = numParticlesLandingMin;
-  bubbleLandingSettings.attarctiveness = 60;
-  bubbleLandingSettings.longRangeCenterAttract = 1;
-  centerRatio = 1.3;
+export interface AppContentProps {
+  /**
+   * Route name of the current page
+   */
+  route?: string;
 }
 
-export default {
-  name: 'app-content',
+const props = withDefaults(defineProps<AppContentProps>(), {
+  route: 'Intro',
+});
 
-  components: {
-    PhysicalBubble,
-    IntroLogo,
-    TheMenu,
-    AboutContent,
-    IntroText,
-    ProjectContent,
-    CurriculumContent,
+// Flatten skills
+const isolatedLabels = skillsArray.flatMap(group => group.content);
+
+const secondary = '#f7567c';
+const secondaryDark = '#83173c';
+const primary = '#1a33ff';
+const primaryDark = '#001433';
+
+const numParticlesLandingMin = 30;
+const numParticlesIntroMin = 20;
+const scrollValueLimit = 1000;
+const scrollDateLimit = 100;
+
+let navTimeout: NodeJS.Timeout | null = null;
+let scrollValueStack = 0;
+let preventNavigation = false;
+let waitScroll = false;
+let bloatedStack = 0;
+
+const { width } = useWindowSize();
+const router = useRouter();
+
+const numParticlesIntro = ref(100);
+const numParticlesLandingInitial = computed(() => {
+  if (width.value > 400 && width.value <= 600) return 50;
+  else if (width.value <= 400) return numParticlesLandingMin;
+  else return 100;
+});
+const numParticlesLandingRemoved = ref(0);
+const numParticlesLanding = computed(() => {
+  return numParticlesLandingInitial.value - numParticlesLandingRemoved.value;
+});
+
+const centerRatioLanding = computed(() => {
+  if (width.value > 400 && width.value <= 600) return 1.1;
+  else if (width.value <= 400) return 1.3;
+  else return 1.05;
+});
+
+const isBubbleIntroOpen = ref(false);
+const bubbleIntro = reactive<PhysicalBubbleProps>({
+  removeParticles: null,
+  open: false,
+  breath: 0,
+  changeBlobColor: '',
+  numParticles: numParticlesIntro.value,
+  settings: {
+    name: 'intro',
+    soothingFactor: 0.02,
+    blobColor: primaryDark,
+    bgColor: primary,
+    showGui: false,
   },
+});
 
-  props: {
-    route: {
-      type: String,
-      default: 'Intro',
+const bubbleLanding = reactive<PhysicalBubbleProps>({
+  removeParticles: null,
+  start: false,
+  hide: false,
+  breath: 0,
+  projectsMode: false,
+  numParticles: numParticlesLanding.value,
+  settings: {
+    name: 'landing',
+    timeScale: 1,
+    particleRadius: 1,
+    particleAuraRadius: 60,
+    randomRadiusFactor: 0,
+    soothingFactor: 0.05,
+    auraTypeMix: 0.8,
+    repelExponent: 14,
+    centerAttractExponent: 20,
+    longRangeCenterAttract: width.value < 400 ? 1 : 0.5,
+    equilibriumDistance: 24,
+    attractiveness: width.value < 400 ? 60 : 50,
+    longRangeTail: 0.6,
+    startRadius: 250,
+    center: {
+      xRatio: centerRatioLanding.value,
+      yRatio: centerRatioLanding.value,
     },
+    showIsolated: true,
+    isolatedLabels,
+    projects: projects,
+    startPosMode: 'far',
+    hasBoundaries: true,
+    boundaries: {
+      right: {
+        wRatio: centerRatioLanding.value,
+        offset: 400,
+      },
+      bottom: {
+        hRatio: centerRatioLanding.value,
+        offset: 400,
+      },
+    },
+    blobColor: secondary,
+    bgColor: primaryDark,
+    maxBreath: -30,
+    minBreath: -100,
+    showGui: false,
   },
+});
 
-  data() {
-    return {
-      hasTouch: false,
-      bubbleIntro: {
-        removeParticlesComunicator: null,
-        open: false,
-        isOpen: false,
-        breath: 0,
-        changeBlobColor: '',
-        numParticles: numParticlesIntro,
-        settings: Object.assign(
-          {},
-          {
-            name: 'intro',
-            soothingFactor: 0.02,
-            blobColor: hexToArray(darkBlue),
-            bgColor: hexToArray(lightBlue),
-            showGui: false,
-            showStats: false,
-          },
-          bubbleIntroSettings
-        ),
-      },
-      bubbleLanding: {
-        removeParticlesComunicator: null,
-        start: false,
-        hide: false,
-        reduce: false,
-        breath: 0,
-        projectsMode: false,
-        numParticles: numParticlesLanding, // 15, // 100,
-        settings: Object.assign(
-          {},
-          {
-            name: 'landing',
-            timeScale: 1, // 0.8,
-            particleRadius: 1,
-            particleAuraRadius: 60,
-            randomRadiusFactor: 0,
-            soothingFactor: 0.05,
-            auraTypeMix: 0.8,
-            repelExponent: 14,
-            centerAttractExponent: 20,
-            longRangeCenterAttract: 0.5,
-            equilibriumDistance: 24,
-            attarctiveness: 50,
-            longRangeTail: 0.6,
-            startRadius: 250,
-            center: {
-              xRatio: centerRatio,
-              yRatio: centerRatio,
-            },
-            showIsolated: true,
-            isolatedLabels: isolatedLabels,
-            projects: projects,
-            startPosMode: 'far',
-            hasBoundaries: true,
-            boundaries: {
-              right: {
-                wRatio: centerRatio,
-                offset: 400,
-              },
-              bottom: {
-                hRatio: centerRatio,
-                offset: 400,
-              },
-            },
-            blobColor: hexToArray(pink),
-            bgColor: hexToArray(darkBlue),
-            maxBreath: -30,
-            minBreath: -100,
-            showGui: false,
-          },
-          bubbleLandingSettings
-        ),
-      },
-      content: {
-        showHideClass: 'hide',
-      },
-      intro: {
-        logo: {
-          doShow: '',
-          dohide: '',
-        },
-        text: {
-          doShow: '',
-          dohide: '',
-          notFound: false,
-        },
-      },
-      about: {
-        show: false,
-        trueHide: false,
-      },
-      project: {
-        show: false,
-        project: {},
-        origin: { x: 0, y: 0 },
-        centerPosition: { x: 0, y: 0 },
-      },
-      curriculum: {
-        show: false,
-        isScrolling: false,
-        skillsArray: skillsArray,
-      },
-      scrollValueLimit: 1000,
-      scrollValueStack: 0,
-      scrollDateLimit: 100,
-      preventNavigation: false,
-      navTimeout: null,
-      waitScroll: false,
-      bloatedStack: 0,
-    };
-  },
+const contentClass = ref('hide');
 
-  computed: {
-    introAppear: function () {
-      return this.route === 'Intro';
-    },
+const showIntroText = ref(false);
+const isNotFoundText = ref(false);
+const showIntroLogo = ref(false);
 
-    landingAppear: function () {
-      return this.route === 'About';
-    },
-  },
+const about = ref({
+  show: false,
+  trueHide: false,
+});
 
-  mounted() {
-    document.body.classList.add('mounted');
+interface DisplayedProject {
+  id: string | null;
+  show: boolean;
+  project: Project | null;
+  origin: Position;
+  centerPosition: Position;
+}
 
-    // detect if touch event is working as supposed => touch device
-    const self = this;
-    window.addEventListener(
-      'touchstart',
-      function setHasTouch() {
-        self.hasTouch = true;
-        window.removeEventListener('touchstart', setHasTouch);
-      },
-      false
-    );
+const project = ref<DisplayedProject>({
+  id: null,
+  show: false,
+  project: null,
+  origin: { x: 0, y: 0 },
+  centerPosition: { x: 0, y: 0 },
+});
 
-    // prevent fake scroll
-    window.onLoad = function () {
-      window.scrollTo(0, 1);
-    };
+const curriculum = ref({
+  show: false,
+  isScrolling: false,
+  skillsArray: skillsArray,
+});
 
-    // prevent touchmove defaults on everything that hides the adress bar in chrome android
-    $('*').on(
-      {
-        touchmove: function (e) {
-          e.preventDefault();
-        },
-      },
-      { passive: true }
-    );
+const introAppear = computed(() => props.route === 'Intro');
+const landingAppear = computed(() => props.route === 'About');
 
-    // preload images
-    if (window.innerWidth <= 600) {
-      this.lazyloadProjectImages('smallImageUrl');
-    } else {
-      this.lazyloadProjectImages('imageUrl');
-    }
+onMounted(() => {
+  // Add class to body to hide the loader
+  document.body.classList.add('mounted');
 
-    switch (this.route) {
-      case 'Intro': {
-        this.checkBloatIntro();
-        this.setBodyBg(blue);
-        setTimeout(() => {
-          this.intro.text.doShow = uniqueID();
-          this.intro.logo.doShow = uniqueID();
-        }, 1000);
-        break;
-      }
-      case 'About':
-        this.setAboutState();
-        break;
-      case 'Projects': {
-        this.about.trueHide = true;
-        this.setProjectsState();
-        break;
-      }
-      case 'Curriculum': {
-        this.about.trueHide = true;
-        this.setCurriculumState();
-        break;
-      }
-      case 'NotFound': {
-        this.checkBloatIntro();
-        this.bubbleIntro.settings.showGui = true;
-        this.intro.text.notFound = true;
-        setTimeout(() => {
-          this.intro.text.doShow = uniqueID();
-        }, 500);
-        break;
-      }
-    }
+  // Preload images lazily
+  if (width.value <= 600) {
+    lazyloadProjectImages('smallImageUrl');
+  } else {
+    lazyloadProjectImages('imageUrl');
+  }
 
-    var timer;
-
-    window.addEventListener('wheel', e => {
-      let factor = 1;
-      if (e.deltaMode === 1) factor = 30;
-      const scrollValue = e.deltaY * factor;
-
-      clearTimeout(timer);
-
-      if (!this.curriculum.isScrolling) {
-        this.scrollValueStack += scrollValue;
-      }
-
-      timer = setTimeout(() => {
-        this.scrollValueStack = 0;
-        this.scrollHandler(0);
-      }, this.scrollDateLimit);
-
-      if (this.scrollValueStack >= this.scrollValueLimit) {
-        this.scrollValueStack = 0;
-        this.waitScroll = true;
-        setTimeout(() => {
-          this.waitScroll = false;
-        }, 1000);
-        this.next(); // go to next page
-      } else if (this.scrollValueStack <= -this.scrollValueLimit) {
-        this.scrollValueStack = 0;
-        this.waitScroll = true;
-        setTimeout(() => {
-          this.waitScroll = false;
-        }, 1000);
-        this.prev(); // go to prev page
-      } else if (!this.waitScroll) {
-        this.scrollHandler(this.scrollValueStack / this.scrollValueLimit); // handle scroll
-      }
-    });
-
-    window.addEventListener('showproject', e => {
-      this.project.show = true;
-      this.project.id = e.detail.id;
-      this.project.project = e.detail.project;
-      this.project.origin = e.detail.origin;
-      this.project.centerPosition = e.detail.centerPosition;
-      this.bubbleLanding.settings.bgColor = e.detail.project.bgColor;
-    });
-
-    window.addEventListener('hideproject', e => {
-      this.project.show = false;
-      if (this.route === 'Projects')
-        this.bubbleLanding.settings.bgColor = darkPink;
-      else if (this.route === 'About')
-        this.bubbleLanding.settings.bgColor = darkBlue;
-    });
-  },
-
-  methods: {
-    bloatIntroHandler: function () {
-      this.bloatedStack++;
-      if (this.bloatedStack >= 7) {
-        this.bloatedStack = 0;
-        if (numParticlesIntro > numParticlesIntroMin) {
-          numParticlesIntro -= 10;
-          this.bubbleIntro.removeParticlesComunicator = {
-            num: 10,
-            threshold: false,
-            id: uniqueID(),
-          };
-        }
-      }
-    },
-
-    checkBloatIntro: function () {
-      window.addEventListener('bloated-intro', this.bloatIntroHandler);
-    },
-
-    uncheckBloatIntro: function () {
-      this.bloatedStack = 0;
-      window.removeEventListener('bloated-intro', this.bloatIntroHandler);
-    },
-
-    bloatLandingHandler: function () {
-      this.bloatedStack++;
-      if (this.bloatedStack >= 7) {
-        this.bloatedStack = 0;
-        if (numParticlesLanding > numParticlesLandingMin) {
-          numParticlesLanding -= 10;
-          this.bubbleLanding.removeParticlesComunicator = {
-            num: 10,
-            threshold: true,
-            id: uniqueID(),
-          };
-        }
-      }
-    },
-
-    checkBloatLanding: function () {
-      window.addEventListener('bloated-landing', this.bloatLandingHandler);
-    },
-
-    uncheckBloatLanding: function () {
-      this.bloatedStack = 0;
-      window.removeEventListener('bloated-landing', this.bloatLandingHandler);
-    },
-
-    lazyloadProjectImages: function (urlName, cb) {
-      var i = projects.length - 1;
-
-      function loadImage(src) {
-        const img = new Image();
-        img.src = src;
-        img.onload = function () {
-          if (i > 0) loadImage(projects[i--][urlName]);
-          else if (cb && typeof cb === 'function') cb();
-        };
-      }
-
-      loadImage(projects[i].imageUrl);
-    },
-
-    setIntroState: function () {
-      this.checkBloatIntro();
-      this.setBodyBg(blue);
-      this.bubbleIntro.open = false;
-      this.about.show = false;
-      this.bubbleLanding.hide = true;
-      this.bubbleLanding.settings.bgColor = darkBlue;
-      this.bubbleLanding.projectsMode = false;
-      this.curriculum.show = false;
+  switch (props.route) {
+    case 'Intro': {
+      setIntroState();
       setTimeout(() => {
-        this.bubbleLanding.start = false;
-      }, 500);
-    },
-
-    setAboutState: function () {
-      this.checkBloatLanding();
-      this.uncheckBloatIntro();
-      this.setBodyBg(darkBlue);
-      if (!this.bubbleIntro.isOpen) this.bubbleIntro.open = true;
-      else {
-        this.bubbleLanding.hide = false;
-        this.bubbleLanding.start = true;
-      }
-      this.about.show = true;
-      this.about.trueHide = false;
-      this.content.showHideClass = 'show';
-      this.intro.logo.doHide = uniqueID();
-      this.intro.text.doHide = uniqueID();
-      this.bubbleLanding.settings.bgColor = darkBlue;
-      this.bubbleLanding.projectsMode = false;
-      this.curriculum.show = false;
-    },
-
-    setProjectsState: function () {
-      this.checkBloatLanding();
-      this.uncheckBloatIntro();
-      this.setBodyBg(darkPink);
-      if (!this.bubbleIntro.isOpen) this.bubbleIntro.open = true;
-      else {
-        this.bubbleLanding.hide = false;
-        this.bubbleLanding.start = true;
-      }
-      this.about.show = false;
-      this.content.showHideClass = 'show';
-      this.intro.logo.doHide = uniqueID();
-      this.intro.text.doHide = uniqueID();
-      this.bubbleLanding.settings.bgColor = darkPink;
-      this.bubbleLanding.projectsMode = true;
-      this.curriculum.show = false;
-    },
-
-    setCurriculumState: function () {
-      this.uncheckBloatLanding();
-      this.uncheckBloatIntro();
-      this.setBodyBg(blue);
-      if (!this.bubbleIntro.isOpen) {
-        this.bubbleIntro.open = true;
-      } else {
-        this.bubbleLanding.hide = false;
-      }
-      this.about.show = false;
-      this.content.showHideClass = 'show';
-      this.intro.logo.doHide = uniqueID();
-      this.intro.text.doHide = uniqueID();
-      this.curriculum.show = true;
-    },
-
-    endClosingHandler: function () {
-      this.bubbleIntro.isOpen = false;
-      this.intro.logo.doShow = uniqueID();
-      this.intro.text.doShow = uniqueID();
-      this.content.showHideClass = 'hide';
-    },
-
-    endOpeningHandler: function () {
-      this.bubbleIntro.isOpen = true;
-      this.bubbleLanding.hide = false;
-      if (!this.curriculum.show) {
-        this.bubbleLanding.start = true;
-      }
-    },
-
-    scrollHandler: function (ratio) {
-      switch (this.route) {
-        case 'Intro':
-          this.bubbleIntro.breath = ratio;
-          break;
-        case 'About':
-          this.bubbleLanding.breath = ratio;
-          break;
-        case 'Projects':
-          this.bubbleLanding.breath = ratio;
-          break;
-      }
-    },
-
-    next: function () {
-      if (!this.preventNavigation) {
-        switch (this.route) {
-          case 'Intro':
-            this.$router.push('/about');
-            break;
-          case 'About':
-            this.$router.push('/projects');
-            break;
-          case 'Projects':
-            this.$router.push('/curriculum');
-            break;
-        }
-        this.preventNavigationOn();
-      }
-    },
-
-    prev: function () {
-      if (!this.preventNavigation) {
-        switch (this.route) {
-          case 'About':
-            this.$router.push('/');
-            break;
-          case 'Projects':
-            this.$router.push('/about');
-            break;
-          case 'Curriculum':
-            this.$router.push('/projects');
-            break;
-        }
-        this.preventNavigationOn();
-      }
-    },
-
-    preventNavigationOn: function () {
-      if (this.navTimeout) clearTimeout(this.navTimeout);
-      this.preventNavigation = true;
-      this.navTimeout = setTimeout(() => {
-        this.preventNavigation = false;
-      }, 2000);
-    },
-
-    curriculumOnHandler: function () {
-      this.bubbleLanding.start = false;
-    },
-
-    curriculumOffHandler: function () {
-      this.bubbleLanding.start = true;
-    },
-
-    curriculumReachedTop: function () {
-      setTimeout(() => {
-        this.curriculum.isScrolling = false;
+        showIntroText.value = true;
+        showIntroLogo.value = true;
       }, 1000);
-    },
+      break;
+    }
+    case 'About':
+      setAboutState();
+      break;
+    case 'Projects': {
+      about.value.trueHide = true;
+      setProjectsState();
+      break;
+    }
+    case 'Curriculum': {
+      about.value.trueHide = true;
+      setCurriculumState();
+      break;
+    }
+    case 'NotFound': {
+      checkBloatIntro();
+      bubbleIntro.settings.showGui = true;
+      isNotFoundText.value = true;
+      setTimeout(() => {
+        showIntroText.value = true;
+      }, 500);
+      break;
+    }
+  }
 
-    curriculumScrollHandler: function () {
-      this.curriculum.isScrolling = true;
-    },
+  let timer: NodeJS.Timeout;
 
-    setBodyBg(color) {
-      document.body.setAttribute('style', 'background-color: ' + color + ';');
-    },
-  },
+  window.addEventListener('wheel', e => {
+    let factor = 1;
+    if (e.deltaMode === 1) factor = 30;
+    const scrollValue = e.deltaY * factor;
 
-  watch: {
-    route: function (newRoute, oldRoute) {
-      switch (newRoute) {
-        case 'Intro':
-          this.setIntroState();
-          break;
-        case 'About':
-          this.setAboutState();
-          break;
-        case 'Projects':
-          this.setProjectsState();
-          break;
-        case 'Curriculum':
-          this.setCurriculumState();
-          break;
-      }
-    },
-  },
-};
+    clearTimeout(timer);
+
+    if (!curriculum.value.isScrolling) {
+      scrollValueStack += scrollValue;
+    }
+
+    timer = setTimeout(() => {
+      scrollValueStack = 0;
+      scrollHandler(0);
+    }, scrollDateLimit);
+
+    if (scrollValueStack >= scrollValueLimit) {
+      scrollValueStack = 0;
+      waitScroll = true;
+      setTimeout(() => {
+        waitScroll = false;
+      }, 1000);
+      goToNextPage();
+    } else if (scrollValueStack <= -scrollValueLimit) {
+      scrollValueStack = 0;
+      waitScroll = true;
+      setTimeout(() => {
+        waitScroll = false;
+      }, 1000);
+      goToPrevPage();
+    } else if (!waitScroll) {
+      scrollHandler(scrollValueStack / scrollValueLimit);
+    }
+  });
+});
+
+useEventListener('show-project', e => {
+  project.value.show = true;
+  project.value.id = e.detail.id;
+  project.value.project = e.detail.project;
+  project.value.origin = e.detail.origin;
+  project.value.centerPosition = e.detail.centerPosition;
+  bubbleLanding.settings.bgColor = e.detail.project.bgColor;
+});
+
+useEventListener('hide-project', () => {
+  project.value.show = false;
+  if (props.route === 'Projects') {
+    bubbleLanding.settings.bgColor = secondaryDark;
+  } else if (props.route === 'About') {
+    bubbleLanding.settings.bgColor = primaryDark;
+  }
+});
+
+function bloatIntroHandler(): void {
+  bloatedStack++;
+  if (bloatedStack >= 7) {
+    bloatedStack = 0;
+    if (numParticlesIntro.value > numParticlesIntroMin) {
+      numParticlesIntro.value -= 10;
+      bubbleIntro.removeParticles = {
+        num: 10,
+        threshold: false,
+      };
+    }
+  }
+}
+
+function checkBloatIntro(): void {
+  window.addEventListener('bloated-intro', bloatIntroHandler);
+}
+
+function uncheckBloatIntro(): void {
+  bloatedStack = 0;
+  window.removeEventListener('bloated-intro', bloatIntroHandler);
+}
+
+function bloatLandingHandler(): void {
+  bloatedStack++;
+  if (bloatedStack >= 7) {
+    bloatedStack = 0;
+    if (numParticlesLanding.value > numParticlesLandingMin) {
+      numParticlesLandingRemoved.value += 10;
+      bubbleLanding.removeParticles = {
+        num: 10,
+        threshold: true,
+      };
+    }
+  }
+}
+
+function checkBloatLanding(): void {
+  window.addEventListener('bloated-landing', bloatLandingHandler);
+}
+
+function uncheckBloatLanding(): void {
+  bloatedStack = 0;
+  window.removeEventListener('bloated-landing', bloatLandingHandler);
+}
+
+function lazyloadProjectImages(
+  urlField: 'smallImageUrl' | 'imageUrl',
+  callback?: () => void
+): void {
+  var i = projects.length - 1;
+
+  function loadImage(src: string): void {
+    const img = new Image();
+    img.src = src;
+    img.onload = function () {
+      if (i > 0) loadImage(projects[i--][urlField]);
+      else callback?.();
+    };
+  }
+
+  loadImage(projects[i].imageUrl);
+}
+
+function setIntroState(): void {
+  checkBloatIntro();
+  setBodyBg(primary);
+  bubbleIntro.open = false;
+  about.value.show = false;
+  bubbleLanding.hide = true;
+  bubbleLanding.settings.bgColor = primaryDark;
+  bubbleLanding.projectsMode = false;
+  curriculum.value.show = false;
+  setTimeout(() => {
+    bubbleLanding.start = false;
+  }, 500);
+}
+
+function setAboutState(): void {
+  checkBloatLanding();
+  uncheckBloatIntro();
+  setBodyBg(primaryDark);
+  if (!isBubbleIntroOpen.value) {
+    bubbleIntro.open = true;
+  } else {
+    bubbleLanding.hide = false;
+    bubbleLanding.start = true;
+  }
+  about.value.show = true;
+  about.value.trueHide = false;
+  contentClass.value = 'show';
+  showIntroLogo.value = false;
+  showIntroText.value = false;
+  bubbleLanding.settings.bgColor = primaryDark;
+  bubbleLanding.projectsMode = false;
+  curriculum.value.show = false;
+}
+
+function setProjectsState(): void {
+  checkBloatLanding();
+  uncheckBloatIntro();
+  setBodyBg(secondaryDark);
+  if (!isBubbleIntroOpen.value) {
+    bubbleIntro.open = true;
+  } else {
+    bubbleLanding.hide = false;
+    bubbleLanding.start = true;
+  }
+  about.value.show = false;
+  contentClass.value = 'show';
+  showIntroLogo.value = false;
+  showIntroText.value = false;
+  bubbleLanding.settings.bgColor = secondaryDark;
+  bubbleLanding.projectsMode = true;
+  curriculum.value.show = false;
+}
+
+function setCurriculumState(): void {
+  uncheckBloatLanding();
+  uncheckBloatIntro();
+  setBodyBg(primary);
+  if (!isBubbleIntroOpen.value) {
+    bubbleIntro.open = true;
+  } else {
+    bubbleLanding.hide = false;
+  }
+  about.value.show = false;
+  contentClass.value = 'show';
+  showIntroLogo.value = false;
+  showIntroText.value = false;
+  curriculum.value.show = true;
+}
+
+function endClosingHandler(): void {
+  isBubbleIntroOpen.value = false;
+  showIntroLogo.value = true;
+  showIntroText.value = true;
+  contentClass.value = 'hide';
+}
+
+function endOpeningHandler(): void {
+  isBubbleIntroOpen.value = true;
+  bubbleLanding.hide = false;
+  if (!curriculum.value.show) {
+    bubbleLanding.start = true;
+  }
+}
+
+function scrollHandler(ratio: number): void {
+  switch (props.route) {
+    case 'Intro':
+      bubbleIntro.breath = ratio;
+      break;
+    case 'About':
+      bubbleLanding.breath = ratio;
+      break;
+    case 'Projects':
+      bubbleLanding.breath = ratio;
+      break;
+  }
+}
+
+function goToNextPage(): void {
+  if (!preventNavigation) {
+    switch (props.route) {
+      case 'Intro':
+        router.push('/about');
+        break;
+      case 'About':
+        router.push('/projects');
+        break;
+      case 'Projects':
+        router.push('/curriculum');
+        break;
+    }
+    preventNavigationOn();
+  }
+}
+
+function goToPrevPage(): void {
+  if (!preventNavigation) {
+    switch (props.route) {
+      case 'About':
+        router.push('/');
+        break;
+      case 'Projects':
+        router.push('/about');
+        break;
+      case 'Curriculum':
+        router.push('/projects');
+        break;
+    }
+    preventNavigationOn();
+  }
+}
+
+function preventNavigationOn(): void {
+  if (navTimeout) clearTimeout(navTimeout);
+  preventNavigation = true;
+  navTimeout = setTimeout(() => {
+    preventNavigation = false;
+  }, 2000);
+}
+
+function curriculumOnHandler(): void {
+  bubbleLanding.start = false;
+}
+
+function curriculumOffHandler(): void {
+  bubbleLanding.start = true;
+}
+
+function curriculumReachedTop(): void {
+  setTimeout(() => {
+    curriculum.value.isScrolling = false;
+  }, 1000);
+}
+
+function curriculumScrollHandler(): void {
+  curriculum.value.isScrolling = true;
+}
+
+function setBodyBg(color: string): void {
+  document.body.style.setProperty('background-color', color);
+}
+
+watch(
+  () => props.route,
+  newRoute => {
+    switch (newRoute) {
+      case 'Intro':
+        setIntroState();
+        break;
+      case 'About':
+        setAboutState();
+        break;
+      case 'Projects':
+        setProjectsState();
+        break;
+      case 'Curriculum':
+        setCurriculumState();
+        break;
+    }
+  }
+);
 </script>

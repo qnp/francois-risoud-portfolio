@@ -1,7 +1,5 @@
 <template lang="pug">
-main.curriculum(
-  :class="(show ? 'show' : 'hide') + (trueHide ? ' true-hide' : '')"
-)
+main.curriculum(:class="classes")
   .mask
   #iscroll.wrapper
     ul.content
@@ -9,10 +7,13 @@ main.curriculum(
         .date
           .year March 2022 – now
         .thing
-          .occupation Lead web developer
+          .occupation Lead fullstack developer & <br/> Head of web
           .location
-            a(href="https://fifteen.eu" target="_blank") Fifteen
-              inline-svg(:src="svgNewWindow")
+            a(
+              href="https://fifteen.eu"
+              target="_blank"
+            ) Fifteen
+              InlineSvg(:src="svgNewWindow")
             | , Vanves, France
       li.item
         .date
@@ -20,8 +21,11 @@ main.curriculum(
         .thing
           .occupation Fullstack web developer
           .location
-            a(href="https://zoov.eu" target="_blank") Zoov by Fifteen
-              inline-svg(:src="svgNewWindow")
+            a(
+              href="https://zoov.eu"
+              target="_blank"
+            ) Zoov by Fifteen
+              InlineSvg(:src="svgNewWindow")
             | , Vanves, France
       li.item
         .date
@@ -35,8 +39,11 @@ main.curriculum(
         .thing
           .occupation Music producer
           .location
-            a(href="https://bredrinrecords.com" target="_blank") Bredrin Records
-              inline-svg(:src="svgNewWindow")
+            a(
+              href="https://bredrinrecords.com"
+              target="_blank"
+            ) Bredrin Records
+              InlineSvg(:src="svgNewWindow")
             | , Paris, France
       li.item
         .date
@@ -44,11 +51,17 @@ main.curriculum(
         .thing
           .occupation PhD in Theoretical Quantum Physics
           .location
-            a(href="http://www.ens.fr" target="_blank") École Normale Supérieure
-              inline-svg(:src="svgNewWindow")
+            a(
+              href="http://www.ens.fr"
+              target="_blank"
+            ) École Normale Supérieure
+              InlineSvg(:src="svgNewWindow")
             | ,&nbsp;
-            a(href="https://www.sorbonne-universite.fr" target="_blank") UPMC
-              inline-svg(:src="svgNewWindow")
+            a(
+              href="https://www.sorbonne-universite.fr"
+              target="_blank"
+            ) UPMC
+              InlineSvg(:src="svgNewWindow")
             | , Paris, France
       li.item
         .date
@@ -56,38 +69,71 @@ main.curriculum(
         .thing
           .occupation Master Degree in Theoretical, Physical & Analytical Chemistry
           .location
-            a(href="http://www.ens.fr" target="_blank") École Normale Supérieure
-              inline-svg(:src="svgNewWindow")
+            a(
+              href="http://www.ens.fr"
+              target="_blank"
+            ) École Normale Supérieure
+              InlineSvg(:src="svgNewWindow")
             | ,&nbsp;
-            a(href="https://www.sorbonne-universite.fr" target="_blank") UPMC
-              inline-svg(:src="svgNewWindow")
+            a(
+              href="https://www.sorbonne-universite.fr"
+              target="_blank"
+            ) UPMC
+              InlineSvg(:src="svgNewWindow")
             | , Paris, France
       li.item
         .date
           .skill-tag skills
         .thing
-          span.category(v-for="category in skillsArray")
+          span.category(
+            v-for="(category, i) in skillsArray"
+            :key="i"
+          )
             span.type {{ category.type }}
             span.skills
-              span(v-for="skill in category.content") {{ skill + ', ' }}
+              span(
+                v-for="(skill, j) in category.content"
+                :key="`${i}-${j}`"
+              ) {{ skill + ', ' }}
       li.item
         .date
           .year clients
         .thing.logos
-          a.logo(href="http://maison-solide.fr" target="_blank")
-            inline-svg(:src="svgSolide")
-          a.logo.datagif(href="http://www.datagif.fr" target="_blank")
-            inline-svg(:src="svgDatagif")
-          a.logo(href="https://www.policestudio.fr" target="_blank")
-            inline-svg(:src="svgPolice")
-          a.logo(href="https://www.habx.fr" target="_blank")
-            inline-svg(:src="svgHabx")
-          a.logo(href="http://4nparis.com" target="_blank")
-            inline-svg(:src="svg4N")
-          a.logo(href="http://zoov.eu" target="_blank")
-            inline-svg(:src="svgZoov")
-          a.logo(href="http://fifteen.eu" target="_blank")
-            inline-svg(:src="svgFifteen")
+          a.logo(
+            href="http://maison-solide.fr"
+            target="_blank"
+          )
+            InlineSvg(:src="svgSolide")
+          a.logo.datagif(
+            href="http://www.datagif.fr"
+            target="_blank"
+          )
+            InlineSvg(:src="svgDatagif")
+          a.logo(
+            href="https://www.policestudio.fr"
+            target="_blank"
+          )
+            InlineSvg(:src="svgPolice")
+          a.logo(
+            href="https://www.linkedin.com/company/habx"
+            target="_blank"
+          )
+            InlineSvg(:src="svgHabx")
+          a.logo(
+            href="http://4nparis.com"
+            target="_blank"
+          )
+            InlineSvg(:src="svg4N")
+          a.logo(
+            href="http://zoov.eu"
+            target="_blank"
+          )
+            InlineSvg(:src="svgZoov")
+          a.logo(
+            href="http://fifteen.eu"
+            target="_blank"
+          )
+            InlineSvg(:src="svgFifteen")
 </template>
 
 <style lang="stylus">
@@ -106,7 +152,7 @@ main.curriculum
   transition opacity 0.5s linear
 
   a:not(.logo)
-    font-weight 400 // 700
+    font-weight 400
 
     .inline-svg
       display inline
@@ -116,7 +162,8 @@ main.curriculum
         width 0.28em
         height 1em
 
-        path
+        path,
+        polygon
           fill $theme-color-white
 
   .mask
@@ -188,7 +235,6 @@ main.curriculum
         .occupation,
         .type
           line-height 1.25em
-          // font-weight 600
           font-weight 700
           font-size ($golden-num ** 2) em
 
@@ -230,7 +276,8 @@ main.curriculum
             svg
               height $golden-num em
 
-            path
+            path,
+            polygon
               fill white
 
   &.show
@@ -239,9 +286,6 @@ main.curriculum
   &.hide
     opacity 0
     pointer-events none
-
-  &.true-hide
-    display none
 
 .iScrollVerticalScrollbar
   position absolute
@@ -326,8 +370,6 @@ main.curriculum
 
     .wrapper
       top: $content-margin-top-mobile + $theme-margin-top-mobile
-      // left $theme-margin-left-right-mobile
-      // right $theme-margin-left-right-mobile
 
     .content
       padding-bottom $content-margin-top-mobile
@@ -369,8 +411,6 @@ main.curriculum
 
     .wrapper
       top ($content-margin-top-mobile - 10px) + ($theme-margin-top-mobile - 10px)
-      // left ($theme-margin-left-right-mobile - 10px)
-      // right ($theme-margin-left-right-mobile - 10px)
 
     .content
       padding-bottom: ($content-margin-top-mobile - 10px)
@@ -386,10 +426,9 @@ main.curriculum
       left ($theme-margin-left-right-mobile - 10px) / 2 - 3px
 </style>
 
-<script>
+<script setup lang="ts">
 import InlineSvg from '@/components/utils/InlineSvg.vue';
-
-import svgNewWindow from '@/assets/images/new-window-mobile.svg';
+import svgNewWindow from '@/assets/images/new-window-inline.svg';
 import svgSolide from '@/assets/images/logos/solide.svg';
 import svgDatagif from '@/assets/images/logos/datagif.svg';
 import svgPolice from '@/assets/images/logos/police.svg';
@@ -398,88 +437,81 @@ import svg4N from '@/assets/images/logos/4N.svg';
 import svgZoov from '@/assets/images/logos/zoov.svg';
 import svgFifteen from '@/assets/images/logos/fifteen.svg';
 
-export default {
-  name: 'curriculum-content',
+export interface CurriculumContentProps {
+  /**
+   * Whether to show the content
+   */
+  show: boolean;
+  /**
+   * The skills array
+   */
+  skillsArray: SkillsGroup[];
+}
 
-  components: {
-    InlineSvg,
-  },
+const props = withDefaults(defineProps<CurriculumContentProps>(), {
+  show: false,
+  skillsArray: () => [],
+});
 
-  props: {
-    show: Boolean,
-    trueHide: Boolean,
-    skillsArray: Array,
-  },
+const emit = defineEmits<{
+  (event: 'reached-top'): void;
+  (event: 'scroll'): void;
+  (event: 'on'): void;
+  (event: 'off'): void;
+}>();
 
-  mounted() {},
+const classes = computed(() => ({
+  show: props.show,
+  hide: !props.show,
+}));
 
-  data() {
-    return {
-      myScroll: null,
-      svgNewWindow,
-      svgSolide,
-      svgDatagif,
-      svgPolice,
-      svgHabx,
-      svg4N,
-      svgZoov,
-      svgFifteen,
-    };
-  },
+let myScroll: IScroll | null = null;
 
-  methods: {
-    setScroll: function () {
-      const self = this;
+function setScroll(): void {
+  import('iscroll/build/iscroll-probe.js')
+    .then(iScroll => {
+      myScroll = new iScroll.default('#iscroll', {
+        probeType: 2,
+        scrollX: false,
+        scrollY: true,
+        click: true,
+        tap: true,
+        mouseWheel: true,
+        bounce: true,
+        scrollbars: 'custom',
+        shrinkScrollbars: 'scale',
+        fadeScrollbars: true,
+        interactiveScrollbars: false,
+        disablePointer: true, // important to disable the pointer events that causes the issues
+        disableTouch: false, // false if you want the slider to be usable with touch devices
+        disableMouse: false, // false if you want the slider to be usable with a mouse (desktop)
+      });
 
-      import('iscroll/build/iscroll-probe.js')
-        .then(function (IScroll) {
-          self.myScroll = new IScroll.default('#iscroll', {
-            probeType: 2,
-            scrollX: false,
-            scrollY: true,
-            click: true,
-            tap: true,
-            mouseWheel: true,
-            bounce: true,
-            scrollbars: 'custom',
-            shrinkScrollbars: 'scale',
-            fadeScrollbars: true,
-            interactiveScrollbars: false,
-            disablePointer: true, // important to disable the pointer events that causes the issues
-            disableTouch: false, // false if you want the slider to be usable with touch devices
-            disableMouse: false, // false if you want the slider to be usable with a mouse (desktop)
-          });
+      myScroll.on('scroll', function (this: IScroll) {
+        if (this.y >= 0) emit('reached-top');
+        else emit('scroll');
+      });
+    })
+    .catch(function (err) {
+      throw err;
+    });
+}
 
-          self.myScroll.on('scroll', function () {
-            if (this.y >= 0) self.$emit('reached-top');
-            else self.$emit('scroll');
-          });
-        })
-        .catch(function (err) {
-          throw err;
-        });
-    },
+function unsetScroll(): void {
+  myScroll?.destroy();
+  myScroll = null;
+}
 
-    unsetScroll: function () {
-      this.myScroll.destroy();
-      this.myScroll = null;
-    },
-  },
-
-  watch: {
-    show: function (newVal, oldVal) {
-      if (newVal) {
-        this.setScroll();
-        setTimeout(() => {
-          this.$emit('on');
-        }, 600);
-      } else {
-        this.unsetScroll();
-        setTimeout(() => {
-          this.$emit('off');
-        }, 400);
-      }
-    },
-  },
-};
+watch(
+  () => props.show,
+  newVal => {
+    if (newVal) {
+      setScroll();
+      setTimeout(() => emit('on'), 600);
+    } else {
+      unsetScroll();
+      setTimeout(() => emit('off'), 400);
+    }
+  }
+);
 </script>
