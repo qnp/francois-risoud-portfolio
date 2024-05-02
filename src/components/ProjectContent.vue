@@ -155,7 +155,7 @@ body.has-touch
 </style>
 
 <script setup lang="ts">
-import svgNewWindow from '@/assets/images/new-window-mobile.svg';
+import svgNewWindow from '@/assets/images/new-window-inline.svg';
 import InlineSvg from '@/components/utils/InlineSvg.vue';
 import ActionStack from '@/utils/action-stack';
 

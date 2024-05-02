@@ -421,7 +421,7 @@ main.curriculum
 <script setup lang="ts">
 import InlineSvg from '@/components/utils/InlineSvg.vue';
 
-import svgNewWindow from '@/assets/images/new-window-mobile.svg';
+import svgNewWindow from '@/assets/images/new-window-inline.svg';
 import svgSolide from '@/assets/images/logos/solide.svg';
 import svgDatagif from '@/assets/images/logos/datagif.svg';
 import svgPolice from '@/assets/images/logos/police.svg';
