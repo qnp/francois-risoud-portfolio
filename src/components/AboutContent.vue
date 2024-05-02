@@ -183,7 +183,7 @@ export interface AboutContentProps {
   /**
    * Controls the visibility of the component.
    */
-  modelValue: boolean;
+  show: boolean;
   /**
    * Completely hides the component, regardless of the model value.
    */
@@ -193,8 +193,8 @@ export interface AboutContentProps {
 const props = defineProps<AboutContentProps>();
 
 const classes = computed(() => ({
-  'AboutContent--show': props.modelValue,
-  'AboutContent--hide': !props.modelValue,
+  'AboutContent--show': props.show,
+  'AboutContent--hide': !props.show,
   'AboutContent--hidden': props.hidden,
 }));
 </script>

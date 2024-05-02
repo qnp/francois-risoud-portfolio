@@ -2273,6 +2273,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/iscroll@^5.2.10":
+  version "5.2.10"
+  resolved "https://registry.yarnpkg.com/@types/iscroll/-/iscroll-5.2.10.tgz#e833613caac6e3b8518515ae66bf6012f5c527d3"
+  integrity sha512-Z6V7uT5c3ceT/GuXesd5WQ5CaAezypIeRBLtUNV0auzCCiu/mhPOgr7DBjvg6ed060S8OIeV7AEvs2GPMcVqxg==
+
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/@types/istanbul-lib-coverage/-/istanbul-lib-coverage-2.0.4.tgz#8467d4b3c087805d63580480890791277ce35c44"
@@ -4961,11 +4966,6 @@ elegant-spinner@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/elegant-spinner/-/elegant-spinner-1.0.1.tgz#db043521c95d7e303fd8f345bedc3349cfb0729e"
   integrity sha1-2wQ1IcldfjA/2PNFvtwzSc+wcp4=
-
-element-closest@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/element-closest/-/element-closest-3.0.2.tgz#3814a69a84f30e48e63eaf57341f4dbf4227d2aa"
-  integrity sha512-JxKQiJKX0Zr5Q2/bCaTx8P+UbfyMET1OQd61qu5xQFeWr1km3fGaxelSJtnfT27XQ5Uoztn2yIyeamAc/VX13g==
 
 elf-cam@^0.1.1:
   version "0.1.1"

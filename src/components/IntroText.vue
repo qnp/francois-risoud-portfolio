@@ -1,5 +1,5 @@
 <template lang="pug">
-.intro-text.hide
+.intro-text(:class="classes")
   h1
     span.name {{ notFound ? '404' : 'François Risoud' }}
     span.type &nbsp;{{ notFound ? 'Not Found' : 'Portfolio' }}
@@ -19,6 +19,7 @@
   display flex
   align-items center
   justify-content center
+  pointer-events none
 
   h1
     font-family 'Raleway', sans-serif
@@ -29,6 +30,7 @@
     transition opacity 0.5s
     text-align center
     line-height $golden-num
+    opacity 0
 
     .name
       font-weight 700
@@ -46,12 +48,6 @@
       display inline-block
       transform scaleX(-1)
 
-  &.hide
-    pointer-events none
-
-    h1
-      opacity 0
-
   &.show
     pointer-events auto
 
@@ -64,46 +60,23 @@
         transition-delay 2s
 </style>
 
-<script lang="ts">
-export default {
-  name: 'intro-text',
+<script setup lang="ts">
+export interface IntroTextProps {
+  /**
+   * Whether to show the intro text
+   */
+  show: boolean;
+  /**
+   * Specific text and emoji to show when for 404 not found
+   */
+  notFound: boolean;
+}
 
-  props: {
-    doShow: String,
-    doHide: String,
-    notFound: {
-      type: Boolean,
-      default: false,
-    },
-  },
+const props = withDefaults(defineProps<IntroTextProps>(), {
+  notFound: false,
+});
 
-  methods: {
-    show: function () {
-      const $el = this.$el;
-
-      $el.classList.remove('hide');
-      $el.classList.add('show');
-    },
-
-    hide: function () {
-      const $el = this.$el;
-
-      $el.classList.add('hide');
-      $el.classList.remove('show');
-    },
-  },
-
-  watch: {
-    doShow: function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.show();
-      }
-    },
-    doHide: function (newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.hide();
-      }
-    },
-  },
-};
+const classes = computed(() => ({
+  show: props.show,
+}));
 </script>

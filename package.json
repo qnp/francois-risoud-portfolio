@@ -18,7 +18,6 @@
     "@vueuse/core": "^10.9.0",
     "connect-history-api-fallback": "^1.5.0",
     "dat.gui": "^0.7.1",
-    "element-closest": "^3.0.2",
     "incremental": "^1.0.1",
     "iscroll": "^5.2.0",
     "matter-attractors": "^0.1.6",
@@ -34,6 +33,7 @@
   "devDependencies": {
     "@prettier/plugin-pug": "^1.19.2",
     "@types/dat.gui": "^0.7.13",
+    "@types/iscroll": "^5.2.10",
     "@types/matter-js": "^0.19.6",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/language-plugin-pug": "^2.0.15",

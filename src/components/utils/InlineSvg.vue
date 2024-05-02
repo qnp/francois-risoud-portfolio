@@ -1,12 +1,12 @@
 <template lang="pug">
-.InlineSvg(
+.inline-svg(
   v-once
   v-html="src"
 )
 </template>
 
 <style lang="stylus">
-.InlineSvg
+.inline-svg
   display flex
   align-items center
 </style>

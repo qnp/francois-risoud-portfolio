@@ -8,9 +8,15 @@ import uniqueId from '@/utils/unique-id';
 
 import type { RgbColorArray } from '@/utils/hex-to-rgb-array';
 
-export interface Position {
-  x: number;
-  y: number;
+/**
+ * Normalize a color to an RGB array
+ * @param color - The color to normalize
+ */
+function normalizeColor(color: string | RgbColorArray): RgbColorArray {
+  let colorArray;
+  if (typeof color === 'string') return hexToRgbArray(color);
+  else if (Array.isArray(color)) return color;
+  else throw new Error('normalizeColor needs a hex color or an rgb array');
 }
 
 /**
@@ -76,7 +82,7 @@ class ParticleView {
       `transform: translate(${pos.x - this.w / 2}px,${pos.y - this.h / 2}px);`
     );
 
-    const updateOriginEvent = new CustomEvent('updateorigin', {
+    const updateOriginEvent = new CustomEvent('update-origin', {
       detail: {
         id: this.id,
         newPos: {
@@ -161,24 +167,28 @@ class ProjectParticleView extends ParticleView {
 
     const self = this;
 
-    this.circle.addEventListener('touchstart', event => {
-      if (!self.open) {
-        setTimeout(() => {
-          domElem.addEventListener('touchstart', function handleOut() {
-            self.mouseleaveHandler();
-            self.circle.classList.remove('hover');
-            domElem.removeEventListener('touchstart', handleOut);
-          });
-        }, 50);
-        self.mouseenterHandler(event);
-        self.circle.classList.add('hover');
-      }
-    });
+    this.circle.addEventListener(
+      'touchstart',
+      event => {
+        if (!self.open) {
+          setTimeout(() => {
+            domElem.addEventListener('touchstart', function handleOut() {
+              self.mouseleaveHandler();
+              self.circle.classList.remove('hover');
+              domElem.removeEventListener('touchstart', handleOut);
+            });
+          }, 50);
+          self.mouseenterHandler(event);
+          self.circle.classList.add('hover');
+        }
+      },
+      { passive: true }
+    );
   }
 
   mouseenterHandler(event: MouseEvent | TouchEvent) {
     this.open = true;
-    const showProjectEvent = new CustomEvent('showproject', {
+    const showProjectEvent = new CustomEvent('show-project', {
       detail: {
         id: this.id,
         project: this.project,
@@ -198,7 +208,7 @@ class ProjectParticleView extends ParticleView {
 
   mouseleaveHandler() {
     this.open = false;
-    window.dispatchEvent(new Event('hideproject'));
+    window.dispatchEvent(new CustomEvent('hide-project'));
   }
 
   off() {
@@ -206,7 +216,24 @@ class ProjectParticleView extends ParticleView {
       this.mouseenterHandler(event);
     });
     this.circle.removeEventListener('mouseleave', this.mouseleaveHandler);
-    window.dispatchEvent(new Event('hideproject'));
+    window.dispatchEvent(new CustomEvent('hide-project'));
+  }
+}
+
+declare global {
+  interface WindowEventMap {
+    'show-project': CustomEvent<{
+      id: string;
+      project: Project;
+      centerPosition: Position;
+      origin: Position;
+    }>;
+    'hide-project': CustomEvent<void>;
+    'update-origin': CustomEvent<{
+      id: string;
+      newPos: Position;
+    }>;
+    [key: `bloated-${string}`]: CustomEvent<void>;
   }
 }
 
@@ -222,7 +249,8 @@ export interface BubbleSettings {
   effectiveCheckRadius: number;
   maxNeighbours: number;
   particleMass?: number;
-  blobColor: RgbColorArray;
+  bgColor: string | RgbColorArray;
+  blobColor: string | RgbColorArray;
   soothingFactor: number;
   attractiveness: number;
   equilibriumDistance: number;
@@ -247,7 +275,6 @@ export interface BubbleSettings {
   playPhysics: boolean;
   randomRadiusFactor: number;
   auraTypeMix: number;
-  bgColor: RgbColorArray;
   startPosMode: 'circle' | 'far';
   showIsolated?: boolean;
   projects: Project[];
@@ -393,7 +420,7 @@ export function createBubble(
     const particleMass = settings.particleMass ?? 50;
     const viscosity = settings.viscosity ?? 0;
 
-    const bloatedEvent = new Event('bloated-' + settings.name);
+    const bloatedEvent = new CustomEvent('bloated-' + settings.name);
 
     // Show labels
     let leftLabels = settings.isolatedLabels.slice(0);
@@ -415,11 +442,17 @@ export function createBubble(
     const minBreath = settings.minBreath;
 
     // Set body background color to prevent white flashes on window resize
-    function setBodyBg(color: number[]) {
+    function setBodyBg(color: string | RgbColorArray) {
       const formattedBgStr =
-        'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')';
+        typeof color === 'string'
+          ? color
+          : 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')';
       document.body.style.setProperty('background-color', formattedBgStr);
     }
+
+    // Normalize initial colors
+    settings.bgColor = normalizeColor(settings.bgColor);
+    settings.blobColor = normalizeColor(settings.blobColor);
 
     /*******
      * gui *
@@ -1025,8 +1058,8 @@ export function createBubble(
         const colorData = new Float32Array(3);
         const bgcolorData = new Float32Array(3);
         for (let i = 0; i < 3; i++) {
-          colorData[i] = settings.blobColor[i] / 255;
-          bgcolorData[i] = settings.bgColor[i] / 255;
+          colorData[i] = normalizeColor(settings.blobColor)[i] / 255;
+          bgcolorData[i] = normalizeColor(settings.bgColor)[i] / 255;
         }
 
         gl?.uniform3fv(metaballsHandle, dataToSendToGPU);
@@ -1275,11 +1308,7 @@ export function createBubble(
       },
 
       changeColor(ref, newColor) {
-        let colorArray;
-
-        if (typeof newColor === 'string') colorArray = hexToRgbArray(newColor);
-        else if (Array.isArray(newColor)) colorArray = newColor;
-        else throw new Error('changeBgColor needs a hex color or an rgb array');
+        const colorArray = normalizeColor(newColor);
 
         actionStack.remove(['change-' + ref + '-color']).add({
           name: 'change-' + ref + '-color',
@@ -1719,7 +1748,7 @@ export function createBubble(
     }
 
     // Window resize
-    window.addEventListener('resize', event => {
+    window.addEventListener('resize', () => {
       const oldW = WIDTH;
       const oldH = HEIGHT;
 

@@ -42,7 +42,7 @@
           x2="25"
           y2="5"
         )
-  nav(:class="[...navClasses, value ? 'show' : 'hide']")
+  nav(:class="computedNavClasses")
     .menu-wrapper
       .menu
         router-link.home(
@@ -344,7 +344,6 @@
             transition stroke 0.3s linear
 
           &:nth-child(1)
-            // animation line1-close 0.4s 0.5s ease-out forwards, line1-untrans 0.2s ease-in-out forwards
             line
               stroke-dasharray 30px 30px
               stroke-dashoffset 30px
@@ -355,7 +354,6 @@
             animation line2-close 0.6s 0.5s linear forwards
 
           &:nth-child(3)
-            // animation line3-close 0.4s 0.5s ease-out forwards, line3-untrans 0.2s ease-in-out forwards
             line
               stroke-dasharray 30px 30px
               stroke-dashoffset -30px
@@ -462,13 +460,6 @@
   100%
     transform translate(0, 0) scaleX(1)
 
-@keyframes line1-untrans
-  0%
-    transform translate(0, 0) scaleX(1)
-
-  100%
-    transform translate(0, -2.5px) scaleX(1.2)
-
 @keyframes line5-uncross
   0%
     stroke-dashoffset 0
@@ -503,13 +494,6 @@
 
   100%
     transform translate(0, 0) scaleX(1)
-
-@keyframes line3-untrans
-  0%
-    transform translate(0, 0) scaleX(1)
-
-  100%
-    transform translate(0, 2.5px) scaleX(1.2)
 
 @keyframes mobile-menu
   0%
@@ -547,95 +531,80 @@
     opacity 0
 </style>
 
-<script lang="ts">
+<script setup lang="ts">
 import svgEk from '@/assets/images/ek.svg';
 
 import InlineSvg from '@/components/utils/InlineSvg.vue';
 
-import $ from '@/utils/$';
-// import raf from 'raf';
+export interface AppMenuProps {
+  /**
+   * Whether to show the menu
+   */
+  value?: boolean;
+  /**
+   * The route name to highlight
+   */
+  route?: string;
+}
 
-export default {
-  name: 'the-menu',
+const props = withDefaults(defineProps<AppMenuProps>(), {
+  value: false,
+  route: 'About',
+});
 
-  components: { InlineSvg },
+const pendingRoute = ref('');
+const mobileOpen = ref(false);
+const burgerOpen = ref(false);
+const animating = ref(false);
+const navClasses = ref<string[]>([]);
+const navWrapperClasses = ref<string[]>([]);
+const timer = ref<NodeJS.Timeout | null>(null);
 
-  props: {
-    value: {
-      type: Boolean,
-      default: false,
-    },
-    // preventNavigation: false,
-    route: {
-      type: String,
-      default: 'About',
-    },
-  },
+const computedNavClasses = computed(() => {
+  return [...navClasses.value, props.value ? 'show' : 'hide'];
+});
 
-  data() {
-    return {
-      svgEk,
-      allA: [],
-      pendingRoute: '',
-      mobileOpen: false,
-      burgerOpen: false,
-      animating: false,
-      navClasses: [],
-      navWrapperClasses: [],
-      timer: null,
-    };
-  },
+const aboutClass = computed(() => ({ active: props.route === 'About' }));
+const projectsClass = computed(() => ({ active: props.route === 'Projects' }));
+const curriculumClass = computed(() => ({
+  active: props.route === 'Curriculum',
+}));
 
-  computed: {
-    aboutClass: function () {
-      return this.route === 'About' ? 'active' : '';
-    },
-    projectsClass: function () {
-      return this.route === 'Projects' ? 'active' : '';
-    },
-    curriculumClass: function () {
-      return this.route === 'Curriculum' ? 'active' : '';
-    },
-  },
-
-  methods: {
-    open() {
-      this.animating = true;
-      this.navClasses = [];
-      this.navWrapperClasses = ['mobile-open'];
-      setTimeout(() => (this.navClasses = ['appear']), 50);
-      setTimeout(() => (this.animating = false), 350);
-    },
-    close() {
-      this.animating = true;
-      this.navClasses = ['disappear'];
-      setTimeout(() => (this.navWrapperClasses = ['mobile-close']), 300);
-      if (this.timer) clearTimeout(this.timer);
-      this.timer = setTimeout(() => {
-        this.navWrapperClasses = [];
-        this.animating = false;
-      }, 1000);
-      setTimeout(() => {
-        if (this.navWrapperClasses.includes('mobile-open')) {
-          this.navWrapperClasses = this.navWrapperClasses.filter(
-            c => c !== 'mobile-open'
-          );
-        }
-      }, 350);
-    },
-    onClickBurger() {
-      if (!this.animating) {
-        if (this.mobileOpen) this.close();
-        else this.open();
-        this.mobileOpen = !this.mobileOpen;
-      }
-    },
-    onClickLink() {
-      if (this.mobileOpen) {
-        this.close();
-        this.mobileOpen = !this.mobileOpen;
-      }
-    },
-  },
-};
+function open() {
+  animating.value = true;
+  navClasses.value = [];
+  navWrapperClasses.value = ['mobile-open'];
+  setTimeout(() => (navClasses.value = ['appear']), 50);
+  setTimeout(() => (animating.value = false), 350);
+}
+function close() {
+  animating.value = true;
+  navClasses.value = ['disappear'];
+  setTimeout(() => (navWrapperClasses.value = ['mobile-close']), 300);
+  if (timer.value) clearTimeout(timer.value);
+  timer.value = setTimeout(() => {
+    navWrapperClasses.value = [];
+    animating.value = false;
+  }, 1000);
+  setTimeout(() => {
+    if (navWrapperClasses.value.includes('mobile-open')) {
+      navWrapperClasses.value = navWrapperClasses.value.filter(
+        c => c !== 'mobile-open'
+      );
+    }
+  }, 350);
+}
+function onClickBurger() {
+  if (!animating.value) {
+    if (mobileOpen.value) close();
+    else open();
+    mobileOpen.value = !mobileOpen.value;
+  }
+}
+function onClickLink() {
+  if (mobileOpen.value) {
+    close();
+    mobileOpen.value = !mobileOpen.value;
+  }
+}
 </script>

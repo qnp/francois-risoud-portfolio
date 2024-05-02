@@ -115,6 +115,7 @@ body.has-touch
 <script setup lang="ts">
 import { createBubble } from '@/core/bubble';
 import hexToRgbArray from '@/utils/hex-to-rgb-array';
+import { useTouch } from '@/composables/useTouch';
 
 import type { Bubble, BubbleSettings } from '@/core/bubble';
 
@@ -130,10 +131,6 @@ export interface RemoveParticlesSettings {
 }
 
 export interface PhysicalBubbleProps {
-  /**
-   * Whether the device has touch capabilities
-   */
-  hasTouch?: boolean;
   /**
    * Whether the bubble is open
    */
@@ -173,11 +170,10 @@ export interface PhysicalBubbleProps {
   /**
    * The settings of the bubble
    */
-  settings?: BubbleSettings | null;
+  settings: Partial<BubbleSettings>;
 }
 
 const props = withDefaults(defineProps<PhysicalBubbleProps>(), {
-  hasTouch: false,
   open: false,
   start: true,
   hide: false,
@@ -187,7 +183,6 @@ const props = withDefaults(defineProps<PhysicalBubbleProps>(), {
   changeBlobColor: '',
   numParticles: 100,
   removeParticles: null,
-  settings: null,
 });
 
 const emit = defineEmits<{
@@ -198,6 +193,7 @@ const emit = defineEmits<{
 const bubble = ref<Bubble | null>(null);
 const isOpen = ref(false);
 const elementRef = ref<HTMLElement | null>(null);
+const { hasTouch } = useTouch();
 
 const defaultSettings: BubbleSettings = {
   name: '',
@@ -231,8 +227,8 @@ const defaultSettings: BubbleSettings = {
   effectiveCheckRadius: 80,
   maxNeighbours: 1,
   startPosMode: 'circle',
-  blobColor: hexToRgbArray('#001433'),
-  bgColor: hexToRgbArray('#1a33ff'),
+  blobColor: '#001433',
+  bgColor: '#1a33ff',
   maxBreath: 15,
   minBreath: -5,
   playPhysics: true,
@@ -257,14 +253,11 @@ onMounted(() => {
   if (props.start) bubble.value?.start({ appear: props.appear });
 });
 
-watch(
-  () => props.hasTouch,
-  newVal => {
-    if (newVal) {
-      bubble.value?.setHasTouch();
-    }
+watchImmediate(hasTouch, newVal => {
+  if (newVal) {
+    bubble.value?.setHasTouch();
   }
-);
+});
 
 watch(
   () => props.open,

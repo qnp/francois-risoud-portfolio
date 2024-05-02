@@ -1,18 +1,21 @@
 <template lang="pug">
-.cursor(:class="classes")
+.cursor(
+  ref="elementRef"
+  :class="classes"
+)
   .cursor-content
-  .social-picto.fifteen
-    inline-svg(:src="svgFifteenLogoOnly")
-  .social-picto.twitter
-    inline-svg(:src="svgTwitter")
-  .social-picto.github
-    inline-svg(:src="svgGithub")
-  .social-picto.mailto
-    inline-svg(:src="svgMail")
-  .social-picto.new-window
-    inline-svg(:src="svgCursorNewWindow")
-  .scroll-picto
-    inline-svg(:src="svgCursorScroll")
+  .social-icon.fifteen
+    InlineSvg(:src="svgFifteenLogoOnly")
+  .social-icon.twitter
+    InlineSvg(:src="svgTwitter")
+  .social-icon.github
+    InlineSvg(:src="svgGithub")
+  .social-icon.mailto
+    InlineSvg(:src="svgMail")
+  .social-icon.new-window
+    InlineSvg(:src="svgCursorNewWindow")
+  .scroll-icon
+    InlineSvg(:src="svgCursorScroll")
 </template>
 
 <style lang="stylus">
@@ -25,22 +28,17 @@ $normal-scale = 0.2
 $click-scale = 0.8
 $clickable-scale = 1
 $clickable-opacity = 1
-$social-picto-size = 60px
-$fifteen-picto-ratio-wh = 1
-$twitter-picto-ratio-wh = 1
-$github-picto-ratio-wh = 1
-$new-window-picto-ratio-wh = 1
-$mail-picto-ratio-wh = 0.7
-$scroll-picto-size = 96px
+$social-icon-size = 60px
+$fifteen-icon-ratio-wh = 1
+$twitter-icon-ratio-wh = 1
+$github-icon-ratio-wh = 1
+$new-window-icon-ratio-wh = 1
+$mail-icon-ratio-wh = 0.7
+$scroll-icon-size = 96px
 
-html:not(.debug),
-body:not(.debug)
+html,
+body
   cursor none
-
-.debug
-  .cursor,
-  .scroll-picto
-    pointer-events auto
 
 .cursor
   position absolute
@@ -70,51 +68,53 @@ body:not(.debug)
     border-radius: ($cursor-size / 2)
     transition all $transition-duration-all ease-out
 
-  .social-picto
-    width $social-picto-size
+  .social-icon
+    width $social-icon-size
     position absolute
     top 50%
     left 50%
-    margin-left: (- $social-picto-size / 2)
+    margin-left: (- $social-icon-size / 2)
     transition all $transition-duration-all ease-out
     opacity 0
     transform scale(0)
 
     svg
-      width $social-picto-size
+      width $social-icon-size
 
-      path
+      path,
+      polygon
         fill $theme-color-pink
 
     &.fifteen
-      margin-top: (- $social-picto-size * $fifteen-picto-ratio-wh / 2)
+      margin-top: (- $social-icon-size * $fifteen-icon-ratio-wh / 2)
 
     &.twitter
-      margin-top: (- $social-picto-size * $twitter-picto-ratio-wh / 2)
+      margin-top: (- $social-icon-size * $twitter-icon-ratio-wh / 2)
 
     &.github
-      margin-top: (- $social-picto-size * $github-picto-ratio-wh / 2)
+      margin-top: (- $social-icon-size * $github-icon-ratio-wh / 2)
 
     &.mailto
-      margin-top: (- $social-picto-size * $mail-picto-ratio-wh / 2)
+      margin-top: (- $social-icon-size * $mail-icon-ratio-wh / 2)
 
     &.new-window
-      margin-top: (- $social-picto-size * $new-window-picto-ratio-wh / 2)
+      margin-top: (- $social-icon-size * $new-window-icon-ratio-wh / 2)
 
-  .scroll-picto
+  .scroll-icon
     position absolute
     top 10px
     pointer-events none
-    width $scroll-picto-size
-    margin-left: (-($scroll-picto-size - $cursor-size) / 2)
+    width $scroll-icon-size
+    margin-left: (-($scroll-icon-size - $cursor-size) / 2)
     opacity 0
     transform scale(0)
     transition all $transition-duration-all ease-out
 
     svg
-      width $scroll-picto-size
+      width $scroll-icon-size
 
-      path
+      path,
+      polygon
         fill $theme-color-pink
 
   &.hidden
@@ -143,9 +143,9 @@ body:not(.debug)
       &.selectable-cursor
         &.down
           .cursor-content
-            width 2px
-            height 2 / 3 * $cursor-size
-            transform translate((($cursor-size - @width) / 2), 1 / 6 * $cursor-size)
+            width 4px
+            height (3 / 4) * $cursor-size
+            transform translate((($cursor-size - @width) / 2), (1 / 6) * $cursor-size)
 
     &.fifteen-cursor,
     &.twitter-cursor,
@@ -156,61 +156,61 @@ body:not(.debug)
         transform scale(0)
 
     &.fifteen-cursor
-      .social-picto.fifteen
+      .social-icon.fifteen
         transform scale($clickable-scale)
         opacity $clickable-opacity
 
       &.down
-        .social-picto.fifteen
+        .social-icon.fifteen
           transform scale($clickable-scale * $click-scale)
 
     &.twitter-cursor
-      .social-picto.twitter
+      .social-icon.twitter
         transform scale($clickable-scale)
         opacity $clickable-opacity
 
       &.down
-        .social-picto.twitter
+        .social-icon.twitter
           transform scale($clickable-scale * $click-scale)
 
     &.github-cursor
-      .social-picto.github
+      .social-icon.github
         transform scale($clickable-scale)
         opacity $clickable-opacity
 
       &.down
-        .social-picto.github
+        .social-icon.github
           transform scale($clickable-scale * $click-scale)
 
     &.mailto-cursor
-      .social-picto.mailto
+      .social-icon.mailto
         transform scale($clickable-scale)
         opacity $clickable-opacity
 
       &.clicked
-        .social-picto.mailto
+        .social-icon.mailto
           animation send-message 1s ease-in
           animation-fill-mode forwards
 
     &.new-window-cursor
-      .social-picto.new-window
+      .social-icon.new-window
         transform scale($clickable-scale)
         opacity $clickable-opacity
 
       &.down
-        .social-picto.new-window
+        .social-icon.new-window
           transform scale($clickable-scale * $click-scale)
 
     &.scroll-cursor
       .cursor-content
         transform scale(0)
 
-      .scroll-picto
+      .scroll-icon
         transform scale($clickable-scale)
         opacity $clickable-opacity
 
       &.down
-        .scroll-picto
+        .scroll-icon
           transform scale($clickable-scale * $click-scale)
 
 @keyframes send-message
@@ -227,268 +227,259 @@ body:not(.debug)
     transform scale(1) translateX(0)
 </style>
 
-<script lang="ts">
+<script setup lang="ts">
 import svgFifteenLogoOnly from '@/assets/images/fifteen-logo-only.svg';
 import svgTwitter from '@/assets/images/twitter.svg';
 import svgGithub from '@/assets/images/github.svg';
 import svgMail from '@/assets/images/mail.svg';
-import svgCursorNewWindow from '@/assets/images/new-window-3.svg';
+import svgCursorNewWindow from '@/assets/images/new-window.svg';
 import svgCursorScroll from '@/assets/images/cursor-scroll.svg';
 
-import $ from '@/utils/$';
 import rot13 from '@/utils/rot13';
-import 'element-closest';
 
 import InlineSvg from '@/components/utils/InlineSvg.vue';
+import { useTouch } from '@/composables/useTouch';
 
+type CursorBlendMode = 'intro' | 'main';
+
+export interface AppCursorProps {
+  /**
+   * The id of the content element
+   */
+  contentId: string;
+  /**
+   * The blend mode of the cursor, named upon the app view context
+   */
+  blendMode: CursorBlendMode;
+}
+
+const props = defineProps<AppCursorProps>();
+
+const router = useRouter();
+const { hasTouch } = useTouch();
+
+interface ClickableConfig {
+  selector: string;
+  cursorClasses: string[];
+}
+
+const clickableSettings: ClickableConfig[] = [
+  {
+    selector: 'a[href]:not([href^=mailto]):not([href^=http]):not(.active)',
+    cursorClasses: ['clickable-cursor'],
+  },
+  {
+    selector: 'p, h1, h2, h3, h4',
+    cursorClasses: ['selectable-cursor'],
+  },
+  {
+    selector: '[href^=mailto]',
+    cursorClasses: ['mailto-cursor'],
+  },
+  {
+    selector: 'a.twitter',
+    cursorClasses: ['twitter-cursor'],
+  },
+  {
+    selector: 'a.github',
+    cursorClasses: ['github-cursor'],
+  },
+  {
+    selector: 'a.fifteen',
+    cursorClasses: ['fifteen-cursor'],
+  },
+  {
+    selector: '.scroll-invite',
+    cursorClasses: ['scroll-cursor'],
+  },
+  {
+    selector: 'a[href^=http]:not(.twitter):not(.github):not(.fifteen)',
+    cursorClasses: ['new-window-cursor'],
+  },
+];
+
+interface EventConfig {
+  selector: string;
+  onClick: (e: MouseEvent) => void;
+}
+
+const eventSettings: EventConfig[] = [
+  {
+    selector: 'a[href].circle',
+    onClick(event) {
+      if (hasTouch.value) {
+        event.preventDefault();
+        return false;
+      }
+    },
+  },
+  {
+    selector: 'a[href]:not([href^=mailto]):not([href^=http])',
+    onClick(event) {
+      event.preventDefault();
+      const href = (event.target as HTMLElement)
+        .closest('a[href]')
+        ?.getAttribute('href');
+      if (href) router.push(href);
+      return false;
+    },
+  },
+  {
+    selector: '[href^=mailto]',
+    onClick(event) {
+      event.preventDefault();
+      // Go to mailto href after 1 second to let the user see the mailing animation
+      setTimeout(function () {
+        window.location.href = 'mailto:' + rot13('senapbvf.evfbhq@tznvy.pbz');
+      }, 1000);
+      return false;
+    },
+  },
+];
+
+const stickySelector = '.sticky';
+const stickiness = 0.4;
+const transitionStickyDuration = 300;
+
+// Store mouse position
 const mouse = { x: 0, y: 0 };
 
-export default {
-  name: 'custom-cursor',
+const stickyElement = ref<Element | null>(null);
+const transition = ref(false);
+const unsetTransitionOnce = ref(false);
+const clicked = ref(false);
+const down = ref(false);
 
-  components: { InlineSvg },
+type ViewClass = 'hidden' | 'visible';
 
-  props: {
-    contentId: String,
-    blendMode: String,
-    hasTouch: {
-      type: Boolean,
-      default: false,
-    },
+const viewClass = ref<ViewClass>('hidden');
+const cursorClasses = ref<string[]>([]);
+const blendModeClass = computed<`blend-${CursorBlendMode}`>(
+  () => `blend-${props.blendMode}`
+);
+const classes = computed(() => [
+  blendModeClass.value,
+  viewClass.value,
+  ...cursorClasses.value,
+  {
+    transition: transition.value,
+    clicked: clicked.value,
+    down: down.value,
   },
+]);
 
-  data() {
-    const router = this.$router;
-    const self = this;
-    return {
-      svgFifteenLogoOnly,
-      svgTwitter,
-      svgGithub,
-      svgMail,
-      svgCursorNewWindow,
-      svgCursorScroll,
-      transitionDurationDownClickable: 500,
-      clickableLogic: [
-        {
-          selector:
-            'a[href]:not([href^=mailto]):not([href^=http]):not(.active)',
-          cursorClasses: ['clickable-cursor'],
-        },
-        {
-          selector: 'p, h1, h2, h3, h4',
-          cursorClasses: ['selectable-cursor'],
-        },
-        {
-          selector: '[href^=mailto]',
-          cursorClasses: ['mailto-cursor'],
-        },
-        {
-          selector: 'a.twitter',
-          cursorClasses: ['twitter-cursor'],
-        },
-        {
-          selector: 'a.github',
-          cursorClasses: ['github-cursor'],
-        },
-        {
-          selector: 'a.fifteen',
-          cursorClasses: ['fifteen-cursor'],
-        },
-        {
-          selector: '.scroll-invite',
-          cursorClasses: ['scroll-cursor'],
-        },
-        {
-          selector: 'a[href^=http]:not(.twitter):not(.github):not(.fifteen)',
-          cursorClasses: ['new-window-cursor'],
-        },
-      ],
-      eventsLogic: [
-        {
-          selector: 'a[href].circle',
-          onClick: function (e) {
-            if (self.hasTouch) {
-              e.preventDefault();
-              return false;
-            }
-          },
-        },
-        {
-          selector: 'a[href]:not([href^=mailto]):not([href^=http])',
-          onClick: function (e) {
-            e.preventDefault();
-            const href = e.target.closest('a[href]').getAttribute('href');
-            if (router) router.push(href);
-            else window.location.href = href;
-            return false;
-          },
-        },
-        {
-          selector: '[href^=mailto]',
-          onClick: function (e) {
-            e.preventDefault();
-            setTimeout(function () {
-              window.location.href =
-                'mailto:' + rot13('senapbvf.evfbhq@tznvy.pbz');
-            }, 500);
-            return false;
-          },
-        },
-      ],
-      viewClass: 'hidden',
-      // waitForHide: false,
-      stickySelector: '.sticky',
-      stickyElem: null,
-      stickyness: 0.4,
-      transition: false,
-      transitionStickyDuration: 300,
-      unsetTransitionOnce: false,
-      elapsedWaitingTime: 0,
-      clicked: false,
-      down: false,
-    };
-  },
+const elementRef = ref<HTMLElement | null>(null);
 
-  computed: {
-    classes() {
-      return [
-        'blend-' + this.blendMode,
-        this.viewClass,
-        { transition: this.transition, clicked: this.clicked, down: this.down },
-      ];
-    },
-    pathDef() {
-      return 'M1,1 L0,1 A1,1,0,1,0,0.000000005,0.999999 Z';
-    },
-  },
+onMounted(() => {
+  // Setup specific event handlers
+  setupEvents();
 
-  mounted() {
-    const debug = false;
-
-    // check for special handlers
-    this.checkEvents();
-
-    if (!debug) {
-      document.body.addEventListener('mousemove', e => {
-        if (!this.hasTouch) {
-          mouse.x = e.clientX;
-          mouse.y = e.clientY;
-          this.checkClickable(mouse.x, mouse.y);
-          this.setCursorPosition(mouse.x, mouse.y);
-          if (this.viewClass !== 'visible') this.viewClass = 'visible';
-        }
-      });
-      document.body.addEventListener('mouseenter', e => {
-        if (!this.hasTouch) {
-          this.setCursorPosition(e.clientX, e.clientY);
-          this.viewClass = 'visible';
-        }
-      });
-      document.body.addEventListener('mouseleave', () => {
-        if (!this.hasTouch) {
-          if (!this.clicked) {
-            this.viewClass = 'hidden';
-          }
-        }
-      });
-      document.body.addEventListener('mousedown', () => {
-        if (!this.hasTouch) {
-          this.down = true;
-        }
-      });
-      document.body.addEventListener('mouseup', () => {
-        if (!this.hasTouch) {
-          this.down = false;
-        }
-      });
-      document.body.addEventListener('click', () => {
-        if (!this.hasTouch) {
-          this.clicked = true;
-          setTimeout(() => (this.clicked = false), 1000);
-        }
-      });
-      document
-        .querySelector(`#${this.contentId}`)
-        ?.addEventListener('DOMSubtreeModified', () => {
-          if (!this.hasTouch) this.checkClickable(mouse.x, mouse.y);
-          this.checkEvents();
-        });
-    } else {
-      this.setCursorPosition(200, 200);
-      this.viewClass = 'visible scroll-cursor';
-      document.querySelector('html')?.classList.add('debug');
-      document.body.classList.add('debug');
+  document.body.addEventListener('mousemove', event => {
+    if (!hasTouch.value) {
+      mouse.x = event.clientX;
+      mouse.y = event.clientY;
+      checkClickable(mouse.x, mouse.y);
+      setCursorPosition(mouse.x, mouse.y);
+      if (viewClass.value !== 'visible') viewClass.value = 'visible';
     }
-  },
+  });
+  document.body.addEventListener('mouseenter', event => {
+    if (!hasTouch.value) {
+      setCursorPosition(event.clientX, event.clientY);
+      viewClass.value = 'visible';
+    }
+  });
+  document.body.addEventListener('mouseleave', () => {
+    if (!hasTouch.value) {
+      if (!clicked.value) {
+        viewClass.value = 'hidden';
+      }
+    }
+  });
+  document.body.addEventListener('mousedown', () => {
+    if (!hasTouch.value) {
+      down.value = true;
+    }
+  });
+  document.body.addEventListener('mouseup', () => {
+    if (!hasTouch.value) {
+      down.value = false;
+    }
+  });
+  document.body.addEventListener('click', () => {
+    if (!hasTouch.value) {
+      clicked.value = true;
+      setTimeout(() => (clicked.value = false), 1000);
+    }
+  });
+  document
+    .querySelector(`#${props.contentId}`)
+    ?.addEventListener('DOMSubtreeModified', () => {
+      if (!hasTouch.value) checkClickable(mouse.x, mouse.y);
+      setupEvents();
+    });
+});
 
-  methods: {
-    checkEvents() {
-      // check for special handlers
-      this.eventsLogic.forEach(logic => {
-        if (logic.onClick) {
-          document.querySelectorAll(logic.selector).forEach(element => {
-            element.removeEventListener('click', logic.onClick);
-            element.addEventListener('click', logic.onClick);
-          });
+function setupEvents(): void {
+  eventSettings.forEach(config => {
+    document.querySelectorAll<HTMLElement>(config.selector).forEach(element => {
+      element.removeEventListener('click', config.onClick);
+      element.addEventListener('click', config.onClick);
+    });
+  });
+}
+
+function checkClickable(x: number, y: number): void {
+  const element = document.elementFromPoint(x, y);
+  // Check if element has a class defined in settings
+  clickableSettings.forEach(config => {
+    if (element?.closest(config.selector)) {
+      config.cursorClasses.forEach(cursorClass => {
+        if (!cursorClasses.value.includes(cursorClass)) {
+          cursorClasses.value.push(cursorClass);
         }
       });
-    },
+    } else {
+      cursorClasses.value = cursorClasses.value.filter(
+        cursorClass => !config.cursorClasses.includes(cursorClass)
+      );
+    }
+  });
+  // Check if element has "sticky" class
+  const _stickyElement = element?.closest(stickySelector);
+  if (_stickyElement) {
+    stickyElement.value = _stickyElement;
+  } else {
+    if (stickyElement.value) {
+      transition.value = true;
+      unsetTransitionOnce.value = true;
+    }
+    stickyElement.value = null;
+  }
+}
 
-    checkClickable(x, y) {
-      const $el = this.$el;
-      const elem = document.elementFromPoint(x, y);
-      // check if it has a class defined in logic
-      this.clickableLogic.forEach(function (logic, i) {
-        if (elem && elem.closest(logic.selector))
-          logic.cursorClasses.forEach(function (c) {
-            $el.classList.add(c);
-          });
-        else
-          logic.cursorClasses.forEach(function (c) {
-            $el.classList.remove(c);
-          });
-      });
-      // check if it has sticky class
-      const stickyElem = elem ? elem.closest(this.stickySelector) : null;
-      if (stickyElem) {
-        // if (!this.stickyElem) {
-        //   this.transition = true;
-        //   this.unsetTransitionOnce = true;
-        // }
-        this.stickyElem = stickyElem;
-        // this.transition = true;
-      } else {
-        if (this.stickyElem) {
-          this.transition = true;
-          this.unsetTransitionOnce = true;
-        }
-        this.stickyElem = null;
-      }
-    },
-
-    setCursorPosition(x, y) {
-      if (this.stickyElem) {
-        const rect = this.stickyElem.getBoundingClientRect();
-        const X = rect.x + rect.width / 2;
-        const Y = rect.y + rect.height / 2;
-        const k = this.stickyness;
-        this.$el.style.transform = `matrix(1, 0, 0, 1, ${k * (x - X) + X}, ${
-          k * (y - Y) + Y
-        })`;
-        // if (this.transition && this.unsetTransitionOnce) {
-        //   this.unsetTransitionOnce = false;
-        //   setTimeout(() => { console.log('once'); this.transition = false; }, 100);
-        // }
-      } else {
-        this.$el.style.transform = `matrix(1, 0, 0, 1, ${x}, ${y})`;
-        if (this.transition && this.unsetTransitionOnce) {
-          this.unsetTransitionOnce = false;
-          setTimeout(() => {
-            this.transition = false;
-          }, this.transitionStickyDuration);
-        }
-      }
-    },
-  },
-};
+function setCursorPosition(x: number, y: number): void {
+  if (!elementRef.value) return;
+  if (stickyElement.value) {
+    const rect = stickyElement.value.getBoundingClientRect();
+    const X = rect.x + rect.width / 2;
+    const Y = rect.y + rect.height / 2;
+    const k = stickiness;
+    elementRef.value.style.setProperty(
+      'transform',
+      `matrix(1, 0, 0, 1, ${k * (x - X) + X}, ${k * (y - Y) + Y})`
+    );
+  } else {
+    elementRef.value.style.setProperty(
+      'transform',
+      `matrix(1, 0, 0, 1, ${x}, ${y})`
+    );
+    if (transition.value && unsetTransitionOnce.value) {
+      unsetTransitionOnce.value = false;
+      setTimeout(() => {
+        transition.value = false;
+      }, transitionStickyDuration);
+    }
+  }
+}
 </script>

@@ -1,7 +1,5 @@
 <template lang="pug">
-main.curriculum(
-  :class="(show ? 'show' : 'hide') + (trueHide ? ' true-hide' : '')"
-)
+main.curriculum(:class="classes")
   .mask
   #iscroll.wrapper
     ul.content
@@ -148,9 +146,9 @@ main.curriculum
   transition opacity 0.5s linear
 
   a:not(.logo)
-    font-weight 400 // 700
+    font-weight 400
 
-    .InlineSvg
+    .inline-svg
       display inline
       margin-left 0.22em
 
@@ -230,7 +228,6 @@ main.curriculum
         .occupation,
         .type
           line-height 1.25em
-          // font-weight 600
           font-weight 700
           font-size ($golden-num ** 2) em
 
@@ -268,7 +265,7 @@ main.curriculum
           &.datagif
             margin-bottom -8px
 
-          .InlineSvg
+          .inline-svg
             svg
               height $golden-num em
 
@@ -281,9 +278,6 @@ main.curriculum
   &.hide
     opacity 0
     pointer-events none
-
-  &.true-hide
-    display none
 
 .iScrollVerticalScrollbar
   position absolute
@@ -347,7 +341,7 @@ main.curriculum
             margin-right 1em
             margin-top 1em
 
-            .InlineSvg
+            .inline-svg
               svg
                 height 1em
 
@@ -368,8 +362,6 @@ main.curriculum
 
     .wrapper
       top: $content-margin-top-mobile + $theme-margin-top-mobile
-      // left $theme-margin-left-right-mobile
-      // right $theme-margin-left-right-mobile
 
     .content
       padding-bottom $content-margin-top-mobile
@@ -411,8 +403,6 @@ main.curriculum
 
     .wrapper
       top ($content-margin-top-mobile - 10px) + ($theme-margin-top-mobile - 10px)
-      // left ($theme-margin-left-right-mobile - 10px)
-      // right ($theme-margin-left-right-mobile - 10px)
 
     .content
       padding-bottom: ($content-margin-top-mobile - 10px)
@@ -428,7 +418,7 @@ main.curriculum
       left ($theme-margin-left-right-mobile - 10px) / 2 - 3px
 </style>
 
-<script lang="ts">
+<script setup lang="ts">
 import InlineSvg from '@/components/utils/InlineSvg.vue';
 
 import svgNewWindow from '@/assets/images/new-window-mobile.svg';
@@ -440,88 +430,81 @@ import svg4N from '@/assets/images/logos/4N.svg';
 import svgZoov from '@/assets/images/logos/zoov.svg';
 import svgFifteen from '@/assets/images/logos/fifteen.svg';
 
-export default {
-  name: 'curriculum-content',
+export interface CurriculumContentProps {
+  /**
+   * Whether to show the content
+   */
+  show: boolean;
+  /**
+   * The skills array
+   */
+  skillsArray: SkillsGroup[];
+}
 
-  components: {
-    InlineSvg,
-  },
+const props = withDefaults(defineProps<CurriculumContentProps>(), {
+  show: false,
+  skillsArray: () => [],
+});
 
-  props: {
-    show: Boolean,
-    trueHide: Boolean,
-    skillsArray: Array,
-  },
+const emit = defineEmits<{
+  (event: 'reached-top'): void;
+  (event: 'scroll'): void;
+  (event: 'on'): void;
+  (event: 'off'): void;
+}>();
 
-  mounted() {},
+const classes = computed(() => ({
+  show: props.show,
+  hide: !props.show,
+}));
 
-  data() {
-    return {
-      myScroll: null,
-      svgNewWindow,
-      svgSolide,
-      svgDatagif,
-      svgPolice,
-      svgHabx,
-      svg4N,
-      svgZoov,
-      svgFifteen,
-    };
-  },
+let myScroll: IScroll | null = null;
 
-  methods: {
-    setScroll: function () {
-      const self = this;
+function setScroll() {
+  import('iscroll/build/iscroll-probe.js')
+    .then(iScroll => {
+      myScroll = new iScroll.default('#iscroll', {
+        probeType: 2,
+        scrollX: false,
+        scrollY: true,
+        click: true,
+        tap: true,
+        mouseWheel: true,
+        bounce: true,
+        scrollbars: 'custom',
+        shrinkScrollbars: 'scale',
+        fadeScrollbars: true,
+        interactiveScrollbars: false,
+        disablePointer: true, // important to disable the pointer events that causes the issues
+        disableTouch: false, // false if you want the slider to be usable with touch devices
+        disableMouse: false, // false if you want the slider to be usable with a mouse (desktop)
+      });
 
-      import('iscroll/build/iscroll-probe.js')
-        .then(function (IScroll) {
-          self.myScroll = new IScroll.default('#iscroll', {
-            probeType: 2,
-            scrollX: false,
-            scrollY: true,
-            click: true,
-            tap: true,
-            mouseWheel: true,
-            bounce: true,
-            scrollbars: 'custom',
-            shrinkScrollbars: 'scale',
-            fadeScrollbars: true,
-            interactiveScrollbars: false,
-            disablePointer: true, // important to disable the pointer events that causes the issues
-            disableTouch: false, // false if you want the slider to be usable with touch devices
-            disableMouse: false, // false if you want the slider to be usable with a mouse (desktop)
-          });
+      myScroll.on('scroll', function (this: IScroll) {
+        if (this.y >= 0) emit('reached-top');
+        else emit('scroll');
+      });
+    })
+    .catch(function (err) {
+      throw err;
+    });
+}
 
-          self.myScroll.on('scroll', function () {
-            if (this.y >= 0) self.$emit('reached-top');
-            else self.$emit('scroll');
-          });
-        })
-        .catch(function (err) {
-          throw err;
-        });
-    },
+function unsetScroll() {
+  myScroll?.destroy();
+  myScroll = null;
+}
 
-    unsetScroll: function () {
-      this.myScroll.destroy();
-      this.myScroll = null;
-    },
-  },
-
-  watch: {
-    show: function (newVal, oldVal) {
-      if (newVal) {
-        this.setScroll();
-        setTimeout(() => {
-          this.$emit('on');
-        }, 600);
-      } else {
-        this.unsetScroll();
-        setTimeout(() => {
-          this.$emit('off');
-        }, 400);
-      }
-    },
-  },
-};
+watch(
+  () => props.show,
+  newVal => {
+    if (newVal) {
+      setScroll();
+      setTimeout(() => emit('on'), 600);
+    } else {
+      unsetScroll();
+      setTimeout(() => emit('off'), 400);
+    }
+  }
+);
 </script>

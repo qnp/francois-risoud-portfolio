@@ -3,3 +3,7 @@ declare module 'matter-attractors' {
   const plugin: Plugin;
   export default plugin;
 }
+
+declare module 'iscroll/build/iscroll-probe.js' {
+  export default IScroll;
+}
