@@ -35,7 +35,7 @@ export default createRouter({
       props: { route: 'NotFound' },
     },
     {
-      path: '/*',
+      path: '/:any(.*)*',
       redirect: '/404',
     },
   ],
