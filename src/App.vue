@@ -12,7 +12,6 @@ import { useHead } from '@unhead/vue';
 
 import AppCursor from '@/components/AppCursor.vue';
 import head from '@/assets/head';
-
 import { useTouch } from '@/composables/useTouch';
 
 useHead(head);

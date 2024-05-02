@@ -32,8 +32,8 @@
       @scroll="curriculumScrollHandler"
     )
     ProjectContent(
-      :show="project.show"
       :id="project.id"
+      :show="project.show"
       :project="project.project"
       :origin="project.origin"
       :center-position="project.centerPosition"
@@ -136,13 +136,8 @@ import AppMenu from '@/components/AppMenu.vue';
 import AboutContent from '@/components/AboutContent.vue';
 import ProjectContent from '@/components/ProjectContent.vue';
 import CurriculumContent from '@/components/CurriculumContent.vue';
-
-import uniqueId from '@/utils/unique-id';
-
 import skillsArray from '@/assets/content/skills-array';
 import projects from '@/assets/content/projects';
-
-import { useTouch } from '@/composables/useTouch';
 
 import type { PhysicalBubbleProps } from '@/components/PhysicalBubble.vue';
 
@@ -388,15 +383,16 @@ useEventListener('show-project', e => {
   bubbleLanding.settings.bgColor = e.detail.project.bgColor;
 });
 
-useEventListener('hide-project', e => {
+useEventListener('hide-project', () => {
   project.value.show = false;
-  if (props.route === 'Projects')
+  if (props.route === 'Projects') {
     bubbleLanding.settings.bgColor = secondaryDark;
-  else if (props.route === 'About')
+  } else if (props.route === 'About') {
     bubbleLanding.settings.bgColor = primaryDark;
+  }
 });
 
-function bloatIntroHandler() {
+function bloatIntroHandler(): void {
   bloatedStack++;
   if (bloatedStack >= 7) {
     bloatedStack = 0;
@@ -410,16 +406,16 @@ function bloatIntroHandler() {
   }
 }
 
-function checkBloatIntro() {
+function checkBloatIntro(): void {
   window.addEventListener('bloated-intro', bloatIntroHandler);
 }
 
-function uncheckBloatIntro() {
+function uncheckBloatIntro(): void {
   bloatedStack = 0;
   window.removeEventListener('bloated-intro', bloatIntroHandler);
 }
 
-function bloatLandingHandler() {
+function bloatLandingHandler(): void {
   bloatedStack++;
   if (bloatedStack >= 7) {
     bloatedStack = 0;
@@ -433,11 +429,11 @@ function bloatLandingHandler() {
   }
 }
 
-function checkBloatLanding() {
+function checkBloatLanding(): void {
   window.addEventListener('bloated-landing', bloatLandingHandler);
 }
 
-function uncheckBloatLanding() {
+function uncheckBloatLanding(): void {
   bloatedStack = 0;
   window.removeEventListener('bloated-landing', bloatLandingHandler);
 }
@@ -445,10 +441,10 @@ function uncheckBloatLanding() {
 function lazyloadProjectImages(
   urlField: 'smallImageUrl' | 'imageUrl',
   callback?: () => void
-) {
+): void {
   var i = projects.length - 1;
 
-  function loadImage(src: string) {
+  function loadImage(src: string): void {
     const img = new Image();
     img.src = src;
     img.onload = function () {
@@ -460,7 +456,7 @@ function lazyloadProjectImages(
   loadImage(projects[i].imageUrl);
 }
 
-function setIntroState() {
+function setIntroState(): void {
   checkBloatIntro();
   setBodyBg(primary);
   bubbleIntro.open = false;
@@ -474,12 +470,13 @@ function setIntroState() {
   }, 500);
 }
 
-function setAboutState() {
+function setAboutState(): void {
   checkBloatLanding();
   uncheckBloatIntro();
   setBodyBg(primaryDark);
-  if (!isBubbleIntroOpen.value) bubbleIntro.open = true;
-  else {
+  if (!isBubbleIntroOpen.value) {
+    bubbleIntro.open = true;
+  } else {
     bubbleLanding.hide = false;
     bubbleLanding.start = true;
   }
@@ -493,12 +490,13 @@ function setAboutState() {
   curriculum.value.show = false;
 }
 
-function setProjectsState() {
+function setProjectsState(): void {
   checkBloatLanding();
   uncheckBloatIntro();
   setBodyBg(secondaryDark);
-  if (!isBubbleIntroOpen.value) bubbleIntro.open = true;
-  else {
+  if (!isBubbleIntroOpen.value) {
+    bubbleIntro.open = true;
+  } else {
     bubbleLanding.hide = false;
     bubbleLanding.start = true;
   }
@@ -511,7 +509,7 @@ function setProjectsState() {
   curriculum.value.show = false;
 }
 
-function setCurriculumState() {
+function setCurriculumState(): void {
   uncheckBloatLanding();
   uncheckBloatIntro();
   setBodyBg(primary);
@@ -527,14 +525,14 @@ function setCurriculumState() {
   curriculum.value.show = true;
 }
 
-function endClosingHandler() {
+function endClosingHandler(): void {
   isBubbleIntroOpen.value = false;
   showIntroLogo.value = true;
   showIntroText.value = true;
   contentClass.value = 'hide';
 }
 
-function endOpeningHandler() {
+function endOpeningHandler(): void {
   isBubbleIntroOpen.value = true;
   bubbleLanding.hide = false;
   if (!curriculum.value.show) {
@@ -542,7 +540,7 @@ function endOpeningHandler() {
   }
 }
 
-function scrollHandler(ratio: number) {
+function scrollHandler(ratio: number): void {
   switch (props.route) {
     case 'Intro':
       bubbleIntro.breath = ratio;
@@ -556,7 +554,7 @@ function scrollHandler(ratio: number) {
   }
 }
 
-function goToNextPage() {
+function goToNextPage(): void {
   if (!preventNavigation) {
     switch (props.route) {
       case 'Intro':
@@ -573,7 +571,7 @@ function goToNextPage() {
   }
 }
 
-function goToPrevPage() {
+function goToPrevPage(): void {
   if (!preventNavigation) {
     switch (props.route) {
       case 'About':
@@ -590,7 +588,7 @@ function goToPrevPage() {
   }
 }
 
-function preventNavigationOn() {
+function preventNavigationOn(): void {
   if (navTimeout) clearTimeout(navTimeout);
   preventNavigation = true;
   navTimeout = setTimeout(() => {
@@ -598,25 +596,25 @@ function preventNavigationOn() {
   }, 2000);
 }
 
-function curriculumOnHandler() {
+function curriculumOnHandler(): void {
   bubbleLanding.start = false;
 }
 
-function curriculumOffHandler() {
+function curriculumOffHandler(): void {
   bubbleLanding.start = true;
 }
 
-function curriculumReachedTop() {
+function curriculumReachedTop(): void {
   setTimeout(() => {
     curriculum.value.isScrolling = false;
   }, 1000);
 }
 
-function curriculumScrollHandler() {
+function curriculumScrollHandler(): void {
   curriculum.value.isScrolling = true;
 }
 
-function setBodyBg(color: string) {
+function setBodyBg(color: string): void {
   document.body.style.setProperty('background-color', color);
 }
 

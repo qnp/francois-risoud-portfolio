@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+
 import AppContent from '@/components/AppContent.vue';
 
 export default createRouter({

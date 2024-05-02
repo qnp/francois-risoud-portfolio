@@ -50,7 +50,6 @@ $logo-w = 2.5em
 
 <script setup lang="ts">
 import svgEk from '@/assets/images/ek.svg';
-
 import InlineSvg from '@/components/utils/InlineSvg.vue';
 
 export interface IntroLogoProps {

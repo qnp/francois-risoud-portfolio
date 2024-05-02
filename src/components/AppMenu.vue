@@ -276,7 +276,7 @@
 
         .menu
           padding-top 10%
-          height 45%
+          height 41%
 
           a.home
             svg
@@ -284,7 +284,7 @@
                 fill $theme-color-white
 
         .social
-          height 31%
+          height 41%
 
         .menu,
         .social
@@ -542,7 +542,6 @@
 
 <script setup lang="ts">
 import svgEk from '@/assets/images/ek.svg';
-
 import InlineSvg from '@/components/utils/InlineSvg.vue';
 
 export interface AppMenuProps {
@@ -561,9 +560,7 @@ const props = withDefaults(defineProps<AppMenuProps>(), {
   route: 'About',
 });
 
-const pendingRoute = ref('');
 const mobileOpen = ref(false);
-const burgerOpen = ref(false);
 const animating = ref(false);
 const navClasses = ref<string[]>([]);
 const navWrapperClasses = ref<string[]>([]);
@@ -579,14 +576,14 @@ const curriculumClass = computed(() => ({
   active: props.route === 'Curriculum',
 }));
 
-function open() {
+function open(): void {
   animating.value = true;
   navClasses.value = [];
   navWrapperClasses.value = ['mobile-open'];
   setTimeout(() => (navClasses.value = ['appear']), 50);
   setTimeout(() => (animating.value = false), 350);
 }
-function close() {
+function close(): void {
   animating.value = true;
   navClasses.value = ['disappear'];
   setTimeout(() => (navWrapperClasses.value = ['mobile-close']), 300);
@@ -603,14 +600,14 @@ function close() {
     }
   }, 350);
 }
-function onClickBurger() {
+function onClickBurger(): void {
   if (!animating.value) {
     if (mobileOpen.value) close();
     else open();
     mobileOpen.value = !mobileOpen.value;
   }
 }
-function onClickLink() {
+function onClickLink(): void {
   if (mobileOpen.value) {
     close();
     mobileOpen.value = !mobileOpen.value;

@@ -114,7 +114,6 @@ body.has-touch
 
 <script setup lang="ts">
 import { createBubble } from '@/core/bubble';
-import hexToRgbArray from '@/utils/hex-to-rgb-array';
 import { useTouch } from '@/composables/useTouch';
 
 import type { Bubble, BubbleSettings } from '@/core/bubble';

@@ -11,8 +11,7 @@
     "plugin:vue-pug/vue3-recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
-    "plugin:import/typescript",
-    "plugin:storybook/recommended"
+    "plugin:import/typescript"
   ],
   "ignorePatterns": ["auto-imports.d.ts", "components.d.ts", "fifteen-sdk/*"],
   "overrides": [
@@ -20,16 +19,6 @@
       "files": ["src/components/views/**/*.vue"],
       "rules": {
         "vue/multi-word-component-names": 0
-      }
-    },
-    {
-      "files": ["**/*.vue"],
-      "extends": ["plugin:vuetify/base"]
-    },
-    {
-      "files": ["stories/**"],
-      "rules": {
-        "@typescript-eslint/explicit-function-return-type": "off"
       }
     },
     {

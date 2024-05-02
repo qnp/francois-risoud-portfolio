@@ -8,6 +8,7 @@ declare global {
     title: string;
     type: string;
     techInfos: string[];
+    date?: string;
     imageUrl: string;
     smallImageUrl: string;
     url: string;

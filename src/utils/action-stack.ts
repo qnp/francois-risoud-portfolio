@@ -1,5 +1,6 @@
 import uniqueId from '@/utils/unique-id';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type InputObject = Record<string, any>;
 
 interface ActionConfig<T extends InputObject = InputObject> {
@@ -30,11 +31,11 @@ interface ActionConfig<T extends InputObject = InputObject> {
   /**
    * Callback to be called when the action is done
    */
-  done?: Function;
+  done?: () => void;
   /**
    * Function to check if the action is done
    */
-  checkCompletion?: Function;
+  checkCompletion?: () => boolean;
 }
 
 /**
@@ -47,8 +48,8 @@ class Action<T extends InputObject = InputObject> {
   private to: number | number[];
   private easing: number;
   private completePercent?: number;
-  private done?: Function;
-  private checkCompletion: Function;
+  private done?: () => void;
+  private checkCompletion: () => boolean;
   private complete: boolean;
 
   constructor(config: ActionConfig<T>) {
@@ -89,7 +90,7 @@ class Action<T extends InputObject = InputObject> {
     }
   }
 
-  increment() {
+  increment(): void {
     if (!this.complete) {
       if (Array.isArray(this.to)) {
         for (let i = 0; i < this.to.length; i++) {
@@ -110,11 +111,11 @@ class Action<T extends InputObject = InputObject> {
     }
   }
 
-  get isComplete() {
+  get isComplete(): boolean {
     return this.complete;
   }
 
-  get name() {
+  get name(): string {
     return this.actionName;
   }
 }
@@ -135,7 +136,7 @@ export default class ActionStack {
     return this;
   }
 
-  has(name: string) {
+  has(name: string): boolean {
     let hasIt = false;
     let i = this.stack.length;
     while (i--) {
@@ -164,8 +165,9 @@ export default class ActionStack {
     let i = this.stack.length;
     while (i--) {
       const action = this.stack[i];
-      if (!action.isComplete) action.increment();
-      else {
+      if (!action.isComplete) {
+        action.increment();
+      } else {
         this.stack.splice(i, 1);
       }
     }

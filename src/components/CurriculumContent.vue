@@ -7,7 +7,7 @@ main.curriculum(:class="classes")
         .date
           .year March 2022 – now
         .thing
-          .occupation Lead web developer
+          .occupation Lead fullstack developer & <br/> Head of web
           .location
             a(
               href="https://fifteen.eu"
@@ -85,10 +85,16 @@ main.curriculum(:class="classes")
         .date
           .skill-tag skills
         .thing
-          span.category(v-for="category in skillsArray")
+          span.category(
+            v-for="(category, i) in skillsArray"
+            :key="i"
+          )
             span.type {{ category.type }}
             span.skills
-              span(v-for="skill in category.content") {{ skill + ', ' }}
+              span(
+                v-for="(skill, j) in category.content"
+                :key="`${i}-${j}`"
+              ) {{ skill + ', ' }}
       li.item
         .date
           .year clients
@@ -109,7 +115,7 @@ main.curriculum(:class="classes")
           )
             InlineSvg(:src="svgPolice")
           a.logo(
-            href="https://www.habx.fr"
+            href="https://www.linkedin.com/company/habx"
             target="_blank"
           )
             InlineSvg(:src="svgHabx")
@@ -156,7 +162,8 @@ main.curriculum
         width 0.28em
         height 1em
 
-        path
+        path,
+        polygon
           fill $theme-color-white
 
   .mask
@@ -269,7 +276,8 @@ main.curriculum
             svg
               height $golden-num em
 
-            path
+            path,
+            polygon
               fill white
 
   &.show
@@ -420,7 +428,6 @@ main.curriculum
 
 <script setup lang="ts">
 import InlineSvg from '@/components/utils/InlineSvg.vue';
-
 import svgNewWindow from '@/assets/images/new-window-inline.svg';
 import svgSolide from '@/assets/images/logos/solide.svg';
 import svgDatagif from '@/assets/images/logos/datagif.svg';
@@ -460,7 +467,7 @@ const classes = computed(() => ({
 
 let myScroll: IScroll | null = null;
 
-function setScroll() {
+function setScroll(): void {
   import('iscroll/build/iscroll-probe.js')
     .then(iScroll => {
       myScroll = new iScroll.default('#iscroll', {
@@ -490,7 +497,7 @@ function setScroll() {
     });
 }
 
-function unsetScroll() {
+function unsetScroll(): void {
   myScroll?.destroy();
   myScroll = null;
 }

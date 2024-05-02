@@ -265,13 +265,13 @@ useEventListener('update-origin', e => {
   }
 });
 
-function animateLoop() {
+function animateLoop(): void {
   animating.value = true;
 
-  const tick = () => {
+  function tick(): void {
     actionStack.increment();
     if (animating.value) requestAnimationFrame(tick);
-  };
+  }
 
   requestAnimationFrame(tick);
 }
@@ -306,7 +306,7 @@ function getTargetRadius(): number {
   return targetRadius;
 }
 
-function showProject(targetRadius: number) {
+function showProject(targetRadius: number): void {
   if (removeImageBgTimeout.value) clearTimeout(removeImageBgTimeout.value);
   removeImageBgTimeout.value = null;
   removeImageBg.value = false;
@@ -330,7 +330,7 @@ function showProject(targetRadius: number) {
   if (!animating.value) animateLoop();
 }
 
-function hideProject() {
+function hideProject(): void {
   removeImageBgTimeout.value = setTimeout(() => {
     removeImageBg.value = true;
   }, 500);

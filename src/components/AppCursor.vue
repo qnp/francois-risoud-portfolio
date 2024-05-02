@@ -252,7 +252,6 @@ import svgMail from '@/assets/images/cursors/mail.svg';
 import svgNewWindow from '@/assets/images/cursors/new-window.svg';
 import svgScroll from '@/assets/images/cursors/scroll.svg';
 import rot13 from '@/utils/rot13';
-
 import InlineSvg from '@/components/utils/InlineSvg.vue';
 import { useTouch } from '@/composables/useTouch';
 

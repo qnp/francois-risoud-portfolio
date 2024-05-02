@@ -13,7 +13,6 @@ import type { RgbColorArray } from '@/utils/hex-to-rgb-array';
  * @param color - The color to normalize
  */
 function normalizeColor(color: string | RgbColorArray): RgbColorArray {
-  let colorArray;
   if (typeof color === 'string') return hexToRgbArray(color);
   else if (Array.isArray(color)) return color;
   else throw new Error('normalizeColor needs a hex color or an rgb array');
@@ -54,7 +53,7 @@ class ParticleView {
     this.hidingTimeout = null;
   }
 
-  show() {
+  show(): void {
     this.domElem.appendChild(this.view);
     setTimeout(() => {
       this.view.classList.add('show');
@@ -65,7 +64,7 @@ class ParticleView {
     }
   }
 
-  hide(callback: Function) {
+  hide(callback: () => void): void {
     this.hiding = true;
     this.view.classList.remove('show');
     if (this.hidingTimeout) clearTimeout(this.hidingTimeout);
@@ -76,7 +75,7 @@ class ParticleView {
     }, this.hidingDuration);
   }
 
-  setPosition(pos: Position) {
+  setPosition(pos: Position): void {
     this.view.setAttribute(
       'style',
       `transform: translate(${pos.x - this.w / 2}px,${pos.y - this.h / 2}px);`
@@ -127,6 +126,8 @@ class IsolatedParticleView extends ParticleView {
   }
 }
 
+let hasTouch = false;
+
 /**
  * Class representing a project as a particle, that can be displayed on hover / touch
  */
@@ -165,28 +166,31 @@ class ProjectParticleView extends ParticleView {
     });
     this.circle.addEventListener('mouseleave', this.mouseleaveHandler);
 
-    const self = this;
+    this.circle.addEventListener('click', event => {
+      if (hasTouch) event.preventDefault();
+    });
 
     this.circle.addEventListener(
       'touchstart',
       event => {
         if (!self.open) {
           setTimeout(() => {
-            domElem.addEventListener('touchstart', function handleOut() {
-              self.mouseleaveHandler();
-              self.circle.classList.remove('hover');
+            const handleOut = (): void => {
+              this.mouseleaveHandler();
+              this.circle.classList.remove('hover');
               domElem.removeEventListener('touchstart', handleOut);
-            });
+            };
+            domElem.addEventListener('touchstart', handleOut);
           }, 50);
-          self.mouseenterHandler(event);
-          self.circle.classList.add('hover');
+          this.mouseenterHandler(event);
+          this.circle.classList.add('hover');
         }
       },
       { passive: true }
     );
   }
 
-  mouseenterHandler(event: MouseEvent | TouchEvent) {
+  mouseenterHandler(event: MouseEvent | TouchEvent): void {
     this.open = true;
     const showProjectEvent = new CustomEvent('show-project', {
       detail: {
@@ -206,12 +210,12 @@ class ProjectParticleView extends ParticleView {
     window.dispatchEvent(showProjectEvent);
   }
 
-  mouseleaveHandler() {
+  mouseleaveHandler(): void {
     this.open = false;
     window.dispatchEvent(new CustomEvent('hide-project'));
   }
 
-  off() {
+  off(): void {
     this.circle.removeEventListener('mouseenter', event => {
       this.mouseenterHandler(event);
     });
@@ -271,7 +275,7 @@ export interface BubbleSettings {
   timeScale: number;
   maxBreath: number;
   minBreath: number;
-  random?: Function;
+  random?: () => void;
   playPhysics: boolean;
   randomRadiusFactor: number;
   auraTypeMix: number;
@@ -343,14 +347,14 @@ export function createBubble(
     let started = false;
 
     // Math aliases
-    const m_random = Math.random;
-    const m_floor = Math.floor;
-    const m_sqrt = Math.sqrt;
-    const m_min = Math.min;
-    const m_max = Math.max;
-    const m_cos = Math.cos;
-    const m_sin = Math.sin;
-    const m_abs = Math.abs;
+    const mRandom = Math.random;
+    const mFloor = Math.floor;
+    const mSqrt = Math.sqrt;
+    const mMin = Math.min;
+    const mMax = Math.max;
+    const mCos = Math.cos;
+    const mSin = Math.sin;
+    const mAbs = Math.abs;
     const PI = Math.PI;
 
     // Fit to window
@@ -363,7 +367,7 @@ export function createBubble(
      *************/
 
     const renderFactor = 1;
-    let renderGPU = true;
+    const renderGpu = true;
     let canvas: HTMLCanvasElement | null;
     let gl: WebGLRenderingContext | null;
     let glW: number;
@@ -442,7 +446,7 @@ export function createBubble(
     const minBreath = settings.minBreath;
 
     // Set body background color to prevent white flashes on window resize
-    function setBodyBg(color: string | RgbColorArray) {
+    function setBodyBg(color: string | RgbColorArray): void {
       const formattedBgStr =
         typeof color === 'string'
           ? color
@@ -503,28 +507,28 @@ export function createBubble(
         import('dat.gui')
           .then(function (dat) {
             settings.random = function () {
-              settings.repelExponent = 2 + m_floor(m_random() * 23);
-              settings.centerAttractExponent = 2 + m_floor(m_random() * 23);
-              settings.centerAttractFactor = m_random();
-              settings.longRangeCenterAttract = m_random() * 20;
-              settings.equilibriumDistance = 10 + m_random() * 35;
-              settings.attractiveness = m_random() * 50;
-              settings.longRangeTail = m_random() * 20;
+              settings.repelExponent = 2 + mFloor(mRandom() * 23);
+              settings.centerAttractExponent = 2 + mFloor(mRandom() * 23);
+              settings.centerAttractFactor = mRandom();
+              settings.longRangeCenterAttract = mRandom() * 20;
+              settings.equilibriumDistance = 10 + mRandom() * 35;
+              settings.attractiveness = mRandom() * 50;
+              settings.longRangeTail = mRandom() * 20;
 
-              settings.soothingFactor = m_random();
-              settings.particleAuraRadius = m_random() * 80;
-              settings.randomRadiusFactor = m_random();
-              settings.auraTypeMix = m_random();
-              settings.threshold = (m_random() * 5) / numParticles;
+              settings.soothingFactor = mRandom();
+              settings.particleAuraRadius = mRandom() * 80;
+              settings.randomRadiusFactor = mRandom();
+              settings.auraTypeMix = mRandom();
+              settings.threshold = (mRandom() * 5) / numParticles;
               settings.blobColor = [
-                m_random() * 255,
-                m_random() * 255,
-                m_random() * 255,
+                mRandom() * 255,
+                mRandom() * 255,
+                mRandom() * 255,
               ];
               settings.bgColor = [
-                m_random() * 255,
-                m_random() * 255,
-                m_random() * 255,
+                mRandom() * 255,
+                mRandom() * 255,
+                mRandom() * 255,
               ];
             };
 
@@ -596,6 +600,7 @@ export function createBubble(
       },
 
       setHasTouch() {
+        hasTouch = true;
         mouseTouchFactor = 1;
       },
 
@@ -621,24 +626,24 @@ export function createBubble(
           let ax;
           let ay;
 
-          const startRadius = settings.startRadius + m_random() * 10;
+          const startRadius = settings.startRadius + mRandom() * 10;
           if (settings.startPosMode === 'circle') {
             ax =
               settings.center.xRatio * WIDTH +
-              startRadius * m_cos((i / numParticles) * 2 * PI);
+              startRadius * mCos((i / numParticles) * 2 * PI);
             ay =
               settings.center.yRatio * HEIGHT +
-              startRadius * m_sin((i / numParticles) * 2 * PI);
+              startRadius * mSin((i / numParticles) * 2 * PI);
           } else {
             ax =
               settings.center.xRatio * WIDTH +
-              startRadius * m_cos(((-1 - i / numParticles) * PI) / 2);
+              startRadius * mCos(((-1 - i / numParticles) * PI) / 2);
             ay =
               settings.center.yRatio * HEIGHT +
-              startRadius * m_sin(((-1 - i / numParticles) * PI) / 2);
+              startRadius * mSin(((-1 - i / numParticles) * PI) / 2);
           }
 
-          const additionalRadiusFactor = 0.5 + m_random() * 2.5;
+          const additionalRadiusFactor = 0.5 + mRandom() * 2.5;
 
           const particle: Particle = Bodies.circle(
             ax,
@@ -658,7 +663,7 @@ export function createBubble(
                       bodyA.position
                     );
                     const vecNormal = Matter.Vector.normalise(vecBToA);
-                    const bToA = m_max(Matter.Vector.magnitude(vecBToA), 1);
+                    const bToA = mMax(Matter.Vector.magnitude(vecBToA), 1);
                     const bToAPow6 = bToA ** 6;
                     const attractiveness = settings.attractiveness * 10 ** 7;
                     const equilibriumDistance = settings.equilibriumDistance;
@@ -681,7 +686,7 @@ export function createBubble(
 
                     let force = Matter.Vector.mult(
                       vecNormal,
-                      m_min(magnitude, max)
+                      mMin(magnitude, max)
                     );
 
                     if (bodyB.isMouse) {
@@ -695,7 +700,7 @@ export function createBubble(
                         vecNormal,
                         mouseTouchFactor *
                           mouseRepelFactor *
-                          m_min(magnitude, max)
+                          mMin(magnitude, max)
                       );
                     } else if (bodyB.isCenter) {
                       magnitude =
@@ -710,7 +715,7 @@ export function createBubble(
 
                       force = Matter.Vector.mult(
                         vecNormal,
-                        -m_min(magnitude, max)
+                        -mMin(magnitude, max)
                       );
                     }
 
@@ -809,12 +814,12 @@ export function createBubble(
       setParticleRadius(radiusValue) {
         let i = numParticles;
         while (i--) {
-          const particle_i = particles[i];
-          if (!particle_i.circleRadius) continue;
+          const particleI = particles[i];
+          if (!particleI.circleRadius) continue;
           Body.scale(
-            particle_i,
-            radiusValue / particle_i.circleRadius,
-            radiusValue / particle_i.circleRadius
+            particleI,
+            radiusValue / particleI.circleRadius,
+            radiusValue / particleI.circleRadius
           );
         }
       },
@@ -825,18 +830,18 @@ export function createBubble(
         if (settings.hasBoundaries && settings.boundaries && checkBoundaries) {
           let i = numParticles;
           while (i--) {
-            const particle_i = particles[i];
+            const particleI = particles[i];
             if (
-              particle_i.position.x >=
+              particleI.position.x >=
                 settings.boundaries.right.wRatio * WIDTH +
                   settings.boundaries.right.offset +
                   boundaryThickness ||
-              particle_i.position.y >=
+              particleI.position.y >=
                 settings.boundaries.bottom.hRatio * HEIGHT +
                   settings.boundaries.bottom.offset +
                   boundaryThickness
             ) {
-              Body.translate(particle_i, {
+              Body.translate(particleI, {
                 x: -boundaryThickness - settings.boundaries.right.offset / 2,
                 y: -boundaryThickness - settings.boundaries.bottom.offset / 2,
               });
@@ -879,7 +884,7 @@ export function createBubble(
         ): WebGLShader {
           if (!gl) throw new Error('No WebGL context.');
 
-          let shader = gl.createShader(shaderType);
+          const shader = gl.createShader(shaderType);
           if (!shader) throw new Error('Failed to create WebGL shader.');
 
           gl.shaderSource(shader, shaderSource);
@@ -892,7 +897,7 @@ export function createBubble(
           return shader;
         }
 
-        let vertexShader = compileShader(
+        const vertexShader = compileShader(
           `
           attribute vec2 position;
           void main() {
@@ -951,7 +956,7 @@ export function createBubble(
           return;
         }
 
-        let program = gl.createProgram();
+        const program = gl.createProgram();
         if (!program) throw new Error('Failed to create WebGL program.');
         gl.attachShader(program, vertexShader);
         gl.attachShader(program, fragmentShader);
@@ -974,7 +979,7 @@ export function createBubble(
         // We order them like so, so that when we draw with
         // gl.TRIANGLE_STRIP, we draw triangle ABC and BCD.
         /* eslint-disable indent, no-multi-spaces */
-        let vertexData = new Float32Array([
+        const vertexData = new Float32Array([
           -1.0,
           1.0, // top left (A)
           -1.0,
@@ -985,7 +990,7 @@ export function createBubble(
           -1.0, // bottom right (D)
         ]);
         /* eslint-enable indent, no-multi-spaces */
-        let vertexDataBuffer = gl.createBuffer();
+        const vertexDataBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, vertexDataBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, vertexData, gl.STATIC_DRAW);
 
@@ -998,7 +1003,7 @@ export function createBubble(
           program: WebGLProgram,
           name: string
         ): number {
-          let attributeLocation = gl?.getAttribLocation(program, name);
+          const attributeLocation = gl?.getAttribLocation(program, name);
           if (attributeLocation === undefined || attributeLocation === -1) {
             throw new Error(`Can not find attribute ${name}.`);
           }
@@ -1007,7 +1012,7 @@ export function createBubble(
 
         // To make the geometry information available in the shader as attributes, we
         // need to tell WebGL what the layout of our data in the vertex buffer is.
-        let positionHandle = getAttribLocation(program, 'position');
+        const positionHandle = getAttribLocation(program, 'position');
         gl.enableVertexAttribArray(positionHandle);
         gl.vertexAttribPointer(
           positionHandle,
@@ -1023,8 +1028,11 @@ export function createBubble(
          *****************/
 
         // Utility to complain loudly if we fail to find the uniform
-        function getUniformLocation(program: WebGLProgram, name: string) {
-          let uniformLocation = gl?.getUniformLocation(program, name);
+        function getUniformLocation(
+          program: WebGLProgram,
+          name: string
+        ): WebGLUniformLocation {
+          const uniformLocation = gl?.getUniformLocation(program, name);
           if (!uniformLocation || uniformLocation === -1) {
             throw new Error(`Can not find uniform ${name}.`);
           }
@@ -1045,8 +1053,8 @@ export function createBubble(
         // To send the data to the GPU, we first need to flatten our data into a single array.
         const dataToSendToGPU = new Float32Array(3 * numParticles);
         for (let i = 0; i < numParticles; i++) {
-          let baseIndex = 3 * i;
-          let particle = particles[i];
+          const baseIndex = 3 * i;
+          const particle = particles[i];
           dataToSendToGPU[baseIndex + 0] = renderFactor * particle.position.x;
           dataToSendToGPU[baseIndex + 1] =
             renderFactor * (HEIGHT - particle.position.y);
@@ -1092,25 +1100,25 @@ export function createBubble(
 
         let i = numParticles;
         while (i--) {
-          const particle_i = particles[i];
-          const x_i = particle_i.position.x;
-          const y_i = particle_i.position.y;
+          const particleI = particles[i];
+          const xI = particleI.position.x;
+          const yI = particleI.position.y;
 
           // Particle must be in viewport (taking into account its mean viewRadius), otherwise no need to check it
           if (
-            x_i < WIDTH + 4 * effectiveCheckRadius &&
-            y_i < HEIGHT + 2 * effectiveCheckRadius
+            xI < WIDTH + 4 * effectiveCheckRadius &&
+            yI < HEIGHT + 2 * effectiveCheckRadius
           ) {
             let neighbours = 0;
 
             let j = numParticles;
             while (j--) {
               if (j !== i) {
-                const particle_j = particles[j];
-                const d2_ij =
-                  (x_i - particle_j.position.x) ** 2 +
-                  (y_i - particle_j.position.y) ** 2;
-                if (d2_ij < 4 * effectiveCheckRadiusPow2) {
+                const particleJ = particles[j];
+                const d2Ij =
+                  (xI - particleJ.position.x) ** 2 +
+                  (yI - particleJ.position.y) ** 2;
+                if (d2Ij < 4 * effectiveCheckRadiusPow2) {
                   neighbours += 1;
                 }
               }
@@ -1118,12 +1126,14 @@ export function createBubble(
 
             if (
               neighbours <= maxNeighbours ||
-              (particle_i.view && particle_i.view.hiding)
-            )
-              isolatedParticles.push(particle_i);
-            else bubble.removeViewHelper(particle_i);
+              (particleI.view && particleI.view.hiding)
+            ) {
+              isolatedParticles.push(particleI);
+            } else {
+              bubble.removeViewHelper(particleI);
+            }
           } else {
-            bubble.removeViewHelper(particle_i);
+            bubble.removeViewHelper(particleI);
           }
         }
 
@@ -1171,17 +1181,25 @@ export function createBubble(
             name: 'open',
             object: settings,
             ref: 'particleAuraRadius',
-            to: m_max(WIDTH, HEIGHT) / 4,
+            to: mMax(WIDTH, HEIGHT) / 4,
             easing: 0.02,
 
             checkCompletion() {
               let complete = true;
               const theColor = settings.blobColor;
 
-              let pixelTL = new Uint8Array(4);
-              gl?.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixelTL);
+              const pixelTopLeft = new Uint8Array(4);
+              gl?.readPixels(
+                0,
+                0,
+                1,
+                1,
+                gl.RGBA,
+                gl.UNSIGNED_BYTE,
+                pixelTopLeft
+              );
 
-              let pixelTR = new Uint8Array(4);
+              const pixelTopRight = new Uint8Array(4);
               gl?.readPixels(
                 gl.drawingBufferWidth - 1,
                 0,
@@ -1189,10 +1207,10 @@ export function createBubble(
                 1,
                 gl.RGBA,
                 gl.UNSIGNED_BYTE,
-                pixelTR
+                pixelTopRight
               );
 
-              let pixelBL = new Uint8Array(4);
+              const pixelBottomLeft = new Uint8Array(4);
               gl?.readPixels(
                 0,
                 gl.drawingBufferHeight - 1,
@@ -1200,10 +1218,10 @@ export function createBubble(
                 1,
                 gl.RGBA,
                 gl.UNSIGNED_BYTE,
-                pixelBL
+                pixelBottomLeft
               );
 
-              let pixelBR = new Uint8Array(4);
+              const pixelBottomRight = new Uint8Array(4);
               gl?.readPixels(
                 gl.drawingBufferWidth - 1,
                 gl.drawingBufferHeight - 1,
@@ -1211,15 +1229,15 @@ export function createBubble(
                 1,
                 gl.RGBA,
                 gl.UNSIGNED_BYTE,
-                pixelBR
+                pixelBottomRight
               );
 
               for (let i = 0; i < 3; i++) {
                 if (
-                  pixelTL[i] !== theColor[i] ||
-                  pixelTR[i] !== theColor[i] ||
-                  pixelBL[i] !== theColor[i] ||
-                  pixelBR[i] !== theColor[i]
+                  pixelTopLeft[i] !== theColor[i] ||
+                  pixelTopRight[i] !== theColor[i] ||
+                  pixelBottomLeft[i] !== theColor[i] ||
+                  pixelBottomRight[i] !== theColor[i]
                 ) {
                   complete = false;
                 }
@@ -1331,8 +1349,9 @@ export function createBubble(
             isolatedParticle.preventNewView = true;
             bubble.removeViewHelper(isolatedParticle, function () {
               count++;
-              if (count === numIsolatedParticles - 1)
+              if (count === numIsolatedParticles - 1) {
                 settings.showIsolated = false;
+              }
             });
           }
         });
@@ -1351,51 +1370,51 @@ export function createBubble(
         if (!settings.showIsolated) bubble.checkIsolatedParticles();
         i = numParticles;
         while (projectParticles.length < numProjects && i--) {
-          const particle_i = particles[i];
+          const particleI = particles[i];
           if (
-            particle_i.view &&
-            particle_i.position.x <= WIDTH &&
-            particle_i.position.y <= HEIGHT
+            particleI.view &&
+            particleI.position.x <= WIDTH &&
+            particleI.position.y <= HEIGHT
           ) {
-            particle_i.isProject = true;
-            projectParticles.push(particle_i);
+            particleI.isProject = true;
+            projectParticles.push(particleI);
           }
         }
         // If not enough, the ones in the viewport
         i = numParticles;
         while (projectParticles.length < numProjects && i--) {
-          const particle_i = particles[i];
+          const particleI = particles[i];
           if (
-            !particle_i.isProject &&
-            particle_i.position.x <= WIDTH &&
-            particle_i.position.y <= HEIGHT
+            !particleI.isProject &&
+            particleI.position.x <= WIDTH &&
+            particleI.position.y <= HEIGHT
           ) {
-            particle_i.isProject = true;
-            projectParticles.push(particle_i);
+            particleI.isProject = true;
+            projectParticles.push(particleI);
           }
         }
         // If not enough, isolated ones not in viewport
         if (!settings.showIsolated) bubble.checkIsolatedParticles();
         i = numParticles;
         while (projectParticles.length < numProjects && i--) {
-          const particle_i = particles[i];
+          const particleI = particles[i];
           if (
-            !particle_i.isProject &&
-            particle_i.view &&
-            particle_i.position.x > WIDTH &&
-            particle_i.position.y > HEIGHT
+            !particleI.isProject &&
+            particleI.view &&
+            particleI.position.x > WIDTH &&
+            particleI.position.y > HEIGHT
           ) {
-            particle_i.isProject = true;
-            projectParticles.push(particle_i);
+            particleI.isProject = true;
+            projectParticles.push(particleI);
           }
         }
         // If not enough, anyone
         i = numParticles;
         while (projectParticles.length < numProjects && i--) {
-          const particle_i = particles[i];
-          if (!particle_i.isProject) {
-            particle_i.isProject = true;
-            projectParticles.push(particle_i);
+          const particleI = particles[i];
+          if (!particleI.isProject) {
+            particleI.isProject = true;
+            projectParticles.push(particleI);
           }
         }
 
@@ -1488,21 +1507,21 @@ export function createBubble(
         const marginLR = WIDTH > 400 ? 80 : 40;
         const marginTop = WIDTH > 400 ? 120 : WIDTH <= 340 ? 60 : 80;
         const marginBot = WIDTH > 400 ? 150 : 60;
-        const rawNumLines = m_sqrt(
+        const rawNumLines = mSqrt(
           ((HEIGHT - marginTop - marginBot) /
-            m_sin(PI / 3) /
+            mSin(PI / 3) /
             (WIDTH - 2 * marginLR)) *
             numProjects
         );
         const rawNumCols = numProjects / rawNumLines;
-        let numLines = m_floor(rawNumLines);
-        let numCols = m_floor(rawNumCols);
+        let numLines = mFloor(rawNumLines);
+        let numCols = mFloor(rawNumCols);
         let distance = 0;
 
         while (numLines * numCols < numProjects) {
           if (
-            m_abs(numLines * (numCols + 1) - numProjects) <
-            m_abs((numLines + 1) * numCols - numProjects)
+            mAbs(numLines * (numCols + 1) - numProjects) <
+            mAbs((numLines + 1) * numCols - numProjects)
           ) {
             numCols++;
             distance = (WIDTH - 2 * marginLR) / numCols;
@@ -1523,16 +1542,16 @@ export function createBubble(
           (HEIGHT -
             marginTop -
             marginBot -
-            (numLines - 1) * distance * m_sin(PI / 3)) /
+            (numLines - 1) * distance * mSin(PI / 3)) /
           2;
 
-        const iLine = m_floor(i / numCols);
+        const iLine = mFloor(i / numCols);
 
         const x =
           extraMarginLeft +
           marginLR +
           ((i % numCols) + (iLine % 2) / 2) * distance;
-        const y = extraMarginTop + marginTop + iLine * distance * m_sin(PI / 3);
+        const y = extraMarginTop + marginTop + iLine * distance * mSin(PI / 3);
 
         return {
           x: x,
@@ -1721,12 +1740,12 @@ export function createBubble(
 
     function tick(): void {
       if (started) {
-        let t0 = performance.now();
+        const t0 = performance.now();
 
         actionStack.increment();
 
         if (settings.playPhysics) bubble.updatePhysics();
-        if (renderGPU) bubble.transferToGPU();
+        if (renderGpu) bubble.transferToGPU();
 
         if (settings.showIsolated) {
           if (!preventCheckIsolated) bubble.checkIsolatedParticles();
@@ -1737,7 +1756,7 @@ export function createBubble(
           bubble.showProjectsParticles();
         }
 
-        let t1 = performance.now();
+        const t1 = performance.now();
 
         if (t1 - t0 > 1000 / 40) {
           window.dispatchEvent(bloatedEvent);
