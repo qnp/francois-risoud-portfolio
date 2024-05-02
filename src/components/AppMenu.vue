@@ -110,7 +110,7 @@
 
     .menu
       width 60%
-      max-width 420px
+      max-width 428px
       display flex
       align-items center
       justify-content space-between
@@ -136,15 +136,20 @@
           path
             fill $theme-color-white
 
+      a:not(.home)
+        padding 8px
+
     .social
       width 40%
-      max-width 263px
+      max-width 356px
       display flex
       align-items center
       justify-content space-between
       margin-left 6%
+      margin-right -8px
 
       a
+        padding 8px
         opacity 0
         transform translateY(20px)
 
@@ -161,8 +166,8 @@
         a
           animation show-menu-translate 0.5s cubic-bezier(0, 0.58, 0, 1) forwards, show-menu-opacity 1s ease-out forwards
 
-        for num in 1 .. 3
-          a:nth-child(3n+{num})
+        for num in 1 .. 4
+          a:nth-child(4n+{num})
             animation-delay: (500 + ((num - 1) * 100))ms
 
     &.hide
