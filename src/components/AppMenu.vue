@@ -49,7 +49,7 @@
           to="/"
           @click="onClickLink"
         )
-          inline-svg(:src="svgEk")
+          InlineSvg(:src="svgEk")
         RouterLink(
           to="/about"
           :class="aboutClass"

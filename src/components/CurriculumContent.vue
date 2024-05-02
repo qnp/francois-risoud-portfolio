@@ -13,7 +13,7 @@ main.curriculum(:class="classes")
               href="https://fifteen.eu"
               target="_blank"
             ) Fifteen
-              inline-svg(:src="svgNewWindow")
+              InlineSvg(:src="svgNewWindow")
             | , Vanves, France
       li.item
         .date
@@ -25,7 +25,7 @@ main.curriculum(:class="classes")
               href="https://zoov.eu"
               target="_blank"
             ) Zoov by Fifteen
-              inline-svg(:src="svgNewWindow")
+              InlineSvg(:src="svgNewWindow")
             | , Vanves, France
       li.item
         .date
@@ -43,7 +43,7 @@ main.curriculum(:class="classes")
               href="https://bredrinrecords.com"
               target="_blank"
             ) Bredrin Records
-              inline-svg(:src="svgNewWindow")
+              InlineSvg(:src="svgNewWindow")
             | , Paris, France
       li.item
         .date
@@ -55,13 +55,13 @@ main.curriculum(:class="classes")
               href="http://www.ens.fr"
               target="_blank"
             ) École Normale Supérieure
-              inline-svg(:src="svgNewWindow")
+              InlineSvg(:src="svgNewWindow")
             | ,&nbsp;
             a(
               href="https://www.sorbonne-universite.fr"
               target="_blank"
             ) UPMC
-              inline-svg(:src="svgNewWindow")
+              InlineSvg(:src="svgNewWindow")
             | , Paris, France
       li.item
         .date
@@ -73,13 +73,13 @@ main.curriculum(:class="classes")
               href="http://www.ens.fr"
               target="_blank"
             ) École Normale Supérieure
-              inline-svg(:src="svgNewWindow")
+              InlineSvg(:src="svgNewWindow")
             | ,&nbsp;
             a(
               href="https://www.sorbonne-universite.fr"
               target="_blank"
             ) UPMC
-              inline-svg(:src="svgNewWindow")
+              InlineSvg(:src="svgNewWindow")
             | , Paris, France
       li.item
         .date
@@ -97,37 +97,37 @@ main.curriculum(:class="classes")
             href="http://maison-solide.fr"
             target="_blank"
           )
-            inline-svg(:src="svgSolide")
+            InlineSvg(:src="svgSolide")
           a.logo.datagif(
             href="http://www.datagif.fr"
             target="_blank"
           )
-            inline-svg(:src="svgDatagif")
+            InlineSvg(:src="svgDatagif")
           a.logo(
             href="https://www.policestudio.fr"
             target="_blank"
           )
-            inline-svg(:src="svgPolice")
+            InlineSvg(:src="svgPolice")
           a.logo(
             href="https://www.habx.fr"
             target="_blank"
           )
-            inline-svg(:src="svgHabx")
+            InlineSvg(:src="svgHabx")
           a.logo(
             href="http://4nparis.com"
             target="_blank"
           )
-            inline-svg(:src="svg4N")
+            InlineSvg(:src="svg4N")
           a.logo(
             href="http://zoov.eu"
             target="_blank"
           )
-            inline-svg(:src="svgZoov")
+            InlineSvg(:src="svgZoov")
           a.logo(
             href="http://fifteen.eu"
             target="_blank"
           )
-            inline-svg(:src="svgFifteen")
+            InlineSvg(:src="svgFifteen")
 </template>
 
 <style lang="stylus">
