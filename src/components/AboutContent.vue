@@ -1,6 +1,6 @@
 <template lang="pug">
-main.AboutContent(:class="classes")
-  .AboutContent__summary
+main.about-content(:class="classes")
+  .summary
     h1
       | Hi, my name is&nbsp;
       a(href="mailto:me") François
@@ -14,16 +14,16 @@ main.AboutContent(:class="classes")
     h2
       | I like doing nice and sharp things with digital and web technologies. From a quantum physics background, I’m also passionate about science, pedagogy, music and digital art.
     h3
-      router-link.scroll-invite(to="/projects") Get to know me.
+      RouterLink.scroll-invite(to="/projects") Get to know me.
 </template>
 
 <style lang="stylus">
-main.AboutContent
+main.about-content
   transition margin 0.3s ease
   margin ($content-margin-top + 1.6 * $theme-margin-top) $theme-margin-left-right 0
   display block
 
-  .AboutContent__summary
+  .summary
     h1
       max-width 440px
 
@@ -64,7 +64,7 @@ main.AboutContent
     transform translateY(20px)
     opacity 0
 
-  &--show
+  &.show
     pointer-events all
 
     h1,
@@ -81,7 +81,7 @@ main.AboutContent
     h3
       animation-delay 1.15s
 
-  &--hide
+  &.hide
     pointer-events none
 
     h1,
@@ -91,14 +91,14 @@ main.AboutContent
       animation hide-content-opacity 0.3s ease-out forwards
       animation-delay 0s
 
-  &--hidden
+  &.hidden
     display none
 
 $media-content-max-width = 'only screen and (min-width: ' + $content-max-width + ')'
 
 @media $media-content-max-width
-  main.AboutContent
-    .AboutContent__summary
+  main.about-content
+    .summary
       h2
         padding-top 2.5em
         margin-left 308px
@@ -108,15 +108,15 @@ $media-content-max-width = 'only screen and (min-width: ' + $content-max-width +
         margin-left 616px
 
 @media only screen and (min-width 1801px)
-  main.AboutContent
+  main.about-content
     margin 2 * $content-margin-top + $theme-margin-top $theme-margin-left-right 0
 
 @media only screen and (min-height 601px) and (max-height 640px)
-  main.AboutContent
+  main.about-content
     margin: $content-margin-top + $theme-margin-top $theme-margin-left-right 0
 
 @media only screen and (max-height 600px)
-  main.AboutContent
+  main.about-content
     margin: $content-margin-top + $theme-margin-top $theme-margin-left-right 0
 
     h1
@@ -127,7 +127,7 @@ $media-content-max-width = 'only screen and (min-width: ' + $content-max-width +
       font-size: (1.2 / $golden-num)em
 
 @media only screen and (max-width 600px)
-  main.AboutContent
+  main.about-content
     h1
       font-size 1.2em
 
@@ -136,19 +136,19 @@ $media-content-max-width = 'only screen and (min-width: ' + $content-max-width +
       font-size: (1.2 / $golden-num)em
 
 @media only screen and (max-width 400px)
-  main.AboutContent
+  main.about-content
     margin ($content-margin-top-mobile + $theme-margin-top-mobile - 15px) $theme-margin-left-right-mobile 0
 
 @media only screen and (min-width 401px) and (max-width 450px) and (max-height 580px)
-  main.AboutContent
+  main.about-content
     margin ($content-margin-top-mobile + $theme-margin-top-mobile - 15px) $theme-margin-left-right 0
 
 @media only screen and (max-width 340px) and (max-height 540px)
-  main.AboutContent
+  main.about-content
     margin ($content-margin-top-mobile + $theme-margin-top-mobile - 25px) ($theme-margin-left-right-mobile - 10px) 0
 
 @media only screen and (max-width 380px) and (max-height 570px)
-  main.AboutContent
+  main.about-content
     h1
       font-size 1em
 
@@ -193,8 +193,8 @@ export interface AboutContentProps {
 const props = defineProps<AboutContentProps>();
 
 const classes = computed(() => ({
-  'AboutContent--show': props.show,
-  'AboutContent--hide': !props.show,
-  'AboutContent--hidden': props.hidden,
+  show: props.show,
+  hide: !props.show,
+  hidden: props.hidden,
 }));
 </script>
