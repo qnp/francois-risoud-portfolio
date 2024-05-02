@@ -14,7 +14,11 @@ main.project(
       h1 {{ selectedProject?.title }} - {{ selectedProject?.type }}
         InlineSvg(:src="svgNewWindow")
 
-    h2(v-for="infoLine in selectedProject?.techInfos") {{ infoLine }}
+    h2(v-if="selectedProject?.date") {{ selectedProject.date }}
+    h2(
+      v-for="(infoLine, index) in selectedProject?.techInfos"
+      :key="index"
+    ) {{ infoLine }}
 </template>
 
 <style lang="stylus">
@@ -91,7 +95,8 @@ body.has-touch
             height 1em
             width 0.35em
 
-            path
+            path,
+            polygon
               fill $theme-color-white
 
 @media only screen and (max-width 1100px)
@@ -158,7 +163,6 @@ body.has-touch
 import svgNewWindow from '@/assets/images/new-window-inline.svg';
 import InlineSvg from '@/components/utils/InlineSvg.vue';
 import ActionStack from '@/utils/action-stack';
-
 import { useTouch } from '@/composables/useTouch';
 
 import type { CSSProperties } from 'vue';
@@ -295,7 +299,7 @@ function getTargetRadius(): number {
       (height - (props.origin.y ? props.origin.y : 0)) ** 2
   );
 
-  const offset = 30;
+  const offset = 50;
   const targetRadius =
     Math.max(distanceBR, distanceTR, distanceTL, distanceBL) + offset;
 
