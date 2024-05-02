@@ -45,35 +45,39 @@
   nav(:class="computedNavClasses")
     .menu-wrapper
       .menu
-        router-link.home(
+        RouterLink.home(
           to="/"
           @click="onClickLink"
         )
           inline-svg(:src="svgEk")
-        router-link(
+        RouterLink(
           to="/about"
           :class="aboutClass"
           @click="onClickLink"
         ) about
-        router-link(
+        RouterLink(
           to="/projects"
           :class="projectsClass"
           @click="onClickLink"
         ) projects
-        router-link(
+        RouterLink(
           to="/curriculum"
           :class="curriculumClass"
           @click="onClickLink"
         ) curriculum
       .social
-        a.twitter(
-          href="https://twitter.com/ekqnp"
+        a.x(
+          href="https://x.com/ekqnp"
           target="_blank"
-        ) twitter
+        ) x
         a.github(
           href="https://github.com/qnp"
           target="_blank"
         ) github
+        a.linkedin(
+          href="https://www.linkedin.com/in/fran%C3%A7ois-risoud"
+          target="_blank"
+        ) linkedin
         a.mailto(href="mailto:me") mail
 </template>
 

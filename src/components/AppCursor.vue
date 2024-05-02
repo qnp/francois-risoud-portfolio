@@ -5,17 +5,19 @@
 )
   .cursor-content
   .social-icon.fifteen
-    InlineSvg(:src="svgFifteenLogoOnly")
-  .social-icon.twitter
-    InlineSvg(:src="svgTwitter")
+    InlineSvg(:src="svgFifteen")
+  .social-icon.x
+    InlineSvg(:src="svgX")
   .social-icon.github
     InlineSvg(:src="svgGithub")
+  .social-icon.linkedin
+    InlineSvg(:src="svgLinkedin")
   .social-icon.mailto
     InlineSvg(:src="svgMail")
   .social-icon.new-window
-    InlineSvg(:src="svgCursorNewWindow")
+    InlineSvg(:src="svgNewWindow")
   .scroll-icon
-    InlineSvg(:src="svgCursorScroll")
+    InlineSvg(:src="svgScroll")
 </template>
 
 <style lang="stylus">
@@ -30,8 +32,9 @@ $clickable-scale = 1
 $clickable-opacity = 1
 $social-icon-size = 60px
 $fifteen-icon-ratio-wh = 1
-$twitter-icon-ratio-wh = 1
+$x-icon-ratio-wh = 1
 $github-icon-ratio-wh = 1
+$linkedin-icon-ratio-wh = 1
 $new-window-icon-ratio-wh = 1
 $mail-icon-ratio-wh = 0.7
 $scroll-icon-size = 96px
@@ -88,11 +91,14 @@ body
     &.fifteen
       margin-top: (- $social-icon-size * $fifteen-icon-ratio-wh / 2)
 
-    &.twitter
-      margin-top: (- $social-icon-size * $twitter-icon-ratio-wh / 2)
+    &.x
+      margin-top: (- $social-icon-size * $x-icon-ratio-wh / 2)
 
     &.github
       margin-top: (- $social-icon-size * $github-icon-ratio-wh / 2)
+
+    &.linkedin
+      margin-top: (- $social-icon-size * $linkedin-icon-ratio-wh / 2)
 
     &.mailto
       margin-top: (- $social-icon-size * $mail-icon-ratio-wh / 2)
@@ -126,7 +132,7 @@ body
       transform scale($normal-scale)
 
   &:not(.hidden)
-    &:not(.twitter-cursor):not(.github-cursor):not(.mailto-cursor):not(.scroll-cursor)&:not(.fifteen-cursor)
+    &:not(.x-cursor):not(.github-cursor):not(.mailto-cursor):not(.scroll-cursor)&:not(.fifteen-cursor):not(.linkedin-cursor)
       &.down
         .cursor-content
           transform scale($normal-scale * $click-scale)
@@ -148,8 +154,9 @@ body
             transform translate((($cursor-size - @width) / 2), (1 / 6) * $cursor-size)
 
     &.fifteen-cursor,
-    &.twitter-cursor,
+    &.x-cursor,
     &.github-cursor,
+    &.linkedin-cursor,
     &.mailto-cursor,
     &.new-window-cursor
       .cursor-content
@@ -164,13 +171,13 @@ body
         .social-icon.fifteen
           transform scale($clickable-scale * $click-scale)
 
-    &.twitter-cursor
-      .social-icon.twitter
+    &.x-cursor
+      .social-icon.x
         transform scale($clickable-scale)
         opacity $clickable-opacity
 
       &.down
-        .social-icon.twitter
+        .social-icon.x
           transform scale($clickable-scale * $click-scale)
 
     &.github-cursor
@@ -180,6 +187,15 @@ body
 
       &.down
         .social-icon.github
+          transform scale($clickable-scale * $click-scale)
+
+    &.linkedin-cursor
+      .social-icon.linkedin
+        transform scale($clickable-scale)
+        opacity $clickable-opacity
+
+      &.down
+        .social-icon.linkedin
           transform scale($clickable-scale * $click-scale)
 
     &.mailto-cursor
@@ -228,13 +244,13 @@ body
 </style>
 
 <script setup lang="ts">
-import svgFifteenLogoOnly from '@/assets/images/fifteen-logo-only.svg';
-import svgTwitter from '@/assets/images/twitter.svg';
-import svgGithub from '@/assets/images/github.svg';
-import svgMail from '@/assets/images/mail.svg';
-import svgCursorNewWindow from '@/assets/images/new-window.svg';
-import svgCursorScroll from '@/assets/images/cursor-scroll.svg';
-
+import svgFifteen from '@/assets/images/cursors/fifteen.svg';
+import svgX from '@/assets/images/cursors/x.svg';
+import svgGithub from '@/assets/images/cursors/github.svg';
+import svgLinkedin from '@/assets/images/cursors/linkedin.svg';
+import svgMail from '@/assets/images/cursors/mail.svg';
+import svgNewWindow from '@/assets/images/cursors/new-window.svg';
+import svgScroll from '@/assets/images/cursors/scroll.svg';
 import rot13 from '@/utils/rot13';
 
 import InlineSvg from '@/components/utils/InlineSvg.vue';
@@ -277,12 +293,16 @@ const clickableSettings: ClickableConfig[] = [
     cursorClasses: ['mailto-cursor'],
   },
   {
-    selector: 'a.twitter',
-    cursorClasses: ['twitter-cursor'],
+    selector: 'a.x',
+    cursorClasses: ['x-cursor'],
   },
   {
     selector: 'a.github',
     cursorClasses: ['github-cursor'],
+  },
+  {
+    selector: 'a.linkedin',
+    cursorClasses: ['linkedin-cursor'],
   },
   {
     selector: 'a.fifteen',
@@ -293,7 +313,7 @@ const clickableSettings: ClickableConfig[] = [
     cursorClasses: ['scroll-cursor'],
   },
   {
-    selector: 'a[href^=http]:not(.twitter):not(.github):not(.fifteen)',
+    selector: 'a[href^=http]:not(.x):not(.github):not(.fifteen):not(.linkedin)',
     cursorClasses: ['new-window-cursor'],
   },
 ];
