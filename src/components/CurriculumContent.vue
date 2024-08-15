@@ -40,7 +40,7 @@ main.curriculum(:class="classes")
           .occupation Music producer
           .location
             a(
-              href="https://bredrinrecords.com"
+              href="https://soundcloud.com/bredrin-records"
               target="_blank"
             ) Bredrin Records
               InlineSvg(:src="svgNewWindow")
@@ -52,7 +52,7 @@ main.curriculum(:class="classes")
           .occupation PhD in Theoretical Quantum Physics
           .location
             a(
-              href="http://www.ens.fr"
+              href="https://www.ens.psl.eu"
               target="_blank"
             ) École Normale Supérieure
               InlineSvg(:src="svgNewWindow")
@@ -70,7 +70,7 @@ main.curriculum(:class="classes")
           .occupation Master Degree in Theoretical, Physical & Analytical Chemistry
           .location
             a(
-              href="http://www.ens.fr"
+              href="https://www.ens.psl.eu"
               target="_blank"
             ) École Normale Supérieure
               InlineSvg(:src="svgNewWindow")
