@@ -14,6 +14,7 @@ export default [
       'Pug',
       'Vue 2',
       'Vue 3',
+      'Nuxt',
       'Composition API',
       'Mapbox',
       'Turf.js',
