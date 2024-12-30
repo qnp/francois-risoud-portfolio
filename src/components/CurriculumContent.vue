@@ -5,7 +5,19 @@ main.curriculum(:class="classes")
     ul.content
       li.item
         .date
-          .year March 2022 – now
+          .year Dec 2024 – now
+        .thing
+          .occupation Head of Front-end Development
+          .location
+            a(
+              href="https://fifteen.eu"
+              target="_blank"
+            ) Fifteen
+              InlineSvg(:src="svgNewWindow")
+            | , Vanves, France
+      li.item
+        .date
+          .year March 2022 – Dec 2024
         .thing
           .occupation Lead fullstack developer & <br/> Head of web
           .location
@@ -94,7 +106,7 @@ main.curriculum(:class="classes")
               span(
                 v-for="(skill, j) in category.content"
                 :key="`${i}-${j}`"
-              ) {{ skill + ', ' }}
+              ) {{ skill + ", " }}
       li.item
         .date
           .year clients

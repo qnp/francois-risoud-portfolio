@@ -123,6 +123,7 @@ export default [
       'Bash',
       'Makefile',
       'ffmpeg',
+      'JQL',
     ],
   },
   {
@@ -139,6 +140,7 @@ export default [
       'XCode',
       'Slack',
       'Notion',
+      'Jira',
     ],
   },
   {
