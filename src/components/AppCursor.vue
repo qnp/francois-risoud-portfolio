@@ -1,22 +1,22 @@
 <template lang="pug">
-.cursor(
+.AppCursor(
   ref="elementRef"
   :class="classes"
 )
-  .cursor-content
-  .social-icon.fifteen
+  .AppCursor__content
+  .AppCursor__socialIcon--fifteen
     InlineSvg(:src="svgFifteen")
-  .social-icon.x
+  .AppCursor__socialIcon--x
     InlineSvg(:src="svgX")
-  .social-icon.github
+  .AppCursor__socialIcon--github
     InlineSvg(:src="svgGithub")
-  .social-icon.linkedin
+  .AppCursor__socialIcon--linkedin
     InlineSvg(:src="svgLinkedin")
-  .social-icon.mailto
+  .AppCursor__socialIcon--mailto
     InlineSvg(:src="svgMail")
-  .social-icon.new-window
+  .AppCursor__socialIcon--newWindow
     InlineSvg(:src="svgNewWindow")
-  .scroll-icon
+  .AppCursor__scrollIcon
     InlineSvg(:src="svgScroll")
 </template>
 
@@ -43,7 +43,7 @@ html,
 body
   cursor none
 
-.cursor
+.AppCursor
   position absolute
   top 0
   pointer-events none
@@ -54,16 +54,16 @@ body
   left -($cursor-size / 2)
   z-index 999
 
-  &.transition
+  &--transition
     transition transform 250ms ease-out
 
-  &.blend-intro
+  &--blendIntro
     mix-blend-mode hard-light
 
-  &.blend-main
+  &--blendMain
     mix-blend-mode hard-light
 
-  .cursor-content
+  &__content
     pointer-events none
     width $cursor-size
     height $cursor-size
@@ -71,7 +71,7 @@ body
     border-radius: ($cursor-size / 2)
     transition all $transition-duration-all ease-out
 
-  .social-icon
+  &__socialIcon
     width $social-icon-size
     position absolute
     top 50%
@@ -88,25 +88,25 @@ body
       polygon
         fill $theme-color-pink
 
-    &.fifteen
+    &--fifteen
       margin-top: (- $social-icon-size * $fifteen-icon-ratio-wh / 2)
 
-    &.x
+    &--x
       margin-top: (- $social-icon-size * $x-icon-ratio-wh / 2)
 
-    &.github
+    &--github
       margin-top: (- $social-icon-size * $github-icon-ratio-wh / 2)
 
-    &.linkedin
+    &--linkedin
       margin-top: (- $social-icon-size * $linkedin-icon-ratio-wh / 2)
 
-    &.mailto
+    &--mailto
       margin-top: (- $social-icon-size * $mail-icon-ratio-wh / 2)
 
-    &.new-window
+    &--newWindow
       margin-top: (- $social-icon-size * $new-window-icon-ratio-wh / 2)
 
-  .scroll-icon
+  &__scrollIcon
     position absolute
     top 10px
     pointer-events none
@@ -123,110 +123,110 @@ body
       polygon
         fill $theme-color-pink
 
-  &.hidden
-    .cursor-content
+  &--hidden
+    &__content
       transform scale(0)
 
-  &.visible
-    .cursor-content
+  &--visible
+    &__content
       transform scale($normal-scale)
 
-  &:not(.hidden)
-    &:not(.x-cursor):not(.github-cursor):not(.mailto-cursor):not(.scroll-cursor)&:not(.fifteen-cursor):not(.linkedin-cursor)
-      &.down
-        .cursor-content
+  &:not(&--hidden)
+    &:not(&--x):not(&--github):not(&--mailto):not(&--scroll)&:not(&--fifteen):not(&--linkedin)
+      &--down
+        &__content
           transform scale($normal-scale * $click-scale)
 
-      &.clickable-cursor
-        .cursor-content
+      &--clickable
+        &__content
           transform scale($clickable-scale)
           opacity $clickable-opacity
 
-        &.down
-          .cursor-content
+        &--down
+          &__content
             transform scale($clickable-scale * $click-scale)
 
-      &.selectable-cursor
-        &.down
-          .cursor-content
+      &--selectable
+        &--down
+          &__content
             width 4px
             height (3 / 4) * $cursor-size
             transform translate((($cursor-size - @width) / 2), (1 / 6) * $cursor-size)
 
-    &.fifteen-cursor,
-    &.x-cursor,
-    &.github-cursor,
-    &.linkedin-cursor,
-    &.mailto-cursor,
-    &.new-window-cursor
-      .cursor-content
+    &--fifteen,
+    &--x,
+    &--github,
+    &--linkedin,
+    &--mailto,
+    &--newWindow
+      &__content
         transform scale(0)
 
-    &.fifteen-cursor
-      .social-icon.fifteen
+    &--fifteen
+      &__socialIcon--fifteen
         transform scale($clickable-scale)
         opacity $clickable-opacity
 
-      &.down
-        .social-icon.fifteen
+      &--down
+        &__socialIcon--fifteen
           transform scale($clickable-scale * $click-scale)
 
-    &.x-cursor
-      .social-icon.x
+    &--x
+      &__socialIcon--x
         transform scale($clickable-scale)
         opacity $clickable-opacity
 
-      &.down
-        .social-icon.x
+      &--down
+        &__socialIcon--x
           transform scale($clickable-scale * $click-scale)
 
-    &.github-cursor
-      .social-icon.github
+    &--github
+      &__socialIcon--github
         transform scale($clickable-scale)
         opacity $clickable-opacity
 
-      &.down
-        .social-icon.github
+      &--down
+        &__socialIcon--github
           transform scale($clickable-scale * $click-scale)
 
-    &.linkedin-cursor
-      .social-icon.linkedin
+    &--linkedin
+      &__socialIcon--linkedin
         transform scale($clickable-scale)
         opacity $clickable-opacity
 
-      &.down
-        .social-icon.linkedin
+      &--down
+        &__socialIcon--linkedin
           transform scale($clickable-scale * $click-scale)
 
-    &.mailto-cursor
-      .social-icon.mailto
+    &--mailto
+      &__socialIcon--mailto
         transform scale($clickable-scale)
         opacity $clickable-opacity
 
-      &.clicked
-        .social-icon.mailto
+      &--clicked
+        &__socialIcon--mailto
           animation send-message 1s ease-in
           animation-fill-mode forwards
 
-    &.new-window-cursor
-      .social-icon.new-window
+    &--newWindow
+      &__socialIcon--newWindow
         transform scale($clickable-scale)
         opacity $clickable-opacity
 
-      &.down
-        .social-icon.new-window
+      &--down
+        &__socialIcon--newWindow
           transform scale($clickable-scale * $click-scale)
 
-    &.scroll-cursor
-      .cursor-content
+    &--scroll
+      &__content
         transform scale(0)
 
-      .scroll-icon
+      &__scrollIcon
         transform scale($clickable-scale)
         opacity $clickable-opacity
 
-      &.down
-        .scroll-icon
+      &--down
+        &__scrollIcon
           transform scale($clickable-scale * $click-scale)
 
 @keyframes send-message
@@ -281,39 +281,39 @@ interface ClickableConfig {
 const clickableSettings: ClickableConfig[] = [
   {
     selector: 'a[href]:not([href^=mailto]):not([href^=http]):not(.active)',
-    cursorClasses: ['clickable-cursor'],
+    cursorClasses: ['AppCursor--clickable'],
   },
   {
     selector: 'p, h1, h2, h3, h4',
-    cursorClasses: ['selectable-cursor'],
+    cursorClasses: ['AppCursor--selectable'],
   },
   {
     selector: '[href^=mailto]',
-    cursorClasses: ['mailto-cursor'],
+    cursorClasses: ['AppCursor--mailto'],
   },
   {
     selector: 'a.x',
-    cursorClasses: ['x-cursor'],
+    cursorClasses: ['AppCursor--x'],
   },
   {
     selector: 'a.github',
-    cursorClasses: ['github-cursor'],
+    cursorClasses: ['AppCursor--github'],
   },
   {
     selector: 'a.linkedin',
-    cursorClasses: ['linkedin-cursor'],
+    cursorClasses: ['AppCursor--linkedin'],
   },
   {
     selector: 'a.fifteen',
-    cursorClasses: ['fifteen-cursor'],
+    cursorClasses: ['AppCursor--fifteen'],
   },
   {
     selector: '.scroll-invite',
-    cursorClasses: ['scroll-cursor'],
+    cursorClasses: ['AppCursor--scroll'],
   },
   {
     selector: 'a[href^=http]:not(.x):not(.github):not(.fifteen):not(.linkedin)',
-    cursorClasses: ['new-window-cursor'],
+    cursorClasses: ['AppCursor--newWindow'],
   },
 ];
 
@@ -369,21 +369,21 @@ const unsetTransitionOnce = ref(false);
 const clicked = ref(false);
 const down = ref(false);
 
-type ViewClass = 'hidden' | 'visible';
+type ViewClass = 'AppCursor--hidden' | 'AppCursor--visible';
 
-const viewClass = ref<ViewClass>('hidden');
+const viewClass = ref<ViewClass>('AppCursor--hidden');
 const cursorClasses = ref<string[]>([]);
-const blendModeClass = computed<`blend-${CursorBlendMode}`>(
-  () => `blend-${props.blendMode}`
+const blendModeClass = computed<`AppCursor--blend${Capitalize<CursorBlendMode>}`>(
+  () => `AppCursor--blend${capitalize(props.blendMode)}`
 );
 const classes = computed(() => [
   blendModeClass.value,
   viewClass.value,
   ...cursorClasses.value,
   {
-    transition: transition.value,
-    clicked: clicked.value,
-    down: down.value,
+    'AppCursor--transition': transition.value,
+    'AppCursor--clicked': clicked.value,
+    'AppCursor--down': down.value,
   },
 ]);
 
@@ -399,19 +399,19 @@ onMounted(() => {
       mouse.y = event.clientY;
       checkClickable(mouse.x, mouse.y);
       setCursorPosition(mouse.x, mouse.y);
-      if (viewClass.value !== 'visible') viewClass.value = 'visible';
+      if (viewClass.value !== 'AppCursor--visible') viewClass.value = 'AppCursor--visible';
     }
   });
   document.body.addEventListener('mouseenter', event => {
     if (!hasTouch.value) {
       setCursorPosition(event.clientX, event.clientY);
-      viewClass.value = 'visible';
+      viewClass.value = 'AppCursor--visible';
     }
   });
   document.body.addEventListener('mouseleave', () => {
     if (!hasTouch.value) {
       if (!clicked.value) {
-        viewClass.value = 'hidden';
+        viewClass.value = 'AppCursor--hidden';
       }
     }
   });

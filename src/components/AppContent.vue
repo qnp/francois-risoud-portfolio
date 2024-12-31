@@ -1,5 +1,5 @@
 <template lang="pug">
-#content.app-content
+#content.AppContent
   PhysicalBubble(
     :open="bubbleIntro.open"
     :appear="introAppear"
@@ -22,7 +22,7 @@
     :remove-particles="bubbleLanding.removeParticles"
   )
 
-  .content-wrapper(:class="contentClass")
+  .AppContent__contentWrapper(:class="contentClass")
     CurriculumContent(
       :show="curriculum.show"
       :skills-array="curriculum.skillsArray"
@@ -106,25 +106,25 @@ svg
 *
   -webkit-tap-highlight-color rgba(0, 0, 0, 0)
 
-.app-content
+.AppContent
   opacity 0
   transition opacity 0.2s linear
 
-  .content-wrapper
+  &__contentWrapper
     pointer-events none
     width 100%
     max-width $content-max-width
     margin-left auto
     margin-right auto
 
-    &.show
+    &--show
       display block
 
-    &.hide
+    &--hide
       display none
 
 body.mounted
-  .app-content
+  .AppContent
     opacity 1
 </style>
 
@@ -256,7 +256,7 @@ const bubbleLanding = reactive<PhysicalBubbleProps>({
   },
 });
 
-const contentClass = ref('hide');
+const contentClass = ref('AppContent__contentWrapper--hide');
 
 const showIntroText = ref(false);
 const isNotFoundText = ref(false);
@@ -482,7 +482,7 @@ function setAboutState(): void {
   }
   about.value.show = true;
   about.value.trueHide = false;
-  contentClass.value = 'show';
+  contentClass.value = 'AppContent__contentWrapper--show';
   showIntroLogo.value = false;
   showIntroText.value = false;
   bubbleLanding.settings.bgColor = primaryDark;
@@ -501,7 +501,7 @@ function setProjectsState(): void {
     bubbleLanding.start = true;
   }
   about.value.show = false;
-  contentClass.value = 'show';
+  contentClass.value = 'AppContent__contentWrapper--show';
   showIntroLogo.value = false;
   showIntroText.value = false;
   bubbleLanding.settings.bgColor = secondaryDark;
@@ -519,7 +519,7 @@ function setCurriculumState(): void {
     bubbleLanding.hide = false;
   }
   about.value.show = false;
-  contentClass.value = 'show';
+  contentClass.value = 'AppContent__contentWrapper--show';
   showIntroLogo.value = false;
   showIntroText.value = false;
   curriculum.value.show = true;
@@ -529,7 +529,7 @@ function endClosingHandler(): void {
   isBubbleIntroOpen.value = false;
   showIntroLogo.value = true;
   showIntroText.value = true;
-  contentClass.value = 'hide';
+  contentClass.value = 'AppContent__contentWrapper--hide';
 }
 
 function endOpeningHandler(): void {

@@ -1,7 +1,7 @@
 <template lang="pug">
-.nav-wrapper(:class="navWrapperClasses")
-  .mobile-menu(:class="value ? 'show' : 'hide'")
-    svg.burger(
+.AppMenu__navWrapper(:class="navWrapperClasses")
+  .AppMenu__navWrapper__mobileMenu(:class="value ? 'AppMenu__navWrapper__mobileMenu--show' : 'AppMenu__navWrapper__mobileMenu--hide'")
+    svg.AppMenu__navWrapper__mobileMenu__burger(
       viewBox="-1 -1 32 32"
       fill="none"
       stroke-width="2"
@@ -43,9 +43,9 @@
           y2="5"
         )
   nav(:class="computedNavClasses")
-    .menu-wrapper
-      .menu
-        RouterLink.home(
+    .AppMenu__navWrapper__menuWrapper
+      .AppMenu__navWrapper__menuWrapper__menu
+        RouterLink.AppMenu__navWrapper__menuWrapper__menu__home(
           to="/"
           @click="onClickLink"
         )
@@ -65,24 +65,24 @@
           :class="curriculumClass"
           @click="onClickLink"
         ) curriculum
-      .social
-        a.x(
+      .AppMenu__navWrapper__menuWrapper__social
+        a.AppMenu__navWrapper__menuWrapper__social__x(
           href="https://x.com/ekqnp"
           target="_blank"
         ) x
-        a.github(
+        a.AppMenu__navWrapper__menuWrapper__social__github(
           href="https://github.com/qnp"
           target="_blank"
         ) github
-        a.linkedin(
+        a.AppMenu__navWrapper__menuWrapper__social__linkedin(
           href="https://www.linkedin.com/in/fran%C3%A7ois-risoud"
           target="_blank"
         ) linkedin
-        a.mailto(href="mailto:me") mail
+        a.AppMenu__navWrapper__menuWrapper__social__mailto(href="mailto:me") mail
 </template>
 
 <style lang="stylus">
-.nav-wrapper
+.AppMenu__navWrapper
   position absolute
   top 0
   left 0
@@ -103,12 +103,12 @@
     color $theme-color-white
     z-index 1
 
-    .menu-wrapper
+    .AppMenu__navWrapper__menuWrapper
       display flex
       justify-content space-between
       width 100%
 
-    .menu
+    .AppMenu__navWrapper__menuWrapper__menu
       width 60%
       max-width 428px
       display flex
@@ -123,8 +123,8 @@
         &.active
           font-weight 700
 
-    .menu
-      a.home
+    .AppMenu__navWrapper__menuWrapper__menu
+      a.AppMenu__navWrapper__menuWrapper__menu__home
         width 32px
         padding-top 1px
         margin-left -4px
@@ -136,10 +136,10 @@
           path
             fill $theme-color-white
 
-      a:not(.home)
+      a:not(.AppMenu__navWrapper__menuWrapper__menu__home)
         padding 8px
 
-    .social
+    .AppMenu__navWrapper__menuWrapper__social
       width 40%
       max-width 356px
       display flex
@@ -154,7 +154,7 @@
         transform translateY(20px)
 
     &.show
-      .menu
+      .AppMenu__navWrapper__menuWrapper__menu
         a
           animation show-menu-translate 0.5s cubic-bezier(0, 0.58, 0, 1) forwards, show-menu-opacity 1s ease-out forwards
 
@@ -162,7 +162,7 @@
           a:nth-child(5n+{num})
             animation-delay: ((num - 1) * 100)ms
 
-      .social
+      .AppMenu__navWrapper__menuWrapper__social
         a
           animation show-menu-translate 0.5s cubic-bezier(0, 0.58, 0, 1) forwards, show-menu-opacity 1s ease-out forwards
 
@@ -173,24 +173,24 @@
     &.hide
       pointer-events none
 
-      .menu,
-      .social
+      .AppMenu__navWrapper__menuWrapper__menu,
+      .AppMenu__navWrapper__menuWrapper__social
         a
           opacity 1
           transform translateY(0)
           animation hide-menu-opacity 0.3s ease-out forwards
 
   /* responsive */
-  .mobile-menu
+  .AppMenu__navWrapper__mobileMenu
     display none
 
 @media only screen and (max-width 900px)
-  .nav-wrapper
+  .AppMenu__navWrapper
     nav
-      .menu-wrapper
+      .AppMenu__navWrapper__menuWrapper
         display none
 
-    .mobile-menu
+    .AppMenu__navWrapper__mobileMenu
       display block
       position absolute
       top $theme-margin-top
@@ -199,7 +199,7 @@
       z-index 2
       mix-blend-mode hard-light
 
-      svg.burger
+      svg.AppMenu__navWrapper__mobileMenu__burger
         width 30px
         height 30px
 
@@ -232,17 +232,17 @@
               stroke-dasharray 40px 40px
               stroke-dashoffset -40px
 
-      &.show
+      &--show
         opacity 1
         transition opacity 0.4s linear
         transition-delay 0.3s
 
-      &.hide
+      &--hide
         opacity 0
         transition opacity 0.1s linear
         transition-delay 0.1s
 
-  .nav-wrapper.mobile-open
+  .AppMenu__navWrapper--mobileOpen
     bottom 0
 
     nav
@@ -266,7 +266,7 @@
         transform translateX(-130%) skew(-5deg, -5deg) scale(1.2)
         transition transform 0.3s ease-in
 
-      .menu-wrapper
+      .AppMenu__navWrapper__menuWrapper
         display flex
         flex-direction column
         align-items center
@@ -274,20 +274,20 @@
         padding-top 30px
         box-sizing border-box
 
-        .menu
+        .AppMenu__navWrapper__menuWrapper__menu
           padding-top 10%
           height 41%
 
-          a.home
+          a.AppMenu__navWrapper__menuWrapper__menu__home
             svg
               path
                 fill $theme-color-white
 
-        .social
+        .AppMenu__navWrapper__menuWrapper__social
           height 41%
 
-        .menu,
-        .social
+        .AppMenu__navWrapper__menuWrapper__menu,
+        .AppMenu__navWrapper__menuWrapper__social
           display flex
           flex-direction column
           align-items center
@@ -299,13 +299,13 @@
             display block
             text-align center
 
-          a.home
+          a.AppMenu__navWrapper__menuWrapper__menu__home
             svg
               margin-left auto
               margin-right auto
 
-    .mobile-menu
-      svg.burger
+    .AppMenu__navWrapper__mobileMenu
+      svg.AppMenu__navWrapper__mobileMenu__burger
         g
           transform-origin center center
 
@@ -342,9 +342,9 @@
               stroke-dashoffset -40px
               animation line5-cross 0.3s 1s ease-out forwards
 
-  .nav-wrapper.mobile-close
-    .mobile-menu
-      svg.burger
+  .AppMenu__navWrapper--mobileClose
+    .AppMenu__navWrapper__mobileMenu
+      svg.AppMenu__navWrapper__mobileMenu__burger
         g
           transform-origin center center
 
@@ -381,8 +381,8 @@
               animation line5-uncross 0.3s 0.2s ease-in forwards
 
 @media only screen and (max-width 400px)
-  .nav-wrapper
-    .mobile-menu
+  .AppMenu__navWrapper
+    .AppMenu__navWrapper__mobileMenu
       top $theme-margin-top-mobile
       left $theme-margin-left-right-mobile
 
@@ -390,8 +390,8 @@
       padding $theme-margin-top-mobile $theme-margin-left-right-mobile
 
 @media only screen and (max-width 340px) and (max-height 580px)
-  .nav-wrapper
-    .mobile-menu
+  .AppMenu__navWrapper
+    .AppMenu__navWrapper__mobileMenu
       top: ($theme-margin-top-mobile - 10px)
       left: ($theme-margin-left-right-mobile - 10px)
 
@@ -579,23 +579,23 @@ const curriculumClass = computed(() => ({
 function open(): void {
   animating.value = true;
   navClasses.value = [];
-  navWrapperClasses.value = ['mobile-open'];
+  navWrapperClasses.value = ['AppMenu__navWrapper--mobileOpen'];
   setTimeout(() => (navClasses.value = ['appear']), 50);
   setTimeout(() => (animating.value = false), 350);
 }
 function close(): void {
   animating.value = true;
   navClasses.value = ['disappear'];
-  setTimeout(() => (navWrapperClasses.value = ['mobile-close']), 300);
+  setTimeout(() => (navWrapperClasses.value = ['AppMenu__navWrapper--mobileClose']), 300);
   if (timer.value) clearTimeout(timer.value);
   timer.value = setTimeout(() => {
     navWrapperClasses.value = [];
     animating.value = false;
   }, 1000);
   setTimeout(() => {
-    if (navWrapperClasses.value.includes('mobile-open')) {
+    if (navWrapperClasses.value.includes('AppMenu__navWrapper--mobileOpen')) {
       navWrapperClasses.value = navWrapperClasses.value.filter(
-        c => c !== 'mobile-open'
+        c => c !== 'AppMenu__navWrapper--mobileOpen'
       );
     }
   }, 350);

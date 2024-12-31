@@ -1,5 +1,5 @@
 <template lang="pug">
-.physical-bubble(ref="elementRef")
+PhysicalBubble(ref="elementRef")
 </template>
 
 <style lang="stylus">
@@ -11,7 +11,7 @@ $line45deg-translate = -($circle-radius + $line45deg-length / 2) * cos(45deg)
 $show-color = $theme-color-pink
 $particle-project-circle-radius = 27px
 
-.physical-bubble
+.PhysicalBubble
   display block
   position fixed
   top 0
@@ -21,10 +21,10 @@ $particle-project-circle-radius = 27px
   opacity 1
   transition opacity 0.3s linear
 
-  &.hide
+  &--hide
     opacity 0
 
-  .isolated-particle-view
+  &__isolatedParticleView
     width 2 * $circle-radius
     height 2 * $circle-radius
     // background-color rgba(155,155,0,0.2)
@@ -34,11 +34,11 @@ $particle-project-circle-radius = 27px
     opacity 0
     transition opacity 0.6s linear
 
-    &.show
+    &--show
       opacity 1
       transition opacity 0.3s linear
 
-    .text
+    &__text
       width 2 * $circle-radius - 40px
       font-size 0.7em
       line-height 1.4
@@ -52,7 +52,7 @@ $particle-project-circle-radius = 27px
       transform translateY(-50%)
       margin-left - @width - $line-length - $text-line-spacing
 
-    .line
+    &__line
       width $line-length
       height 1px
       background-color $show-color
@@ -61,7 +61,7 @@ $particle-project-circle-radius = 27px
       left 50%
       margin-left: (- $line-length)
 
-  .project-particle-view
+  &__projectParticleView
     width 2 * $circle-radius
     height 2 * $circle-radius
     position fixed
@@ -70,10 +70,10 @@ $particle-project-circle-radius = 27px
     opacity 0
     transition opacity 0.3s linear
 
-    &.show
+    &--show
       opacity 1
 
-    .circle
+    &__circle
       width 2 * $particle-project-circle-radius
       height 2 * $particle-project-circle-radius
       position absolute
@@ -86,15 +86,15 @@ $particle-project-circle-radius = 27px
       border-radius $particle-project-circle-radius
 
 body:not(.has-touch)
-  .physical-bubble
-    .project-particle-view
-      .circle:hover
+  .PhysicalBubble
+    &__projectParticleView
+      &__circle:hover
         background-color alpha($theme-color-dark-teal, 0.6)
 
 body.has-touch
-  .physical-bubble
-    .project-particle-view
-      .circle.hover
+  .PhysicalBubble
+    &__projectParticleView
+      &__circle.hover
         transition all 0.2s linear
         background-color alpha($theme-color-pink, 0.6)
         border 5px solid $theme-color-pink
@@ -290,9 +290,9 @@ watch(
   () => props.hide,
   newVal => {
     if (newVal) {
-      elementRef.value?.classList.add('hide');
+      elementRef.value?.classList.add('PhysicalBubble--hide');
     } else {
-      elementRef.value?.classList.remove('hide');
+      elementRef.value?.classList.remove('PhysicalBubble--hide');
     }
   }
 );

@@ -1,5 +1,5 @@
 <template lang="pug">
-InlineSvg.intro-logo(
+InlineSvg.IntroLogo(
   :class="classes"
   :src="svgEk"
 )
@@ -9,7 +9,7 @@ InlineSvg.intro-logo(
 $beat-scale = 1.2
 $logo-w = 2.5em
 
-.intro-logo
+.IntroLogo
   width $logo-w
   position absolute
   top 50%
@@ -21,10 +21,10 @@ $logo-w = 2.5em
 
   svg
     width $logo-w
-    animation beating 15s linear infinite
+    animation IntroLogo__beating 15s linear infinite
     animation-delay 10s
 
-  &.show
+  &--show
     pointer-events auto
     opacity 1
 
@@ -36,7 +36,7 @@ $logo-w = 2.5em
       transition fill 0.5s linear
       fill $theme-color-dark-white
 
-@keyframes beating
+@keyframes IntroLogo__beating
   0%,
   49%,
   51%,
@@ -62,7 +62,7 @@ export interface IntroLogoProps {
 const props = defineProps<IntroLogoProps>();
 
 const classes = computed(() => ({
-  show: props.show,
-  clickable: props.show,
+  'IntroLogo--show': props.show,
+  'IntroLogo--clickable': props.show,
 }));
 </script>

@@ -18,11 +18,11 @@
     <title>Francois Risoud Portfolio</title>
 
     <style>
-      html.js .no-js-info {
+      html.js .NoJsInfo {
         display: none;
       }
 
-      html.no-js .no-js-info {
+      html.no-js .NoJsInfo {
         display: block;
         text-align: center;
         margin-top: 100px;
@@ -35,7 +35,7 @@
         background-color: #1a33ff;
       }
 
-      .loader-wrapper {
+      .LoaderWrapper {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -44,18 +44,18 @@
         transition: opacity 0.2s linear;
       }
 
-      .loader {
+      .LoaderWrapper__loader {
         width: 75px;
         height: 75px;
         transform-origin: center center;
-        animation: loader-breath 2s ease infinite alternate;
+        animation: LoaderWrapper__loader__breath 2s ease infinite alternate;
       }
 
-      body.mounted .loader-wrapper {
+      body.mounted .LoaderWrapper {
         opacity: 0;
       }
 
-      @keyframes loader-breath {
+      @keyframes LoaderWrapper__loader__breath {
         0% {
           transform: scale(0.1);
         }
@@ -71,12 +71,12 @@
     </script>
   </head>
   <body>
-    <div class="no-js-info">
+    <div class="NoJsInfo">
       <h1>Sorry, this website needs javascript 〴⋋_⋌〵</h1>
     </div>
 
-    <div class="loader-wrapper">
-      <div class="loader">
+    <div class="LoaderWrapper">
+      <div class="LoaderWrapper__loader">
         <svg viewBox="0 0 2 2" xmlns="http://www.w3.org/2000/svg">
           <circle fill="#001433" cx="1" cy="1" r="1" />
         </svg>
