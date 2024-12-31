@@ -1,28 +1,28 @@
 <template lang="pug">
-main.project(
+main.ProjectContent(
   ref="elementRef"
   :class="classes"
   :style="computedBlendModeStyle"
 )
-  .image-wrapper(:style="computedImageWrapperStyle")
-    .image(:style="computedImageStyle")
-  .infos(:style="computedInfosStyle")
+  .ProjectContent__imageWrapper(:style="computedImageWrapperStyle")
+    .ProjectContent__image(:style="computedImageStyle")
+  .ProjectContent__infos(:style="computedInfosStyle")
     a(
       :href="selectedProject?.url"
       target="_blank"
     )
-      h1 {{ selectedProject?.title }} - {{ selectedProject?.type }}
+      h1.ProjectContent__infos__title {{ selectedProject?.title }} - {{ selectedProject?.type }}
         InlineSvg(:src="svgNewWindow")
 
-    h2(v-if="selectedProject?.date") {{ selectedProject.date }}
-    h2(
+    h2.ProjectContent__infos__date(v-if="selectedProject?.date") {{ selectedProject.date }}
+    h2.ProjectContent__infos__techInfo(
       v-for="(infoLine, index) in selectedProject?.techInfos"
       :key="index"
     ) {{ infoLine }}
 </template>
 
 <style lang="stylus">
-main.project
+.ProjectContent
   position absolute
   top 0
   left 0
@@ -31,7 +31,7 @@ main.project
   opacity 0
   transition opacity 1s ease-in
 
-  .image-wrapper
+  &__imageWrapper
     position absolute
     top 0
     left 0
@@ -41,7 +41,7 @@ main.project
     opacity 1
     transition opacity 0.5s linear
 
-  .image
+  &__image
     position absolute
     top 0
     left 0
@@ -51,7 +51,7 @@ main.project
     background-size cover
     background-position center center
 
-  .infos
+  &__infos
     position absolute
     left $theme-margin-left-right
     bottom $theme-margin-top
@@ -60,12 +60,13 @@ main.project
     font-family 'Raleway', sans-serif
     color $theme-color-white
 
-    h1
+    &__title
       white-space nowrap
       font-weight 700
       font-size $golden-num em
 
-    h2
+    &__date,
+    &__techInfo
       font-weight 400
       font-size 1em
       font-family $the-serif, serif
@@ -73,17 +74,17 @@ main.project
     .inline-svg
       display none
 
-  &.show
+  &--show
     opacity 1
     transition opacity 0.2s ease-in
 
-  &.transition
-    .image-wrapper
+  &--transition
+    &__imageWrapper
       opacity 0
 
 body.has-touch
-  main.project
-    .infos
+  .ProjectContent
+    &__infos
       a
         pointer-events all
 
@@ -100,13 +101,13 @@ body.has-touch
               fill $theme-color-white
 
 @media only screen and (max-width 1100px)
-  main.project
-    .infos
+  .ProjectContent
+    &__infos
       bottom $theme-margin-top-mobile
 
 @media only screen and (max-width 660px)
-  main.project
-    .infos
+  .ProjectContent
+    &__infos
       top auto
       left 0
       right 0
@@ -114,48 +115,51 @@ body.has-touch
       padding ($theme-margin-top-mobile - 10px) $theme-margin-left-right $theme-margin-top-mobile
 
   body.has-touch
-    main.project
-      .infos
+    .ProjectContent
+      &__infos
         padding ($theme-margin-top-mobile / 2 - 5px) $theme-margin-left-right ($theme-margin-top-mobile / 2)
 
-        h1
+        &__title
           font-size 1em
 
-        h2
+        &__date,
+        &__techInfo
           font-size: (1 / $golden-num-sqrt)em
 
 @media only screen and (max-width 400px)
   body.has-touch
-    main.project
-      .infos
+    .ProjectContent
+      &__infos
         padding ($theme-margin-top-mobile / 2 - 5px) $theme-margin-left-right-mobile ($theme-margin-top-mobile / 2)
 
-        h1
+        &__title
           font-size: (1 / $golden-num-sqrt)em
 
-        h2
+        &__date,
+        &__techInfo
           font-size: (1 / $golden-num)em
 
 @media only screen and (max-width 340px)
   body.has-touch
-    main.project
-      .infos
-        h1
+    .ProjectContent
+      &__infos
+        &__title
           font-size: (1 / $golden-num)em
           margin-bottom 2px
 
-        h2
+        &__date,
+        &__techInfo
           font-size: (1 / $golden-num)em
 
 @media only screen and (min-width 661px) and (max-height 700px)
-  main.project
-    .infos
+  .ProjectContent
+    &__infos
       bottom: ($theme-margin-top / 2)
 
 @media only screen and (max-width 340px) and (max-height 580px)
   body.has-touch
-    main.project
-      .infos
+    .ProjectContent
+      &__infos
         padding ($theme-margin-top-mobile / 2 - 10px) ($theme-margin-left-right-mobile - 10px) ($theme-margin-top-mobile / 2 - 10px)
 </style>
 
@@ -215,8 +219,8 @@ const radius = ref(0);
 const newPos = ref({ x: 0, y: 0 });
 
 const classes = computed(() => ({
-  show: props.show,
-  transition: transition.value,
+  'ProjectContent--show': props.show,
+  'ProjectContent--transition': transition.value,
 }));
 
 const computedImageStyle = computed<CSSProperties>(() => {

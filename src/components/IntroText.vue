@@ -1,15 +1,15 @@
 <template lang="pug">
-.intro-text(:class="classes")
-  h1
-    span.name {{ notFound ? '404' : 'François Risoud' }}
-    span.type &nbsp;{{ notFound ? 'Not Found' : 'Portfolio' }}
+IntroText(:class="classes")
+  h1.IntroText__title
+    span.IntroText__title__name {{ notFound ? '404' : 'François Risoud' }}
+    span.IntroText__title__type &nbsp;{{ notFound ? 'Not Found' : 'Portfolio' }}
     br(v-if="notFound")
-    span.emoji.reverse(v-if="notFound") づ
-    span.emoji(v-if="notFound") (｡◉‿◉｡)づ
+    span.IntroText__title__emoji--reverse(v-if="notFound") づ
+    span.IntroText__title__emoji(v-if="notFound") (｡◉‿◉｡)づ
 </template>
 
 <style lang="stylus">
-.intro-text
+.IntroText
   position absolute
   height 20px
   margin-top $theme-margin-top
@@ -21,7 +21,7 @@
   justify-content center
   pointer-events none
 
-  h1
+  &__title
     font-family 'Raleway', sans-serif
     font-size 1em
     color $theme-color-black
@@ -32,29 +32,29 @@
     line-height $golden-num
     opacity 0
 
-    .name
+    &__name
       font-weight 700
 
-    .type
+    &__type
       font-family $the-serif, serif
       font-weight 400
 
-    .emoji
+    &__emoji
       opacity 0
       font-weight 400
       transition opacity 0.5s linear
 
-    .reverse
+    &__emoji--reverse
       display inline-block
       transform scaleX(-1)
 
-  &.show
+  &--show
     pointer-events auto
 
-    h1
+    &__title
       opacity 1
 
-      .emoji
+      &__emoji
         opacity 1
         transition opacity 1s linear
         transition-delay 2s
@@ -77,6 +77,6 @@ const props = withDefaults(defineProps<IntroTextProps>(), {
 });
 
 const classes = computed(() => ({
-  show: props.show,
+  'IntroText--show': props.show,
 }));
 </script>

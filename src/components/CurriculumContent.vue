@@ -1,147 +1,147 @@
 <template lang="pug">
-main.curriculum(:class="classes")
-  .mask
-  #iscroll.wrapper
-    ul.content
-      li.item
-        .date
-          .year Dec 2024 – now
-        .thing
-          .occupation Head of Front-end Development
-          .location
-            a(
+main.CurriculumContent(:class="classes")
+  .CurriculumContent__mask
+  #iscroll.CurriculumContent__wrapper
+    ul.CurriculumContent__content
+      li.CurriculumContent__content__item
+        .CurriculumContent__content__item__date
+          .CurriculumContent__content__item__date__year Dec 2024 – now
+        .CurriculumContent__content__item__thing
+          .CurriculumContent__content__item__thing__occupation Head of Front-end Development
+          .CurriculumContent__content__item__thing__location
+            a.CurriculumContent__content__item__thing__location__link(
               href="https://fifteen.eu"
               target="_blank"
             ) Fifteen
               InlineSvg(:src="svgNewWindow")
             | , Vanves, France
-      li.item
-        .date
-          .year March 2022 – Dec 2024
-        .thing
-          .occupation Lead fullstack developer & <br/> Head of web
-          .location
-            a(
+      li.CurriculumContent__content__item
+        .CurriculumContent__content__item__date
+          .CurriculumContent__content__item__date__year March 2022 – Dec 2024
+        .CurriculumContent__content__item__thing
+          .CurriculumContent__content__item__thing__occupation Lead fullstack developer & <br/> Head of web
+          .CurriculumContent__content__item__thing__location
+            a.CurriculumContent__content__item__thing__location__link(
               href="https://fifteen.eu"
               target="_blank"
             ) Fifteen
               InlineSvg(:src="svgNewWindow")
             | , Vanves, France
-      li.item
-        .date
-          .year June 2018 – March 2022
-        .thing
-          .occupation Fullstack web developer
-          .location
-            a(
+      li.CurriculumContent__content__item
+        .CurriculumContent__content__item__date
+          .CurriculumContent__content__item__date__year June 2018 – March 2022
+        .CurriculumContent__content__item__thing
+          .CurriculumContent__content__item__thing__occupation Fullstack web developer
+          .CurriculumContent__content__item__thing__location
+            a.CurriculumContent__content__item__thing__location__link(
               href="https://zoov.eu"
               target="_blank"
             ) Zoov by Fifteen
               InlineSvg(:src="svgNewWindow")
             | , Vanves, France
-      li.item
-        .date
-          .year 2014 – June 2018
-        .thing
-          .occupation Freelance fullstack web developer
-          .location Paris, France
-      li.item
-        .date
-          .year 2011 – 2018
-        .thing
-          .occupation Music producer
-          .location
-            a(
+      li.CurriculumContent__content__item
+        .CurriculumContent__content__item__date
+          .CurriculumContent__content__item__date__year 2014 – June 2018
+        .CurriculumContent__content__item__thing
+          .CurriculumContent__content__item__thing__occupation Freelance fullstack web developer
+          .CurriculumContent__content__item__thing__location Paris, France
+      li.CurriculumContent__content__item
+        .CurriculumContent__content__item__date
+          .CurriculumContent__content__item__date__year 2011 – 2018
+        .CurriculumContent__content__item__thing
+          .CurriculumContent__content__item__thing__occupation Music producer
+          .CurriculumContent__content__item__thing__location
+            a.CurriculumContent__content__item__thing__location__link(
               href="https://soundcloud.com/bredrin-records"
               target="_blank"
             ) Bredrin Records
               InlineSvg(:src="svgNewWindow")
             | , Paris, France
-      li.item
-        .date
-          .year 2013 – 2016
-        .thing
-          .occupation PhD in Theoretical Quantum Physics
-          .location
-            a(
+      li.CurriculumContent__content__item
+        .CurriculumContent__content__item__date
+          .CurriculumContent__content__item__date__year 2013 – 2016
+        .CurriculumContent__content__item__thing
+          .CurriculumContent__content__item__thing__occupation PhD in Theoretical Quantum Physics
+          .CurriculumContent__content__item__thing__location
+            a.CurriculumContent__content__item__thing__location__link(
               href="https://www.ens.psl.eu"
               target="_blank"
             ) École Normale Supérieure
               InlineSvg(:src="svgNewWindow")
             | ,&nbsp;
-            a(
+            a.CurriculumContent__content__item__thing__location__link(
               href="https://www.sorbonne-universite.fr"
               target="_blank"
             ) UPMC
               InlineSvg(:src="svgNewWindow")
             | , Paris, France
-      li.item
-        .date
-          .year 2011 – 2012
-        .thing
-          .occupation Master Degree in Theoretical, Physical & Analytical Chemistry
-          .location
-            a(
+      li.CurriculumContent__content__item
+        .CurriculumContent__content__item__date
+          .CurriculumContent__content__item__date__year 2011 – 2012
+        .CurriculumContent__content__item__thing
+          .CurriculumContent__content__item__thing__occupation Master Degree in Theoretical, Physical & Analytical Chemistry
+          .CurriculumContent__content__item__thing__location
+            a.CurriculumContent__content__item__thing__location__link(
               href="https://www.ens.psl.eu"
               target="_blank"
             ) École Normale Supérieure
               InlineSvg(:src="svgNewWindow")
             | ,&nbsp;
-            a(
+            a.CurriculumContent__content__item__thing__location__link(
               href="https://www.sorbonne-universite.fr"
               target="_blank"
             ) UPMC
               InlineSvg(:src="svgNewWindow")
             | , Paris, France
-      li.item
-        .date
-          .skill-tag skills
-        .thing
-          span.category(
+      li.CurriculumContent__content__item
+        .CurriculumContent__content__item__date
+          .CurriculumContent__content__item__date__skill-tag skills
+        .CurriculumContent__content__item__thing
+          span.CurriculumContent__content__item__thing__category(
             v-for="(category, i) in skillsArray"
             :key="i"
           )
-            span.type {{ category.type }}
-            span.skills
+            span.CurriculumContent__content__item__thing__category__type {{ category.type }}
+            span.CurriculumContent__content__item__thing__category__skills
               span(
                 v-for="(skill, j) in category.content"
                 :key="`${i}-${j}`"
               ) {{ skill + ", " }}
-      li.item
-        .date
-          .year clients
-        .thing.logos
-          a.logo(
+      li.CurriculumContent__content__item
+        .CurriculumContent__content__item__date
+          .CurriculumContent__content__item__date__year clients
+        .CurriculumContent__content__item__thing.CurriculumContent__content__item__thing--logos
+          a.CurriculumContent__content__item__thing__logo(
             href="http://maison-solide.fr"
             target="_blank"
           )
             InlineSvg(:src="svgSolide")
-          a.logo.datagif(
+          a.CurriculumContent__content__item__thing__logo--datagif(
             href="http://www.datagif.fr"
             target="_blank"
           )
             InlineSvg(:src="svgDatagif")
-          a.logo(
+          a.CurriculumContent__content__item__thing__logo(
             href="https://www.policestudio.fr"
             target="_blank"
           )
             InlineSvg(:src="svgPolice")
-          a.logo(
+          a.CurriculumContent__content__item__thing__logo(
             href="https://www.linkedin.com/company/habx"
             target="_blank"
           )
             InlineSvg(:src="svgHabx")
-          a.logo(
+          a.CurriculumContent__content__item__thing__logo(
             href="http://4nparis.com"
             target="_blank"
           )
             InlineSvg(:src="svg4N")
-          a.logo(
+          a.CurriculumContent__content__item__thing__logo(
             href="http://zoov.eu"
             target="_blank"
           )
             InlineSvg(:src="svgZoov")
-          a.logo(
+          a.CurriculumContent__content__item__thing__logo(
             href="http://fifteen.eu"
             target="_blank"
           )
@@ -151,7 +151,7 @@ main.curriculum(:class="classes")
 <style lang="stylus">
 $curriculum-color = #111
 
-main.curriculum
+.CurriculumContent
   position absolute
   top 0
   left 0
@@ -163,22 +163,7 @@ main.curriculum
   opacity 0
   transition opacity 0.5s linear
 
-  a:not(.logo)
-    font-weight 400
-
-    .inline-svg
-      display inline
-      margin-left 0.22em
-
-      svg
-        width 0.28em
-        height 1em
-
-        path,
-        polygon
-          fill $theme-color-white
-
-  .mask
+  &__mask
     position absolute
     top 0
     left 0
@@ -187,7 +172,7 @@ main.curriculum
     background linear-gradient(to bottom, alpha($curriculum-color, 1) 50%, alpha($curriculum-color, 0))
     z-index 1
 
-  .wrapper
+  &__wrapper
     mix-blend-mode hard-light
     position absolute
     top: $content-margin-top + $theme-margin-top
@@ -199,13 +184,13 @@ main.curriculum
     left calc(50%)
     transform translateX(-50%)
 
-  .content
+  &__content
     padding-bottom: ($theme-margin-top / 2)
     line-height 1.2
     font-family 'Raleway', sans-serif
     color $theme-color-white
 
-    .item
+    &__item
       display flex
       align-items baseline
       margin 0 0 90px $theme-margin-left-right
@@ -213,7 +198,7 @@ main.curriculum
       &:last-child
         margin 0 0 0 $theme-margin-left-right
 
-      .date
+      &__date
         text-align right
         box-sizing border-box
         padding-right 50px
@@ -226,62 +211,62 @@ main.curriculum
           &:nth-child(n+2):before
             content ' '
 
-        .since
+        &__since
           font-size 1em
 
-        .year
+        &__year
           font-size $golden-num em
 
-        .skill-tag
+        &__skill-tag
           font-size $golden-num em
           vertical-align top
 
-      .thing
+      &__thing
         max-width 650px
 
-        &.logos
+        &--logos
           display flex
           flex-wrap wrap
           align-items center
 
-        .occupation,
-        .type
+        &__occupation,
+        &__type
           line-height 1.25em
           font-weight 700
           font-size ($golden-num ** 2) em
 
-        .location
+        &__location
           font-family $the-serif, serif
           line-height 2.5em
           font-weight 400
           font-size 1em
 
-        .skills
+        &__skills
           font-family $the-serif, serif
           line-height 2.5em
           font-weight 400
           font-size 1em
 
-        .type
+        &__type
           line-height 0
 
-        .category
+        &__category
           vertical-align middle
 
-        .type,
-        .skills
+        &__type,
+        &__skills
           vertical-align middle
 
           > span
             &:first-child::before
               content ' '
 
-        .logo
+        &__logo
           display inline-block
           margin-right $golden-num em
           margin-top $golden-num em
 
-          &.datagif
+          &--datagif
             margin-bottom -8px
 
           .inline-svg
@@ -292,10 +277,10 @@ main.curriculum
             polygon
               fill white
 
-  &.show
+  &--show
     opacity 1
 
-  &.hide
+  &--hide
     opacity 0
     pointer-events none
 
@@ -316,47 +301,47 @@ main.curriculum
   width 100%
 
 @media only screen and (max-width 1120px)
-  main.curriculum
-    .content
-      .item
+  .CurriculumContent
+    &__content
+      &__item
         margin 0 $theme-margin-left-right 60px $theme-margin-left-right
 
         &:last-child
           margin 0 0 0 $theme-margin-left-right
 
 @media only screen and (max-width 1050px)
-  main.curriculum
-    .content
-      .item
-        .date
+  .CurriculumContent
+    &__content
+      &__item
+        &__date
           padding-right 30px
           width 150px
 
-          .since
+          &__since
             font-size: (1 / $golden-num)em
 
-          .year
+          &__year
             font-size 1em
 
-          .skill-tag
+          &__skill-tag
             font-size 1em
 
-        .thing
+        &__thing
           max-width 410px
 
-          .occupation,
-          .type
+          &__occupation,
+          &__type
             font-size $golden-num em
 
-          .location
+          &__location
             line-height: (2.5 / $golden-num)em
             font-size: (1 / $golden-num)em
 
-          .skills
+          &__skills
             line-height: (2.5 / $golden-num)em
             font-size: (1 / $golden-num)em
 
-          .logo
+          &__logo
             display inline-block
             margin-right 1em
             margin-top 1em
@@ -366,27 +351,27 @@ main.curriculum
                 height 1em
 
 @media only screen and (max-width 780px)
-  main.curriculum
-    .content
-      .item
+  .CurriculumContent
+    &__content
+      &__item
         display block
 
-        .date
+        &__date
           width auto
           text-align left
 
 @media only screen and (max-width 400px)
-  main.curriculum
-    .mask
+  .CurriculumContent
+    &__mask
       height 2.5 * $theme-margin-top-mobile
 
-    .wrapper
+    &__wrapper
       top: $content-margin-top-mobile + $theme-margin-top-mobile
 
-    .content
+    &__content
       padding-bottom $content-margin-top-mobile
 
-      .item
+      &__item
         margin 0 $theme-margin-left-right-mobile
         padding-bottom 35px
 
@@ -394,40 +379,40 @@ main.curriculum
           margin 0 $theme-margin-left-right-mobile
           padding-bottom 0
 
-        .thing
-          .occupation,
+        &__thing
+          &__occupation,
           break-word nowrap
             line-height 1.1em
             font-size: (0.95 * $golden-num)em
 
-          .location
+          &__location
             margin-top 4px
 
-          .category.type
+          &__category__type
             line-height: (0.9 / $golden-num)em
             font-size: (0.95 * $golden-num)em
 
-          .skills
+          &__skills
             line-height: (0.9 / $golden-num)em
 
-          .logo
+          &__logo
             margin-top 0.5em
 
     .iScrollVerticalScrollbar
       left: ($theme-margin-left-right-mobile / 2 - 3px)
 
 @media only screen and (max-width 340px) and (max-height 580px)
-  main.curriculum
-    .mask
+  .CurriculumContent
+    &__mask
       height 2.5 * ($theme-margin-top-mobile - 10px)
 
-    .wrapper
+    &__wrapper
       top ($content-margin-top-mobile - 10px) + ($theme-margin-top-mobile - 10px)
 
-    .content
+    &__content
       padding-bottom: ($content-margin-top-mobile - 10px)
 
-      .item
+      &__item
         margin 0 ($theme-margin-left-right-mobile - 10px)
 
         &:last-child
@@ -473,8 +458,8 @@ const emit = defineEmits<{
 }>();
 
 const classes = computed(() => ({
-  show: props.show,
-  hide: !props.show,
+  'CurriculumContent--show': props.show,
+  'CurriculumContent--hide': !props.show,
 }));
 
 let myScroll: IScroll | null = null;
