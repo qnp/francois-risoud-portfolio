@@ -66,10 +66,10 @@
           @click="onClickLink"
         ) curriculum
       .social
-        a.x(
-          href="https://x.com/ekqnp"
+        a.bluesky(
+          href="https://bsky.app/profile/ekqnp.bsky.social"
           target="_blank"
-        ) x
+        ) bluesky
         a.github(
           href="https://github.com/qnp"
           target="_blank"
@@ -141,7 +141,7 @@
 
     .social
       width 40%
-      max-width 356px
+      max-width 420px
       display flex
       align-items center
       justify-content space-between

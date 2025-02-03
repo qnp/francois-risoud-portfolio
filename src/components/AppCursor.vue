@@ -6,8 +6,8 @@
   .cursor-content
   .social-icon.fifteen
     InlineSvg(:src="svgFifteen")
-  .social-icon.x
-    InlineSvg(:src="svgX")
+  .social-icon.bluesky
+    InlineSvg(:src="svgBluesky")
   .social-icon.github
     InlineSvg(:src="svgGithub")
   .social-icon.linkedin
@@ -32,7 +32,7 @@ $clickable-scale = 1
 $clickable-opacity = 1
 $social-icon-size = 60px
 $fifteen-icon-ratio-wh = 1
-$x-icon-ratio-wh = 1
+$bluesky-icon-ratio-wh = 1
 $github-icon-ratio-wh = 1
 $linkedin-icon-ratio-wh = 1
 $new-window-icon-ratio-wh = 1
@@ -91,8 +91,8 @@ body
     &.fifteen
       margin-top: (- $social-icon-size * $fifteen-icon-ratio-wh / 2)
 
-    &.x
-      margin-top: (- $social-icon-size * $x-icon-ratio-wh / 2)
+    &.bluesky
+      margin-top: (- $social-icon-size * $bluesky-icon-ratio-wh / 2)
 
     &.github
       margin-top: (- $social-icon-size * $github-icon-ratio-wh / 2)
@@ -132,7 +132,7 @@ body
       transform scale($normal-scale)
 
   &:not(.hidden)
-    &:not(.x-cursor):not(.github-cursor):not(.mailto-cursor):not(.scroll-cursor)&:not(.fifteen-cursor):not(.linkedin-cursor)
+    &:not(.bluesky-cursor):not(.github-cursor):not(.mailto-cursor):not(.scroll-cursor)&:not(.fifteen-cursor):not(.linkedin-cursor)
       &.down
         .cursor-content
           transform scale($normal-scale * $click-scale)
@@ -154,7 +154,7 @@ body
             transform translate((($cursor-size - @width) / 2), (1 / 6) * $cursor-size)
 
     &.fifteen-cursor,
-    &.x-cursor,
+    &.bluesky-cursor,
     &.github-cursor,
     &.linkedin-cursor,
     &.mailto-cursor,
@@ -171,13 +171,13 @@ body
         .social-icon.fifteen
           transform scale($clickable-scale * $click-scale)
 
-    &.x-cursor
-      .social-icon.x
+    &.bluesky-cursor
+      .social-icon.bluesky
         transform scale($clickable-scale)
         opacity $clickable-opacity
 
       &.down
-        .social-icon.x
+        .social-icon.bluesky
           transform scale($clickable-scale * $click-scale)
 
     &.github-cursor
@@ -245,7 +245,7 @@ body
 
 <script setup lang="ts">
 import svgFifteen from '@/assets/images/cursors/fifteen.svg';
-import svgX from '@/assets/images/cursors/x.svg';
+import svgBluesky from '@/assets/images/cursors/bluesky.svg';
 import svgGithub from '@/assets/images/cursors/github.svg';
 import svgLinkedin from '@/assets/images/cursors/linkedin.svg';
 import svgMail from '@/assets/images/cursors/mail.svg';
@@ -292,8 +292,8 @@ const clickableSettings: ClickableConfig[] = [
     cursorClasses: ['mailto-cursor'],
   },
   {
-    selector: 'a.x',
-    cursorClasses: ['x-cursor'],
+    selector: 'a.bluesky',
+    cursorClasses: ['bluesky-cursor'],
   },
   {
     selector: 'a.github',
@@ -312,7 +312,8 @@ const clickableSettings: ClickableConfig[] = [
     cursorClasses: ['scroll-cursor'],
   },
   {
-    selector: 'a[href^=http]:not(.x):not(.github):not(.fifteen):not(.linkedin)',
+    selector:
+      'a[href^=http]:not(.bluesky):not(.github):not(.fifteen):not(.linkedin)',
     cursorClasses: ['new-window-cursor'],
   },
 ];
