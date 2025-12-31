@@ -78,7 +78,7 @@
           href="https://www.linkedin.com/in/fran%C3%A7ois-risoud"
           target="_blank"
         ) linkedin
-        a.mailto(href="mailto:me") mail
+        a.mailto(href="mailto:francois.risoud@gmail.com") mail
 </template>
 
 <style lang="stylus">

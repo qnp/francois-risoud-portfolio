@@ -251,7 +251,6 @@ import svgLinkedin from '@/assets/images/cursors/linkedin.svg';
 import svgMail from '@/assets/images/cursors/mail.svg';
 import svgNewWindow from '@/assets/images/cursors/new-window.svg';
 import svgScroll from '@/assets/images/cursors/scroll.svg';
-import rot13 from '@/utils/rot13';
 import InlineSvg from '@/components/utils/InlineSvg.vue';
 import { useTouch } from '@/composables/useTouch';
 
@@ -341,17 +340,6 @@ const eventSettings: EventConfig[] = [
         .closest('a[href]')
         ?.getAttribute('href');
       if (href) router.push(href);
-      return false;
-    },
-  },
-  {
-    selector: '[href^=mailto]',
-    onClick(event) {
-      event.preventDefault();
-      // Go to mailto href after 1 second to let the user see the mailing animation
-      setTimeout(function () {
-        window.location.href = 'mailto:' + rot13('senapbvf.evfbhq@tznvy.pbz');
-      }, 1000);
       return false;
     },
   },

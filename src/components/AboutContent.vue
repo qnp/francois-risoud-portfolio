@@ -3,7 +3,7 @@ main.about-content(:class="classes")
   .summary
     h1
       | Hi, my name is&nbsp;
-      a(href="mailto:me") François
+      a(href="mailto:francois.risoud@gmail.com") François
       | .
       br
       | I’m a full-stack developer living in Paris, currently working at&nbsp;
